@@ -72,4 +72,11 @@ export class TaServiceService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put(url, taData, { headers });
   }
+  changePassword(taId: number, newPassword: string) {
+  const url = `${this.apiBaseUrl}/api/Ta/${taId}/change-password`;
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.http.put(url, { newPassword }, { headers });
 }
+
+} 
+

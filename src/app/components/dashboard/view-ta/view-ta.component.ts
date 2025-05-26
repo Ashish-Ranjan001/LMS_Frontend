@@ -98,7 +98,9 @@ export class ViewTaComponent implements OnInit {
   goToNextPage(): void { this.goToPage(this.currentPage + 1); }
 
   editTa(taId: number): void { this.router.navigate(['/dashboard/ta/edit', taId]); }
-  changePassword(taId: number): void { console.log('Change password for TA with ID:', taId); }
+  changePassword(taId: number): void {
+  this.router.navigate(['/dashboard/changePassword', taId]); // ✅ Correct navigation
+}
 
   getStatusClass(status: boolean): string { return status ? 'active' : 'inactive'; }
   getStatusText(status: boolean): string { return status ? 'Active' : 'Inactive'; }

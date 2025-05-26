@@ -3,20 +3,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { AdminserviceService } from '../../../services/Admin/adminservice.service';
-
+import { HttpClient } from '@angular/common/http';
+import {  AdminService } from '../../../services/admins/admin.service';
 
 interface Admin {
-  adminId: string;
-  userId: string;
+  adminId: number;
+  userId:string;
   userName: string;
   email: string;
   phone: number;
-  smeId: string;
+  smeId:string;
   status: boolean;
   createdAt: string;
   updatedAt: string;
 }
+
 
 @Component({
   selector: 'app-view-admin',
@@ -26,11 +27,10 @@ interface Admin {
   styleUrls: ['./view-admin.component.css']
 })
 export class ViewAdminComponent implements OnInit {
-  // Admin data from backend
-  admins: Admin[] = [];
-  
-  // Filtered admins (based on search)
-  filteredAdmins: Admin[] = [];
+ admins: Admin[] = [];
+ filteredAdmins: Admin[] = [];
+
+
   
   // Pagination variables
   currentPage: number = 1;
@@ -43,7 +43,7 @@ export class ViewAdminComponent implements OnInit {
   // Loading state
   isLoading: boolean = true;
   
-  constructor(private adminService: AdminserviceService) {}
+  constructor(private adminService: AdminService) {}
   
   ngOnInit(): void {
     this.loadAdmins();
@@ -82,10 +82,12 @@ export class ViewAdminComponent implements OnInit {
       this.filteredAdmins = [...this.admins];
     } else {
       const lowerCaseTerm = term.toLowerCase();
+
       this.filteredAdmins = this.admins.filter(admin => 
         admin.userName.toLowerCase().includes(lowerCaseTerm) ||
         admin.email.toLowerCase().includes(lowerCaseTerm) ||
         admin.phone.toString().includes(term)
+
       );
     }
     
