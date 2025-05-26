@@ -25,12 +25,15 @@ import { ViewUserComponent } from './components/dashboard/view-user/view-user.co
 import { EditCourseComponent } from './components/dashboard/edit-course/edit-course.component';
 import { AddModuleComponent } from './components/dashboard/add-module/add-module.component';
 import { EditModuleComponent } from './components/dashboard/edit-module/edit-module.component';
+import { LandingpageComponent } from './components/landingpage/landingpage.component';
 
 
 
 
 export const routes: Routes = [
-    {path: '', component:LoginComponent},
+    {path: '', component:LandingpageComponent},
+    {path:'user-login', component:LoginComponent},
+    {path:'admin-login', component:LoginComponent},
 
   
 
