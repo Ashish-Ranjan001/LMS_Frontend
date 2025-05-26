@@ -1,0 +1,128 @@
+<!-- 
+<div id="carouselExample" class="carousel slide">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="evs1.png" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="evs.jpg" class="d-block w-100" alt="...">
+    </div>
+    
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+<div class="container">
+  <h1>Evalueserve</h1>
+  
+  <div class="login-options">
+    <button routerLink="/app-login" class="login-button">User Login</button>
+    <button routerLink="/app-login" class="login-button">Admin Login</button>
+  </div>
+</div> -->
+<header>
+  <!-- Intro settings -->
+  <style>
+    /* Default height for small devices */
+    #intro-example {
+      height: 400px;
+    }
+
+    /* Height for devices larger than 992px */
+    @media (min-width: 992px) {
+      #intro-example {
+        height: 600px;
+      }
+    }
+  </style>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-body">
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        (click)="backgroundImageExample2.toggle()"
+        aria-controls="backgroundImageExample2"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div
+        mdbCollapse
+        #backgroundImageExample2="mdbCollapse"
+        class="collapse navbar-collapse"
+        id="backgroundImageExample2"
+      >
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item active">
+            <a class="nav-link" aria-current="page" href="">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="https://www.evalueserve.com/speak-to-expert/"
+              >Help</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Navbar -->
+
+  <!-- Background image -->
+  <div
+    id="intro-example"
+    class="p-5 text-center bg-image"
+    style="background-image: url('evs5.jpg')"
+  >
+    <div class="mask" style="padding: 50px 20px">
+      <div
+        class="d-flex flex-column justify-content-center align-items-center h-100"
+      >
+        <div class="text-white text-center">
+          <h1 class="mb-4 display-4 fw-bold animate-text">Evalueserve</h1>
+          <h5 class="mb-4 animate-text">
+            At Evalueserve, we empower businesses <br />
+            with advanced, tech-driven insights that enhance <br />
+            strategic decisions and fuel impactful results.
+          </h5>
+         
+          <div class="login-options mt-4">
+            <a
+              class="btn btn-light btn-lg m-2 rounded-pill px-4 shadow-lg animate-btn"
+              routerLink="/user-login"
+            >
+              User Login
+            </a>
+            <a
+              class="btn btn-light btn-lg m-2 rounded-pill px-4 shadow-lg animate-btn"
+              routerLink="/admin-login"
+            >
+              Admin Login
+            </a>
+          </div>
+
+          <a
+            class="btn btn-light btn-lg m-2 rounded-pill px-4 shadow-lg animate-btn"
+            href="https://www.evalueserve.com/about/"
+            target="_blank"
+            role="button"
+          >
+            About Us
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Background image -->
+</header>
