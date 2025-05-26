@@ -26,6 +26,7 @@ import { EditCourseComponent } from './components/dashboard/edit-course/edit-cou
 import { AddModuleComponent } from './components/dashboard/add-module/add-module.component';
 import { EditModuleComponent } from './components/dashboard/edit-module/edit-module.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
+import { EditUserComponent } from './components/dashboard/edit-user/edit-user.component';
 
 
 
@@ -57,7 +58,7 @@ export const routes: Routes = [
         {path: 'admin/add', component: AddAdminComponent},
         {path: 'course/edit/:id', component: EditCourseComponent},
         {path: 'module/add/:id', component:AddModuleComponent},
-        {path: 'module/edit/:id', component:EditModuleComponent}
-        
+        {path: 'module/edit/:id', component:EditModuleComponent},
+        {path:'user/edit/:id', component:EditUserComponent}
      ] }
 ];
