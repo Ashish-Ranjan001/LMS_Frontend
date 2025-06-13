@@ -124,7 +124,140 @@
       </ul>
     </nav>
   </div>
+</div><div class="view-user-container">
+ 
+  <div *ngIf="loading" class="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="mt-2">Loading User data...</div>
+  </div>
+  
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+  </div>
+  
+  <div class="search-container">
+    <label for="search" class="form-label">Search:</label>
+    <input 
+      type="text" 
+      id="search" 
+      class="form-control search-input" 
+      [(ngModel)]="searchTerm" 
+      (ngModelChange)="onSearchChange()"
+      placeholder="Search users by name, email, or phone...">
+  </div>
+
+  <div class="table-container" *ngIf="!loading && !error">
+    <div class="table-responsive">
+      <table class="table user-table">
+        <thead class="table-header">
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-email">Email</th>
+            <th class="col-phone">Phone</th>
+            <th class="col-lob">LOB Name</th>
+            <th class="col-role">Role</th>
+            <th class="col-status">Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of paginatedUsers" class="table-row">
+            <td class="col-name">
+              <div class="user-name">
+                <i class="fas fa-user-circle user-icon"></i>
+                {{ user.name }}
+              </div>
+            </td>
+            <td class="col-email">
+              <span class="email-text">{{ user.email }}</span>
+            </td>
+            <td class="col-phone">
+              <span class="phone-text">{{ formatPhone(user.phone) }}</span>
+            </td>
+            <td class="col-lob">
+              <span class="badge bg-info text-dark lob-badge">{{ user.lobName }}</span>
+            </td>
+            <td class="col-role">
+              <span class="badge bg-secondary role-badge">{{ user.roleName }}</span>
+            </td>
+            <td class="col-status">
+              <span class="status-badge" [ngClass]="getStatusClass(user.status)">
+                <span class="status-dot"></span>
+                {{ getStatusText(user.status) }}
+              </span>
+            </td>
+            <td class="col-actions">
+              <button 
+                class="btn btn-outline-primary btn-sm btn-edit" 
+                (click)="editUser(user.id)"
+                title="Edit User">
+                <i class="fas fa-edit me-1"></i>
+                Edit
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="paginatedUsers.length === 0">
+            <td colspan="7" class="no-data">
+              <div class="no-data-content">
+                <i class="fas fa-users fa-3x mb-3"></i>
+                <h5>No Users Found</h5>
+                <p class="text-muted">Try adjusting your search criteria</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="pagination-container" *ngIf="!loading && !error && filteredUsers.length > 0">
+    <div class="pagination-info">
+      <small class="text-muted">
+        Showing {{ getStartIndex() + 1 }} to {{ getEndIndex() }} of {{ filteredUsers.length }} users
+      </small>
+    </div>
+    
+    <nav aria-label="User pagination">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="firstPage()" [disabled]="currentPage === 1">
+            <i class="fas fa-angle-double-left"><<</i>
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">
+            <i class="fas fa-angle-left"> < </i>
+          </button>
+        </li>
+        <li class="page-item active">
+          <span class="page-link">
+            {{ currentPage }} / {{ totalPages }}
+          </span>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">
+            <i class="fas fa-angle-right">></i>
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="lastPage()" [disabled]="currentPage === totalPages">
+            <i class="fas fa-angle-double-right">>></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </div>
+  <!-- <div class="pagination-container" *ngIf="!loading && !error && filteredLobs.length > 0">
+    <button class="pagination-btn" (click)="firstPage()" [disabled]="currentPage === 1">«</button>
+    <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">‹</button>
+    <span class="pagination-current">{{ currentPage }} of {{ totalPages }}</span>
+    <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">›</button>
+    <button class="pagination-btn" (click)="lastPage()" [disabled]="currentPage === totalPages"></button>
+  </div> -->
   <!-- <div class="pagination-container" *ngIf="!loading && !error && filteredLobs.length > 0">
     <button class="pagination-btn" (click)="firstPage()" [disabled]="currentPage === 1">«</button>
     <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">‹</button>

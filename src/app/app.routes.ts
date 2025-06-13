@@ -34,6 +34,7 @@ import { CoursesComponent } from './components/main/courses/courses.component';
 import {  CourseModuleViewComponent } from './components/main/courses-details/courses-details.component';
 import { ModuleviewerComponent } from './components/main/moduleviewer/moduleviewer.component';
 import { LearningpageComponent } from './components/main/learningpage/learningpage.component';
+import { UpdateUserComponent } from './components/main/userupdate/userupdate.component';
 
 
 
@@ -50,6 +51,8 @@ export const routes: Routes = [
     {path: 'video/:id', component: ViewVideoComponent},
     {path: 'ashish/:id' , component: ModuleviewerComponent},
     {path:'learningpage', component:LearningpageComponent},
+    {path:'userupdate', component:UpdateUserComponent},
+    {path:'module', component:CourseModuleViewComponent },
 
   
 

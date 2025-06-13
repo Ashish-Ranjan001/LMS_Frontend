@@ -1,0 +1,439 @@
+<div class="update-user-container">
+    <div class="header-section">
+      <h2 class="page-title">
+        <i class="fas fa-user-edit me-2"></i>
+        Update Profile
+      </h2>
+      <p class="page-subtitle">Update your personal and professional information</p>
+    </div>
+  
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="mt-2">Loading user data...</div>
+    </div>
+  
+    <!-- Error Alert -->
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+    </div>
+  
+    <!-- Success Alert -->
+    <div *ngIf="success" class="alert alert-success" role="alert">
+      <i class="fas fa-check-circle me-2"></i>
+      {{ success }}
+    </div>
+  
+    <!-- Update Form -->
+    <form *ngIf="!loading && !error" [formGroup]="updateUserForm" (ngSubmit)="onSubmit()" class="update-form">
+      <div class="form-sections">
+        
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <h4 class="section-title">
+              <i class="fas fa-user me-2"></i>
+              Personal Information
+            </h4>
+          </div>
+          <div class="section-content">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="name" class="form-label required">Full Name</label>
+                  <input 
+                    type="text" 
+                    id="name" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('name')"
+                    formControlName="name"
+                    placeholder="Enter your full name">
+                  <div class="invalid-feedback">{{ getFieldError('name') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="email" class="form-label required">Email Address</label>
+                  <input 
+                    type="email" 
+                    id="email" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('email')"
+                    formControlName="email"
+                    placeholder="Enter your email address">
+                  <div class="invalid-feedback">{{ getFieldError('email') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="phone" class="form-label required">Phone Number</label>
+                  <input 
+                    type="tel" 
+                    id="phone" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('phone')"
+                    formControlName="phone"
+                    placeholder="Enter your phone number">
+                  <div class="invalid-feedback">{{ getFieldError('phone') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="gender" class="form-label required">Gender</label>
+                  <select 
+                    id="gender" 
+                    class="form-select"
+                    [class.is-invalid]="isFieldInvalid('gender')"
+                    formControlName="gender">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <div class="invalid-feedback">{{ getFieldError('gender') }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Professional Information Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <h4 class="section-title">
+              <i class="fas fa-briefcase me-2"></i>
+              Professional Information
+            </h4>
+          </div>
+          <div class="section-content">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="designation" class="form-label required">Designation</label>
+                  <input 
+                    type="text" 
+                    id="designation" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('designation')"
+                    formControlName="designation"
+                    placeholder="Enter your designation">
+                  <div class="invalid-feedback">{{ getFieldError('designation') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="level" class="form-label required">Level</label>
+                  <input 
+                    type="text" 
+                    id="level" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('level')"
+                    formControlName="level"
+                    placeholder="Enter your level">
+                  <div class="invalid-feedback">{{ getFieldError('level') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="lobId" class="form-label required">LOB ID</label>
+                  <input 
+                    type="text" 
+                    id="lobId" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('lobId')"
+                    formControlName="lobId"
+                    placeholder="Enter LOB ID">
+                  <div class="invalid-feedback">{{ getFieldError('lobId') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="subLob" class="form-label required">Sub LOB</label>
+                  <input 
+                    type="text" 
+                    id="subLob" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('subLob')"
+                    formControlName="subLob"
+                    placeholder="Enter Sub LOB">
+                  <div class="invalid-feedback">{{ getFieldError('subLob') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="location" class="form-label required">Work Location</label>
+                  <input 
+                    type="text" 
+                    id="location" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('location')"
+                    formControlName="location"
+                    placeholder="Enter work location">
+                  <div class="invalid-feedback">{{ getFieldError('location') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="roleId" class="form-label required">Role ID</label>
+                  <input 
+                    type="number" 
+                    id="roleId" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('roleId')"
+                    formControlName="roleId"
+                    placeholder="Enter role ID">
+                  <div class="invalid-feedback">{{ getFieldError('roleId') }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Educational Information Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <h4 class="section-title">
+              <i class="fas fa-graduation-cap me-2"></i>
+              Educational Information
+            </h4>
+          </div>
+          <div class="section-content">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="collegeName" class="form-label required">College Name</label>
+                  <input 
+                    type="text" 
+                    id="collegeName" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('collegeName')"
+                    formControlName="collegeName"
+                    placeholder="Enter college name">
+                  <div class="invalid-feedback">{{ getFieldError('collegeName') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="collegeLocation" class="form-label required">College Location</label>
+                  <input 
+                    type="text" 
+                    id="collegeLocation" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('collegeLocation')"
+                    formControlName="collegeLocation"
+                    placeholder="Enter college location">
+                  <div class="invalid-feedback">{{ getFieldError('collegeLocation') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="specialization" class="form-label required">Specialization</label>
+                  <input 
+                    type="text" 
+                    id="specialization" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('specialization')"
+                    formControlName="specialization"
+                    placeholder="Enter specialization">
+                  <div class="invalid-feedback">{{ getFieldError('specialization') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="qualification" class="form-label required">Qualification</label>
+                  <input 
+                    type="text" 
+                    id="qualification" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('qualification')"
+                    formControlName="qualification"
+                    placeholder="Enter qualification">
+                  <div class="invalid-feedback">{{ getFieldError('qualification') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="collegeTier" class="form-label required">College Tier</label>
+                  <select 
+                    id="collegeTier" 
+                    class="form-select"
+                    [class.is-invalid]="isFieldInvalid('collegeTier')"
+                    formControlName="collegeTier">
+                    <option value="">Select College Tier</option>
+                    <option value="Tier 1">Tier 1</option>
+                    <option value="Tier 2">Tier 2</option>
+                    <option value="Tier 3">Tier 3</option>
+                  </select>
+                  <div class="invalid-feedback">{{ getFieldError('collegeTier') }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Employment Details Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <h4 class="section-title">
+              <i class="fas fa-calendar-alt me-2"></i>
+              Employment Details
+            </h4>
+          </div>
+          <div class="section-content">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="doj" class="form-label required">Date of Joining</label>
+                  <input 
+                    type="date" 
+                    id="doj" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('doj')"
+                    formControlName="doj">
+                  <div class="invalid-feedback">{{ getFieldError('doj') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="expectanceDate" class="form-label required">Expected Date</label>
+                  <input 
+                    type="date" 
+                    id="expectanceDate" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('expectanceDate')"
+                    formControlName="expectanceDate">
+                  <div class="invalid-feedback">{{ getFieldError('expectanceDate') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="joinerStatus" class="form-label required">Joiner Status</label>
+                  <select 
+                    id="joinerStatus" 
+                    class="form-select"
+                    [class.is-invalid]="isFieldInvalid('joinerStatus')"
+                    formControlName="joinerStatus">
+                    <option value="">Select Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Onboarded">Onboarded</option>
+                    <option value="Declined">Declined</option>
+                  </select>
+                  <div class="invalid-feedback">{{ getFieldError('joinerStatus') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="trf" class="form-label required">TRF</label>
+                  <input 
+                    type="text" 
+                    id="trf" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('trf')"
+                    formControlName="trf"
+                    placeholder="Enter TRF">
+                  <div class="invalid-feedback">{{ getFieldError('trf') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="offerReleaseSpoc" class="form-label required">Offer Release SPOC</label>
+                  <input 
+                    type="text" 
+                    id="offerReleaseSpoc" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('offerReleaseSpoc')"
+                    formControlName="offerReleaseSpoc"
+                    placeholder="Enter offer release SPOC">
+                  <div class="invalid-feedback">{{ getFieldError('offerReleaseSpoc') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="uploader" class="form-label required">Uploader</label>
+                  <input 
+                    type="text" 
+                    id="uploader" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('uploader')"
+                    formControlName="uploader"
+                    placeholder="Enter uploader name">
+                  <div class="invalid-feedback">{{ getFieldError('uploader') }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="revokes" class="form-label required">Revokes</label>
+                  <input 
+                    type="number" 
+                    id="revokes" 
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('revokes')"
+                    formControlName="revokes"
+                    min="0"
+                    placeholder="Enter number of revokes">
+                  <div class="invalid-feedback">{{ getFieldError('revokes') }}</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="isTerm" class="form-label required">Is Term</label>
+                  <select 
+                    id="isTerm" 
+                    class="form-select"
+                    [class.is-invalid]="isFieldInvalid('isTerm')"
+                    formControlName="isTerm">
+                    <option value="">Select Option</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                  </select>
+                  <div class="invalid-feedback">{{ getFieldError('isTerm') }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button 
+          type="button" 
+          class="btn btn-secondary btn-cancel"
+          (click)="cancel()">
+          <i class="fas fa-times me-2"></i>
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-update"
+          [disabled]="updateUserForm.invalid || loading">
+          <i class="fas fa-save me-2"></i>
+          <span *ngIf="!loading">Update Profile</span>
+          <span *ngIf="loading">
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Updating...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
