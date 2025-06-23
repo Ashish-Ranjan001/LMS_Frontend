@@ -79,11 +79,10 @@
       </div>
 
       <div class="options-section">
-        <div 
-          *ngFor="let option of quizQuestions[currentQuestionIndex]?.options; let i = index"
-          class="option-card"
-          [class.selected]="selectedAnswers[currentQuestionIndex] === i"
-          (click)="selectOption(i)">
+        <div *ngFor="let option of quizQuestions[currentQuestionIndex]?.options; let i = index" 
+             class="option-card"
+             [class.selected]="selectedAnswers[currentQuestionIndex] === i" 
+             (click)="selectOption(i)">
           <div class="option-radio">
             <div class="radio-inner" *ngIf="selectedAnswers[currentQuestionIndex] === i"></div>
           </div>
@@ -95,10 +94,9 @@
       </div>
 
       <div class="quiz-actions text-end">
-        <button 
-          class="btn btn-primary btn-lg next-btn"
-          [disabled]="selectedAnswers[currentQuestionIndex] === undefined"
-          (click)="nextQuestion()">
+        <button class="btn btn-primary btn-lg next-btn" 
+                [disabled]="selectedAnswers[currentQuestionIndex] === undefined"
+                (click)="nextQuestion()">
           {{ currentQuestionIndex === quizQuestions.length - 1 ? 'Submit Quiz' : 'Next Question' }}
           <i class="fas fa-arrow-right ms-2"></i>
         </button>
@@ -113,7 +111,7 @@
           <div class="score-status">{{ quizScore >= 70 ? 'PASSED' : 'FAILED' }}</div>
         </div>
       </div>
-      
+
       <div class="results-stats">
         <div class="row text-center">
           <div class="col-4">
@@ -141,11 +139,16 @@
       </div>
 
       <div class="results-actions text-center">
-        <button class="btn btn-success me-3" (click)="closeQuiz()">
-          <i class="fas fa-check me-2"></i>
-          Complete
+        <button class="btn btn-success me-3" 
+                (click)="completeQuiz()" 
+                [disabled]="isSubmittingQuiz">
+          <i class="fas fa-spinner fa-spin me-2" *ngIf="isSubmittingQuiz"></i>
+          <i class="fas fa-check me-2" *ngIf="!isSubmittingQuiz"></i>
+          {{ isSubmittingQuiz ? 'Saving...' : 'Complete' }}
         </button>
-        <button class="btn btn-outline-primary" (click)="retakeQuiz()" *ngIf="quizScore < 70">
+        <button class="btn btn-outline-primary" 
+                (click)="retakeQuiz()" 
+                *ngIf="quizScore < 70 && !isSubmittingQuiz">
           <i class="fas fa-redo me-2"></i>
           Retake Quiz
         </button>
@@ -223,19 +226,17 @@
                 <i class="fas fa-trophy me-1"></i>
                 Complete!
               </div>
-
             </div>
-            
+
             <div class="modules-list">
-              <div 
-                *ngFor="let module of courseDetail.modules; let i = index"
-                class="module-item"
-                [class.active]="selectedModule?.moduleId === module.moduleId"
-                [class.completed]="module.isCompleted"
-                (click)="selectModule(module)">
-                
+              <div *ngFor="let module of courseDetail.modules; let i = index" 
+                   class="module-item"
+                   [class.active]="selectedModule?.moduleId === module.moduleId" 
+                   [class.completed]="module.isCompleted"
+                   (click)="selectModule(module)">
+
                 <div class="module-number">{{ i + 1 }}</div>
-                
+
                 <div class="module-content">
                   <div class="module-header">
                     <h6 class="module-title">{{ module.moduleName }}</h6>
@@ -243,15 +244,15 @@
                       <i [class]="getModuleStatusIcon(module)"></i>
                     </div>
                   </div>
-                  
+
                   <div class="module-meta">
                     <span class="module-type">
                       <i [class]="getModuleIcon(module)" class="me-1"></i>
-                      {{ module.duration || 'Video Content' }}
+                      {{ getModuleDuration(module) || 'Video Content' }}
                     </span>
                   </div>
                 </div>
-                
+
                 <div class="module-arrow">
                   <i class="fas fa-chevron-right"></i>
                 </div>
@@ -288,23 +289,24 @@
                       </div>
                       <p>Loading video...</p>
                     </div>
-                    
-                    <iframe 
-                      *ngIf="safeVideoUrl && !videoLoading"
-                      [src]="safeVideoUrl" 
-                      frameborder="0" 
-                      allowfullscreen
-                      class="video-player"
-                      (load)="onVideoLoad()">
+
+                    <iframe *ngIf="safeVideoUrl && !videoLoading" 
+                            [src]="safeVideoUrl" 
+                            frameborder="0" 
+                            allowfullscreen
+                            class="video-player" 
+                            (load)="onVideoLoad()">
                     </iframe>
-                    
-                    <div class="video-overlay" *ngIf="!videoWatched && !videoLoading" (click)="startWatchingVideo()">
+
+                    <div class="video-overlay" 
+                         *ngIf="!videoWatched && !videoLoading && safeVideoUrl" 
+                         (click)="startWatchingVideo()">
                       <div class="play-button">
                         <i class="fas fa-play"></i>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div class="video-status" *ngIf="videoWatched">
                     <div class="alert alert-success">
                       <i class="fas fa-check-circle me-2"></i>
@@ -324,7 +326,7 @@
                     </h5>
                   </div>
                   <div class="card-body">
-                    <p class="card-text">{{ selectedModule.description }}</p>
+                    <p class="card-text" [innerHTML]="selectedModule.description"></p>
                   </div>
                 </div>
               </div>
@@ -333,21 +335,19 @@
               <div class="action-buttons">
                 <div class="row g-3">
                   <div class="col-md-6" *ngIf="(videoWatched || selectedModule.isCompleted) && safeVideoUrl">
-                    <button 
-                      class="btn btn-success btn-lg w-100 complete-btn"
-                      [class.completed]="selectedModule.isCompleted"
-                      (click)="markCurrentModuleAsCompleted()"
-                      [disabled]="selectedModule.isCompleted">
-                    <i class="fas fa-check me-2" *ngIf="selectedModule.isCompleted"></i>
-                      <i  class="fas fa-medal me-2" *ngIf="!selectedModule.isCompleted"></i>
+                    <button class="btn btn-success btn-lg w-100 complete-btn"
+                            [class.completed]="selectedModule.isCompleted" 
+                            (click)="markCurrentModuleAsCompleted()"
+                            [disabled]="selectedModule.isCompleted || (!videoWatched && !selectedModule.isCompleted)">
+                      <i class="fas fa-check me-2" *ngIf="selectedModule.isCompleted"></i>
+                      <i class="fas fa-medal me-2" *ngIf="!selectedModule.isCompleted"></i>
                       {{ selectedModule.isCompleted ? 'Completed' : 'Mark as Complete' }}
                     </button>
                   </div>
-                  
+
                   <div class="col-md-6" *ngIf="selectedModule.documentPath">
-                    <button 
-                      class="btn btn-outline-primary btn-lg w-100 download-btn"
-                      (click)="downloadModulePdf(selectedModule)">
+                    <button class="btn btn-outline-primary btn-lg w-100 download-btn"
+                            (click)="downloadModulePdf(selectedModule)">
                       <i class="fas fa-file-pdf me-2"></i>
                       Download PDF
                       <i class="fas fa-download ms-2"></i>
@@ -364,30 +364,48 @@
                       <i class="fas fa-trophy"></i>
                     </div>
                     <h3 class="card-title">🎉 Congratulations!</h3>
-                    <p class="card-text">You've completed all modules! Download your assignment and take the quiz to finish your learning journey.</p>
-                    
+                    <p class="card-text">
+                      You've completed all modules! Download your assignment and take the quiz to finish your learning journey.
+                    </p>
+
                     <div class="final-actions">
                       <div class="row g-3 justify-content-center">
                         <div class="col-md-6">
-                          <button 
-                            class="btn btn-primary btn-lg w-100"
-                            (click)="downloadAssignment()"
-                            [disabled]="courseDetail.assignmentDownloaded">
-                            <i class="fas fa-download me-2" *ngIf="!courseDetail.assignmentDownloaded"></i>
-                            <i class="fas fa-check me-2" *ngIf="courseDetail.assignmentDownloaded"></i>
-                            {{ courseDetail.assignmentDownloaded ? 'Assignment Downloaded' : 'Download Assignment' }}
+                          <button class="btn btn-primary btn-lg w-100" 
+                                  (click)="downloadAssignment()"
+                                  [disabled]="courseDetail.assignmentDownloadStatus || isDownloading">
+                            <i class="fas fa-spinner fa-spin me-2" *ngIf="isDownloading"></i>
+                            <i class="fas fa-download me-2" *ngIf="!courseDetail.assignmentDownloadStatus && !isDownloading"></i>
+                            <i class="fas fa-check me-2" *ngIf="courseDetail.assignmentDownloadStatus && !isDownloading"></i>
+                            {{ isDownloading ? 'Downloading...' : 
+                               courseDetail.assignmentDownloadStatus ? 'Assignment Downloaded' : 'Download Assignment' }}
                           </button>
                         </div>
 
                         <div class="col-md-6" *ngIf="courseDetail.quizPath">
-                          <button 
-                            class="btn btn-warning btn-lg w-100 quiz-btn"
-                            (click)="startQuiz()"
-                            [disabled]="quizTaken">
+                          <button class="btn btn-warning btn-lg w-100 quiz-btn" 
+                                  (click)="startQuiz()"
+                                  [disabled]="quizTaken">
                             <i class="fas fa-clipboard-check me-2" *ngIf="!quizTaken"></i>
                             <i class="fas fa-trophy me-2" *ngIf="quizTaken"></i>
                             {{ quizTaken ? 'Quiz Completed' : 'Take Quiz' }}
                           </button>
+                        </div>
+                      </div>
+
+                      <!-- Assignment Status Display -->
+                      <div class="assignment-status mt-3" *ngIf="courseDetail.assignmentDownloadStatus">
+                        <div class="alert alert-success">
+                          <i class="fas fa-check-circle me-2"></i>
+                          Assignment has been downloaded successfully!
+                        </div>
+                      </div>
+
+                      <!-- Quiz Status Display -->
+                      <div class="quiz-status mt-3" *ngIf="quizTaken">
+                        <div class="alert alert-info">
+                          <i class="fas fa-trophy me-2"></i>
+                          Quiz completed with score: {{ quizScore }}%
                         </div>
                       </div>
                     </div>
@@ -410,6 +428,33 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Completion Status -->
+  <div class="course-completion-status" *ngIf="allModulesCompleted && courseDetail.assignmentDownloadStatus && quizTaken">
+    <div class="completion-banner">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <div class="completion-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+          </div>
+          <div class="col">
+            <div class="completion-text">
+              <h4 class="mb-1">🎓 Course Completed Successfully!</h4>
+              <p class="mb-0">You have finished all modules, downloaded the assignment, and completed the quiz.</p>
+            </div>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-light" (click)="goBack()">
+              <i class="fas fa-arrow-right me-2"></i>
+              Continue Learning
+            </button>
           </div>
         </div>
       </div>
