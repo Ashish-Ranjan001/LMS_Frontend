@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -18,6 +19,13 @@ export interface UserInLob {
   has_assignment: boolean;
   assignment_status: number;
   last_assigned_by: string;
+  assignment_download_status: number;
+}
+
+export interface CompleteQuizRequest {
+  UserId: string;
+  CourseId: string;
+  QuizScore: number;
 }
 
 @Injectable({
@@ -47,5 +55,11 @@ export class AssignmentService {
   getUsersInLob(lobId: string, courseId: string): Observable<any> {
     const url = `${this.apiBaseUrl}/api/assignment/users-in-lob?lobId=${lobId}&courseId=${courseId}`;
     return this.http.get(url);
+  }
+
+  // Complete Quiz
+  completeQuiz(request: CompleteQuizRequest): Observable<any> {
+    const url = `${this.apiBaseUrl}/api/quiz/complete`;
+    return this.http.post(url, request);
   }
 }

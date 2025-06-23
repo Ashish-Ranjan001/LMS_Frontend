@@ -64,13 +64,13 @@
             </div>
   
             <!-- Assignment Section -->
-            <div class="assignment-section" *ngIf="!courseDetail.assignmentDownloaded">
+            <div class="assignment-section" *ngIf="!courseDetail.assignmentDownloadStatus">
               <button class="btn btn-outline-primary w-100 mb-2" (click)="downloadAssignment()">
                 <i class="fas fa-download me-2"></i>Download Assignment
               </button>
             </div>
   
-            <div *ngIf="courseDetail.assignmentDownloaded" class="text-success mb-2">
+            <div *ngIf="courseDetail.assignmentDownloadStatus" class="text-success mb-2">
               <i class="fas fa-check-circle me-2"></i>Assignment Downloaded
             </div>
           </div>

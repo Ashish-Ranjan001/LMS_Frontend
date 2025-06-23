@@ -1099,7 +1099,7 @@ export class CoursesDetailComponent implements OnInit, OnDestroy {
     if (this.courseDetail) {
       this.userLearningService.downloadAssignment(this.userId, this.courseId).subscribe({
         next: (response) => {
-          this.courseDetail!.assignmentDownloaded = true;
+          this.courseDetail!.assignmentDownloadStatus = 1;
           console.log('Assignment download status updated');
         },
         error: (error) => {

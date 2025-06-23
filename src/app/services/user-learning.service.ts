@@ -13,29 +13,30 @@ export interface CourseBasicDto {
   courseId: string;
   courseName: string;
   description?: string;
-  
+
   // Image fields - add these based on what your API returns
   thumbnailUrl?: string;
   imagePath?: string;
   imageUrl?: string;
   thumbnail?: string;
   image?: string;
-  
+
   // Course metadata
   duration?: string;
   author?: string;
-  
+
   // Enrollment status
   isEnrolled: boolean;
   isCompleted: boolean;
   progress?: number;
-  
+
   // Additional fields as needed
   categoryId?: string;
   level?: string;
   rating?: number;
 }
 export interface CourseDetailDto {
+  assignmentPath: string;
   courseId: string;
   courseName: string;
   description: string;
@@ -43,10 +44,10 @@ export interface CourseDetailDto {
   modules: ModuleDto[];
   progress: number;
   isCompleted: boolean;
-  assignmentDownloaded: boolean;
+  assignmentDownloadStatus: number;
   assignmentSubmitted: boolean;
   quizSubmitted: boolean;
-  quizPath:string
+  quizPath: string
 }
 
 export interface ModuleDto {
@@ -122,7 +123,7 @@ export class UserLearningService {
     return this.http.get<CourseDetailDto>(`${this.baseUrl}/courses/${courseId}/user/${userId}`);
   }
 
-    getAssignment(courseId: string, userId: string) {
+  getAssignment(courseId: string, userId: string) {
     return this.http.get(`${this.baseUrl}/courses/${courseId}/user/${userId}`);
   }
 
@@ -150,4 +151,6 @@ export class UserLearningService {
   downloadAssignment(userId: string, courseId: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/assignment/download/${userId}/${courseId}`, {});
   }
+
+
 }

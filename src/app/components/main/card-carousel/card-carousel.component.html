@@ -18,7 +18,7 @@
     <div class="course-card" 
          [class.transitioning]="isTransitioning()"
          [style.background]="currentCard()?.bgGradient"
-         [style.box-shadow]="'0 20px 40px ' + currentCard()?.shadowColor + ', 0 8px 16px rgba(0,0,0,0.1)'">
+         [style.box-shadow]="'0 20px 40px ' + currentCard().shadowColor + ', 0 8px 16px rgba(0,0,0,0.1)'">
       
       <!-- Floating Elements -->
       <div class="floating-elements">
@@ -91,9 +91,9 @@
             
             <!-- Data Points -->
             <g class="data-points">
-              <circle cx="20" cy="25" r="2" [attr.fill]="currentCard()?.graphColor" class="data-point point-1"></circle>
-              <circle cx="50" cy="15" r="2" [attr.fill]="currentCard()?.graphColor" class="data-point point-2"></circle>
-              <circle cx="80" cy="10" r="2" [attr.fill]="currentCard()?.graphColor" class="data-point point-3"></circle>
+              <circle cx="20" cy="25" r="2" [attr.fill]="currentCard().graphColor" class="data-point point-1"></circle>
+              <circle cx="50" cy="15" r="2" [attr.fill]="currentCard().graphColor" class="data-point point-2"></circle>
+              <circle cx="80" cy="10" r="2" [attr.fill]="currentCard().graphColor" class="data-point point-3"></circle>
             </g>
           </svg>
           

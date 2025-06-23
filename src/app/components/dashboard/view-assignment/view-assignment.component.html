@@ -114,8 +114,8 @@
               </td>
               <td class="user-email">{{ user.user_email }}</td>
               <td class="assignment-status">
-                <span [class]="'status-badge ' + getAssignmentStatusClass(user.assignment_status)">
-                  {{ getAssignmentStatusText(user.assignment_status) }}
+                <span [class]="'status-badge ' + getAssignmentStatusClass(user.assignment_download_status)">
+                  {{ getAssignmentStatusText(user.assignment_download_status) }}
                 </span>
               </td>
               <td class="has-assignment">

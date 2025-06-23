@@ -49,7 +49,7 @@
       <g class="center-content">
         <circle cx="100" cy="100" r="22" fill="#111827" opacity="0.9"></circle>
         <ng-container *ngIf="!hoveredSegment">
-          <text x="100" y="95" text-anchor="middle" class="center-value">{{ courseData[0]?.value }}</text>
+          <text x="100" y="95" text-anchor="middle" class="center-value">{{ courseData[0].value }}</text>
           <text x="100" y="105" text-anchor="middle" class="center-label">Courses</text>
         </ng-container>
         <ng-container *ngIf="hoveredSegment && getHoveredData()">
