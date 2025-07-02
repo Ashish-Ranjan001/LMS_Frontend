@@ -1,0 +1,46 @@
+<aside class="sidebar"
+  [class.closed]="collapsed && !tempExpanded"
+  (mouseenter)="onSidebarMouseEnter()"
+  (mouseleave)="onSidebarMouseLeave()">
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <img src="dodo.jpg" alt="Logo" class="sidebar-logo" />
+      <h1 class="sidebar-title" [class.hide]="collapsed && !tempExpanded">Learn & Empower</h1>
+    </div>
+    <div class="user-profile" [class.collapsed]="collapsed && !tempExpanded">
+      <img [src]="userAvatar" class="user-avatar" alt="userName" />
+      <div class="user-info" [class.hide]="collapsed && !tempExpanded">
+        <span class="user-name">{{ userName }}</span>
+        <span class="user-email">{{ userEmail }}</span>
+      </div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <ul>
+      <li *ngFor="let item of navConfig"
+          class="nav-item"
+          [class.hidden]="!shouldShowMenuItem(item.key)">
+        <button class="nav-button"
+                [class.active]="openSections[item.key] && !(collapsed && !tempExpanded)"
+                (click)="toggleSection(item.key)">
+          <i [class]="item.icon"></i>
+          <span class="nav-label" [class.hide]="collapsed && !tempExpanded">{{ item.label }}</span>
+          <i *ngIf="!(collapsed && !tempExpanded)"
+             class="bi"
+             [class.bi-chevron-down]="openSections[item.key]"
+             [class.bi-chevron-right]="!openSections[item.key]">
+          </i>
+        </button>
+        <ul class="submenu" [class.expanded]="openSections[item.key] && !(collapsed && !tempExpanded)">
+          <li *ngFor="let child of item.children">
+            <a [routerLink]="child.to"
+               routerLinkActive="active"
+               class="submenu-link">
+              {{ child.label }}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</aside>
