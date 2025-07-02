@@ -3,10 +3,12 @@
     <!-- Left side with image -->
     <div class="col-md-6">
       <div class="login-image-container">
-        <img src="https://images.unsplash.com/photo-1554232456-8727aae0cfa4?q=80&w=435&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Learn Bridge" class="login-image" />
+        <img
+          src="https://images.unsplash.com/photo-1554232456-8727aae0cfa4?q=80&w=435&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Learn Bridge" class="login-image" />
       </div>
     </div>
- 
+
     <!-- Right side with login form -->
     <div class="col-md-6">
       <div class="login-form-container">
@@ -15,128 +17,232 @@
           <div class="login-logo-container">
             <img
               src="https://mltfwbciccuo.i.optimole.com/cb:n4OZ.4d52/w:auto/h:auto/q:mauto/f:best/https://www.evalueserve.com/wp-content/uploads/2025/02/evalueserve-university.jpg"
-              alt="Evalueserve Learning"
-              class="university-logo"
-            />
+              alt="Evalueserve Learning" class="university-logo" />
           </div>
- 
-          <h1>Welcome Back! <span class="wave">👋</span></h1>
-          <p class="welcome-text">Please sign in to your Evalueserve Account</p>
- 
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <!-- Email Field -->
-            <div class="form-group mb-24">
-              <label for="email" class="form-label mb-8 h6">
-                Email
-                <i class="bi bi-mailbox ms-2"></i>
-                <!-- ms-2 adds left margin -->
-              </label>
-              <div class="position-relative">
-                <input
-                  type="email"
-                  class="form-control py-11 ps-40"
-                  id="email"
-                  formControlName="email"
-                  placeholder="Type your email"
-                  [class.is-invalid]="
+
+          <!-- Regular Login Form -->
+          <div *ngIf="!showTotpForm">
+            <h1>Welcome Back! <span class="wave">👋</span></h1>
+            <p class="welcome-text">Please sign in to your Evalueserve Account</p>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <!-- Email Field -->
+              <div class="form-group mb-24">
+                <label for="email" class="form-label mb-8 h6">
+                  Email
+                  <i class="bi bi-mailbox ms-2"></i>
+                </label>
+                <div class="position-relative">
+                  <input type="email" class="form-control py-11 ps-40" id="email" formControlName="email"
+                    placeholder="Type your email" [class.is-invalid]="
+                      loginForm.get('email')?.invalid &&
+                      loginForm.get('email')?.touched
+                    " />
+                  <span class="input-icon">
+                    <i class="ph ph-user"></i>
+                  </span>
+                </div>
+                <div *ngIf="
                     loginForm.get('email')?.invalid &&
                     loginForm.get('email')?.touched
-                  "
-                />
-                <span class="input-icon">
-                  <i class="ph ph-user"></i>
-                </span>
+                  " class="text-danger mt-1">
+                  <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</small>
+                  <small *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email</small>
+                </div>
               </div>
-              <div
-                *ngIf="
-                  loginForm.get('email')?.invalid &&
-                  loginForm.get('email')?.touched
-                "
-                class="text-danger mt-1"
-              >
-                <small *ngIf="loginForm.get('email')?.errors?.['required']"
-                  >Email is required</small
-                >
-                <small *ngIf="loginForm.get('email')?.errors?.['email']"
-                  >Please enter a valid email</small
-                >
-              </div>
-            </div>
- 
-            <!-- Password Field -->
-            <div class="form-group mb-24">
-              <label for="password" class="form-label mb-8 h6">
-                Password <i class="bi bi-house-lock ms-2"></i>
-                <!-- ms-2 = margin start (left) -->
-              </label>
-              <div class="position-relative">
-                <input
-                  [type]="showPassword ? 'text' : 'password'"
-                  class="form-control py-11 ps-40"
-                  id="password"
-                  formControlName="password"
-                  placeholder="Enter Current Password"
-                  [class.is-invalid]="
+
+              <!-- Password Field -->
+              <div class="form-group mb-24">
+                <label for="password" class="form-label mb-8 h6">
+                  Password <i class="bi bi-house-lock ms-2"></i>
+                </label>
+                <div class="position-relative">
+                  <input [type]="showPassword ? 'text' : 'password'" class="form-control py-11 ps-40" id="password"
+                    formControlName="password" placeholder="Enter Current Password" [class.is-invalid]="
+                      loginForm.get('password')?.invalid &&
+                      loginForm.get('password')?.touched
+                    " />
+                  <span class="input-icon">
+                    <i class="ph ph-lock"></i>
+                  </span>
+                  <span class="toggle-password" (click)="togglePasswordVisibility()">
+                    <i [class]="showPassword ? 'ph ph-eye' : 'ph ph-eye-slash'"></i>
+                  </span>
+                </div>
+                <div *ngIf="
                     loginForm.get('password')?.invalid &&
                     loginForm.get('password')?.touched
-                  "
-                />
-                <span class="input-icon">
-                  <i class="ph ph-lock"></i>
-                </span>
-                <span
-                  class="toggle-password"
-                  (click)="togglePasswordVisibility()"
-                >
-                  <i
-                    [class]="showPassword ? 'ph ph-eye' : 'ph ph-eye-slash'"
-                  ></i>
-                </span>
+                  " class="text-danger mt-1">
+                  <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</small>
+                  <small *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 8
+                    characters</small>
+                </div>
               </div>
-              <div
-                *ngIf="
-                  loginForm.get('password')?.invalid &&
-                  loginForm.get('password')?.touched
-                "
-                class="text-danger mt-1"
-              >
-                <small *ngIf="loginForm.get('password')?.errors?.['required']"
-                  >Password is required</small
-                >
-                <small *ngIf="loginForm.get('password')?.errors?.['minlength']"
-                  >Password must be at least 8 characters</small
-                >
+
+              <!-- Remember Me & Forgot Password -->
+              <div class="mb-32 d-flex justify-content-between align-items-center flex-wrap gap-8">
+                <a href="forgot-password" class="forgot-password">Forgot Password?</a>
+              </div>
+
+              <!-- Error Message -->
+              <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+                {{ errorMessage }}
+              </div>
+
+              <!-- reCAPTCHA -->
+              <div class="form-group mb-24">
+                <re-captcha 
+                  (resolved)="onCaptchaResolved($event)" 
+                  siteKey="6Le7cW8rAAAAAH3gLUj_5PHY0oiD2S1gnRqLKDSx">
+                </re-captcha>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="btn btn-primary w-100 sign-in-btn"
+                [ngClass]="{ 'login-success': loginSuccess }" [disabled]="loginForm.invalid || isSubmitting">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                <span class="btn-text" *ngIf="!loginSuccess">Sign In</span>
+                <span class="checkmark" *ngIf="loginSuccess">
+                  <i class="ph ph-check-circle"></i>
+                </span>
+              </button>
+            </form>
+          </div>
+
+          <!-- 2FA Verification Form -->
+          <div *ngIf="showTotpForm" class="totp-form">
+            <div class="text-center mb-4">
+              <div class="totp-icon mb-3">
+                <i class="ph ph-shield-check" style="font-size: 3rem; color: #007bff;"></i>
+              </div>
+              <h2>Two-Factor Authentication</h2>
+              <p class="text-muted">
+                Enter the 6-digit code from your Microsoft Authenticator app
+              </p>
+              <div class="countdown-timer">
+                <small class="text-warning">
+                  <i class="ph ph-clock"></i> Session expires in: {{ formatCountdown() }}
+                </small>
               </div>
             </div>
-             <!-- Remember Me & Forgot Password -->
-            <div class="mb-32 d-flex justify-content-between align-items-center flex-wrap gap-8">
-             
-              <a href="forgot-password" class="forgot-password">Forgot Password?</a>
+
+            <form [formGroup]="totpForm" (ngSubmit)="onTotpSubmit()">
+              <!-- TOTP Code Field -->
+              <div class="form-group mb-24">
+                <label for="totpCode" class="form-label mb-8 h6 text-center d-block">
+                  Authentication Code
+                  <i class="bi bi-shield-lock ms-2"></i>
+                </label>
+                <div class="position-relative">
+                  <input 
+                    type="text" 
+                    class="form-control py-11 ps-40 text-center totp-input" 
+                    id="totpCode" 
+                    formControlName="totpCode"
+                    placeholder="000000" 
+                    maxlength="6"
+                    (input)="onTotpInput($event)"
+                    [class.is-invalid]="totpForm.get('totpCode')?.invalid && totpForm.get('totpCode')?.touched"
+                    autocomplete="off" />
+                  <span class="input-icon">
+                    <i class="ph ph-key"></i>
+                  </span>
+                </div>
+                <div *ngIf="totpForm.get('totpCode')?.invalid && totpForm.get('totpCode')?.touched" class="text-danger mt-1 text-center">
+                  <small *ngIf="totpForm.get('totpCode')?.errors?.['required']">Authentication code is required</small>
+                  <small *ngIf="totpForm.get('totpCode')?.errors?.['pattern']">Please enter a valid 6-digit code</small>
+                </div>
+              </div>
+
+              <!-- Error Message -->
+              <div *ngIf="errorMessage" class="alert alert-danger mb-3 text-center">
+                {{ errorMessage }}
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary sign-in-btn" [disabled]="totpForm.invalid || totpSubmitting">
+                  <span *ngIf="totpSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                  <span *ngIf="!totpSubmitting">Verify Code</span>
+                  <span *ngIf="totpSubmitting">Verifying...</span>
+                </button>
+                
+                <button type="button" class="btn btn-outline-secondary" (click)="backToLogin()" [disabled]="totpSubmitting">
+                  <i class="ph ph-arrow-left me-2"></i>
+                  Back to Login
+                </button>
+              </div>
+            </form>
+
+            <!-- Help Text -->
+            <div class="text-center mt-4">
+              <small class="text-muted">
+                <i class="ph ph-info"></i>
+                Can't access your authenticator app? Contact your administrator.
+              </small>
             </div>
-            <!-- Error Message -->
-            <div *ngIf="errorMessage" class="alert alert-danger mb-3">
-              {{ errorMessage }}
-            </div>
- 
-            <!-- Submit Button -->
-            <button
-              type="submit"
-              class="btn btn-primary w-100 sign-in-btn"
-              [ngClass]="{ 'login-success': loginSuccess }"
-              [disabled]="loginForm.invalid || isSubmitting"
-            >
-              <span
-                *ngIf="isSubmitting"
-                class="spinner-border spinner-border-sm me-2"
-              ></span>
-              <span class="btn-text" *ngIf="!loginSuccess">Sign In</span>
-              <span class="checkmark" *ngIf="loginSuccess">
-                <i class="ph ph-check-circle"></i>
-              </span>
-            </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+.totp-form {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.totp-input {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.5rem;
+  font-family: 'Courier New', monospace;
+}
+
+.countdown-timer {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 12px;
+  display: inline-block;
+}
+
+.totp-icon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+</style>

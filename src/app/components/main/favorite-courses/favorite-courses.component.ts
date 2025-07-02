@@ -1016,7 +1016,7 @@ export class FavoriteCoursesComponent implements OnInit, OnDestroy, AfterViewIni
     // Show alert when card is clicked
     alert(`You clicked on "${course.title}" course`)
   
-    this.router.navigate(['module/', course.id])
+    this.router.navigate(['module/', btoa(course.id)])
 
     // this.userLearningService.getCourseDetail(course.id, userid).subscribe({
     //   next: (courseDetail) => {
@@ -1101,7 +1101,7 @@ export class FavoriteCoursesComponent implements OnInit, OnDestroy, AfterViewIni
     const course = this.courses.find((c) => c.id === courseId)
     if (course) {
       alert(`Viewing details for "${course.title}"`)
-      this.router.navigate(['module/', course.id])
+      this.router.navigate(['module/', btoa(course.id)])
       console.log("View Details clicked for course:", course)
     }
   }

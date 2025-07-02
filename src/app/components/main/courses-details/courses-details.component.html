@@ -5,13 +5,13 @@
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-  
+ 
     <!-- Error State -->
     <div *ngIf="error" class="alert alert-danger" role="alert">
       {{ error }}
       <button class="btn btn-outline-danger ms-2" (click)="retryLoadCourse()">Retry</button>
     </div>
-  
+ 
     <!-- Course Detail Content -->
     <div *ngIf="!loading && !error && courseDetail" class="row">
       <!-- Header -->
@@ -25,19 +25,19 @@
           </ol>
         </nav>
       </div>
-  
+ 
       <!-- Left Sidebar - Course Info & Modules -->
       <div class="col-lg-4 col-md-5">
         <!-- Course Info Card -->
         <div class="card shadow-sm mb-4">
           <div class="course-header position-relative">
-            <!-- <img 
-              [src]="getSafeImageUrl(courseDetail.thumbnailUrl)" 
-              class="card-img-top" 
+            <!-- <img
+              [src]="getSafeImageUrl(courseDetail.thumbnailUrl)"
+              class="card-img-top"
               [alt]="courseDetail.courseName"
               (error)="onImageError($event)"
               style="height: 200px; object-fit: cover;"> -->
-            <div class="course-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" 
+            <div class="course-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
                  style="background: rgba(0,0,0,0.3);">
               <div class="university-logo">
                 <i class="fas fa-university text-white fa-2x"></i>
@@ -47,7 +47,7 @@
           <div class="card-body">
             <h4 class="card-title">{{ courseDetail.courseName }}</h4>
             <p class="card-text text-muted">{{ courseDetail.description }}</p>
-  
+ 
             <!-- Progress -->
             <div class="mb-3">
               <div class="d-flex justify-content-between align-items-center mb-2">
@@ -55,27 +55,27 @@
                 <span class="text-muted">{{ courseDetail.progress || 0 }}%</span>
               </div>
               <div class="progress" style="height: 8px;">
-                <div class="progress-bar" 
+                <div class="progress-bar"
                      [class]="getProgressClass(courseDetail.progress || 0)"
-                     role="progressbar" 
+                     role="progressbar"
                      [style.width.%]="courseDetail.progress || 0">
                 </div>
               </div>
             </div>
-  
+ 
             <!-- Assignment Section -->
             <div class="assignment-section" *ngIf="!courseDetail.assignmentDownloaded">
               <button class="btn btn-outline-primary w-100 mb-2" (click)="downloadAssignment()">
                 <i class="fas fa-download me-2"></i>Download Assignment
               </button>
             </div>
-  
+ 
             <div *ngIf="courseDetail.assignmentDownloaded" class="text-success mb-2">
               <i class="fas fa-check-circle me-2"></i>Assignment Downloaded
             </div>
           </div>
         </div>
-  
+ 
         <!-- Modules List -->
         <div class="card shadow-sm">
           <div class="card-header bg-primary text-white">
@@ -85,8 +85,8 @@
           </div>
           <div class="card-body p-0">
             <div class="modules-list">
-              <div *ngFor="let module of courseDetail.modules; let i = index" 
-                   class="module-item p-3 border-bottom" 
+              <div *ngFor="let module of courseDetail.modules; let i = index"
+                   class="module-item p-3 border-bottom"
                    [class.active]="selectedModule?.moduleId === module.moduleId"
                    [class.completed]="module.isCompleted"
                    [class.bg-light]="selectedModule?.moduleId === module.moduleId"
@@ -94,7 +94,7 @@
                    style="cursor: pointer;">
                 <div class="d-flex align-items-center">
                   <div class="module-icon me-3">
-                    <i [class]="getModuleIcon(module)" 
+                    <i [class]="getModuleIcon(module)"
                        [class.text-success]="module.isCompleted"
                        [class.text-primary]="!module.isCompleted"></i>
                   </div>
@@ -112,7 +112,7 @@
           </div>
         </div>
       </div>
-  
+ 
       <!-- Right Content Area -->
       <div class="col-lg-8 col-md-7">
         <!-- Welcome Message -->
@@ -143,7 +143,7 @@
             </div>
           </div>
         </div>
-  
+ 
         <!-- Selected Module Content -->
         <div *ngIf="selectedModule && !showVideoPlayer && !showDocumentViewer" class="module-content">
           <div class="card shadow-sm">
@@ -153,13 +153,13 @@
             <div class="card-body">
               <p class="card-text">{{ selectedModule.description || 'No description available.' }}</p>
               <div class="module-actions">
-                <button *ngIf="selectedModule.videoUrl && isValidVideoUrl(selectedModule.videoUrl)" 
-                        class="btn btn-primary me-3" 
+                <button *ngIf="selectedModule.videoUrl && isValidVideoUrl(selectedModule.videoUrl)"
+                        class="btn btn-primary me-3"
                         (click)="playVideo(selectedModule)">
                   <i class="fas fa-play me-2"></i>Watch Video
                 </button>
-                <button *ngIf="selectedModule.documentPath && isValidDocumentUrl(selectedModule.documentPath)" 
-                        class="btn btn-outline-primary" 
+                <button *ngIf="selectedModule.documentPath && isValidDocumentUrl(selectedModule.documentPath)"
+                        class="btn btn-outline-primary"
                         (click)="viewDocument(selectedModule)">
                   <i class="fas fa-file-pdf me-2"></i>View Document
                 </button>
@@ -170,7 +170,7 @@
             </div>
           </div>
         </div>
-  
+ 
         <!-- Video Player -->
         <div *ngIf="showVideoPlayer && selectedModule && sanitizedVideoUrl" class="video-player">
           <div class="card shadow-sm">
@@ -183,23 +183,23 @@
             <div class="card-body p-0">
               <div class="video-container">
                 <!-- Try video element first -->
-                <video 
-                  controls 
-                  class="w-100" 
+                <video
+                  controls
+                  class="w-100"
                   style="height: 400px;"
                   [src]="selectedModule.videoUrl"
                   (error)="onVideoError($event)">
                   Your browser does not support the video tag.
                 </video>
-                
+               
                 <!-- Fallback iframe if video fails -->
-                <iframe 
-                  [src]="sanitizedVideoUrl" 
-                  class="w-100" 
+                <iframe
+                  [src]="sanitizedVideoUrl"
+                  class="w-100"
                   style="height: 400px; border: none; display: none;"
                   allowfullscreen>
                 </iframe>
-                
+               
                 <!-- Fallback link if both fail -->
                 <div class="p-3 text-center" style="display: none;">
                   <p class="mb-3">Unable to display video player.</p>
@@ -211,7 +211,7 @@
             </div>
           </div>
         </div>
-  
+ 
         <!-- Document Viewer -->
         <div *ngIf="showDocumentViewer && selectedModule && sanitizedDocumentUrl" class="document-viewer">
           <div class="card shadow-sm">
@@ -228,13 +228,13 @@
             </div>
             <div class="card-body p-0">
               <div class="document-container">
-                <iframe 
-                  [src]="sanitizedDocumentUrl" 
-                  class="w-100" 
+                <iframe
+                  [src]="sanitizedDocumentUrl"
+                  class="w-100"
                   style="height: 600px; border: none;"
                   (error)="onDocumentError($event)">
                 </iframe>
-                
+               
                 <!-- Fallback if iframe fails -->
                 <div class="p-3 text-center" style="display: none;">
                   <p class="mb-3">Unable to display document viewer.</p>

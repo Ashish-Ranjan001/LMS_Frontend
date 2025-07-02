@@ -282,7 +282,7 @@ export class HomeSavedCourseComponent implements OnInit, OnDestroy, AfterViewIni
     // Show alert when card is clicked
     alert(`You clicked on "${course.title}" course`)
 
-    this.router.navigate(['module/', course.id])
+    this.router.navigate(['module/', btoa(course.id)])
     // Log the click event
     console.log("Course clicked:", course)
   }
@@ -293,6 +293,7 @@ export class HomeSavedCourseComponent implements OnInit, OnDestroy, AfterViewIni
 
   onContinueCourse(courseId: string, event: Event): void {
     event.stopPropagation() // Prevent card click event
+    this.router.navigate(['module/', btoa(courseId)])
     console.log("Continue course clicked for course:", courseId)
   }
 

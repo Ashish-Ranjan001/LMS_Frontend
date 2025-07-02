@@ -172,3 +172,4 @@ export class UserLearningService {
     return this.http.put(`${this.baseUrl}/assignment/download/${userId}/${courseId}`, {});
   }
 }
+

@@ -238,6 +238,17 @@
                     </span>
                   </div>
                 </div>
+                <div class="col-md-3 text-end" *ngIf="isCourseFullyCompleted()">
+                  <button 
+                    class="btn btn-success btn-lg download-certificate-header-btn"
+                    (click)="downloadCourseCertificate()"
+                    [disabled]="isGeneratingCertificate"
+                  >
+                    <i class="fas fa-spinner fa-spin me-2" *ngIf="isGeneratingCertificate"></i>
+                    <i class="fas fa-certificate me-2" *ngIf="!isGeneratingCertificate"></i>
+                    {{ isGeneratingCertificate ? 'Generating...' : 'Download Certificate' }}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -276,7 +287,9 @@
 
                 <div class="module-content">
                   <div class="module-header">
-                    <h4 class="module-title">{{ module.moduleName }}</h4>
+                    <h4 class="module-title" [title]="module.moduleName">
+                      {{ module.moduleName }}
+                    </h4>
                     <div class="module-status">
                       <i [class]="getModuleStatusIcon(module)"></i>
                     </div>
@@ -343,7 +356,7 @@
 
                     <div
                       class="video-overlay"
-                      *ngIf="!videoWatched && !videoLoading && safeVideoUrl"
+                      *ngIf="showVideoOverlay && !videoLoading && safeVideoUrl"
                       (click)="startWatchingVideo()"
                     >
                       <div class="play-button">
@@ -446,35 +459,53 @@
                     <div class="final-actions">
                       <div class="row g-3 justify-content-center">
                         <div class="col-md-6">
-                          <!-- <button class="btn btn-primary btn-lg w-100" 
-                                  (click)="downloadAssignment()"
-                                  [disabled]="courseDetail.assignmentDownloadStatus==1 || isDownloading">
-                            <i class="fas fa-spinner fa-spin me-2" *ngIf="isDownloading"></i>
-                            <i class="fas fa-download me-2" *ngIf="!courseDetail.assignmentDownloadStatus && !isDownloading"></i>
-                            <i class="fas fa-check me-2" *ngIf="courseDetail.assignmentDownloadStatus && !isDownloading"></i>
-                            {{ isDownloading ? 'Downloading...' : 
-                               courseDetail.assignmentDownloadStatus ? 'Assignment Downloaded' : 'Download Assignment' }}
-                          </button> -->
-
                           <button
-                            class="btn btn-primary btn-lg w-100"
+                            class="btn btn-lg w-100"
+                            [ngClass]="{
+                              'btn-primary': hasAssignment() && dstatus !== 1,
+                              'btn-success': hasAssignment() && dstatus === 1,
+                              'btn-secondary': !hasAssignment()
+                            }"
                             (click)="downloadAssignment()"
                             [disabled]="isButtonDisabled()"
                           >
+                            <!-- No Assignment Available -->
+                            <i
+                              class="fas fa-exclamation-circle me-2"
+                              *ngIf="!hasAssignment()"
+                            ></i>
+
+                            <!-- Downloading -->
                             <i
                               class="fas fa-spinner fa-spin me-2"
-                              *ngIf="isDownloading"
+                              *ngIf="hasAssignment() && isDownloading"
                             ></i>
+
+                            <!-- Ready to Download -->
                             <i
                               class="fas fa-download me-2"
-                              *ngIf="!dstatus && !isDownloading"
+                              *ngIf="
+                                hasAssignment() &&
+                                !isDownloading &&
+                                dstatus !== 1
+                              "
                             ></i>
+
+                            <!-- Downloaded -->
                             <i
                               class="fas fa-check me-2"
-                              *ngIf="dstatus === 1 && !isDownloading"
+                              *ngIf="
+                                hasAssignment() &&
+                                !isDownloading &&
+                                dstatus === 1
+                              "
                             ></i>
+
+                            <!-- Button Text -->
                             {{
-                              isDownloading
+                              !hasAssignment()
+                                ? "No Assignment Currently"
+                                : isDownloading
                                 ? "Downloading..."
                                 : dstatus === 1
                                 ? "Assignment Downloaded"
@@ -487,17 +518,59 @@
                           <button
                             class="btn btn-warning btn-lg w-100 quiz-btn"
                             (click)="startQuiz()"
-                            [disabled]="quizStatus==2"
+                            [disabled]="quizStatus == 2"
                           >
                             <i
                               class="fas fa-clipboard-check me-2"
                               *ngIf="!quizTaken"
                             ></i>
-                            <i class="fas fa-trophy me-2" *ngIf="quizStatus"></i>
-                            {{ quizStatus==2 ? "Quiz Completed" : "Take Quiz" }}
+                            <i
+                              class="fas fa-trophy me-2"
+                              *ngIf="quizStatus"
+                            ></i>
+                            {{
+                              quizStatus == 2 ? "Quiz Completed" : "Take Quiz"
+                            }}
                           </button>
                         </div>
                       </div>
+
+                      <!-- Submit Assignment Button - Shows when download is disabled -->
+                      <div
+                        class="row g-3 justify-content-center mt-3"
+                        *ngIf="dstatus === 1"
+                      >
+                        <div class="col-md-6">
+                          <button
+                            class="btn btn-success btn-lg w-100 submit-assignment-btn"
+                            (click)="openFileUpload()"
+                            [disabled]="isSubmittingAssignment"
+                          >
+                            <i
+                              class="fas fa-spinner fa-spin me-2"
+                              *ngIf="isSubmittingAssignment"
+                            ></i>
+                            <i
+                              class="fas fa-upload me-2"
+                              *ngIf="!isSubmittingAssignment"
+                            ></i>
+                            {{
+                              isSubmittingAssignment
+                                ? "Submitting..."
+                                : "Submit Assignment"
+                            }}
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Hidden File Input -->
+                      <input
+                        type="file"
+                        #fileInput
+                        (change)="onFileSelected($event)"
+                        accept=".pdf,.docx,.doc"
+                        style="display: none"
+                      />
 
                       <!-- Assignment Status Display -->
                       <div
@@ -507,6 +580,17 @@
                         <div class="alert alert-success">
                           <i class="fas fa-check-circle me-2"></i>
                           Assignment has been downloaded successfully!
+                        </div>
+                      </div>
+
+                      <!-- Assignment Submission Status -->
+                      <div
+                        class="assignment-submission-status mt-3"
+                        *ngIf="assignmentSubmitted"
+                      >
+                        <div class="alert alert-info">
+                          <i class="fas fa-check-circle me-2"></i>
+                          Assignment submitted successfully!
                         </div>
                       </div>
 
@@ -580,4 +664,18 @@
       </div>
     </div>
   </div>
+  <!-- Certificate Modal -->
+<div class="certificate-modal" *ngIf="showCertificateModal">
+  <div class="certificate-modal-backdrop" (click)="closeCertificateModal()"></div>
+  <div class="certificate-modal-content">
+    <button class="close-modal-btn" (click)="closeCertificateModal()">
+      <i class="fas fa-times"></i>
+    </button>
+    <app-certificate 
+      [userName]="userName" 
+      [courseName]="courseDetail.courseName || ''"
+      [showDownloadButton]="true">
+    </app-certificate>
+  </div>
+</div>
 </div>

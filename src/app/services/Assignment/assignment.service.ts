@@ -92,6 +92,12 @@ export interface CompleteQuizRequest {
   QuizScore: number;
 }
 
+export interface SubmitAssignmentDto {
+  UserId: string;
+  CourseId: string;
+  assignment_sme_file: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -126,4 +132,15 @@ export class AssignmentService {
     const url = `${this.apiBaseUrl}/api/quiz/complete`;
     return this.http.post(url, request);
   }
+
+  submitAssignment(submitData: SubmitAssignmentDto): Observable<any> {
+    const url = `${this.apiBaseUrl}/api/UserLearning/assignment/submit`;
+    
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(url, submitData, { headers });
+  }
+  
 }

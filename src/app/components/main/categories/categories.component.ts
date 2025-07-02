@@ -118,7 +118,7 @@ export class CategoriesComponent implements OnInit {
   viewCategoryCourses(categoryId: string, categoryName: string): void {
     console.log('Navigating to courses for category:', categoryId, categoryName);
     if (categoryId) {
-      this.router.navigate(['/courses', categoryId], { 
+      this.router.navigate(['/courses', btoa(categoryId)], { 
         queryParams: { categoryName: categoryName } 
       });
     } else {

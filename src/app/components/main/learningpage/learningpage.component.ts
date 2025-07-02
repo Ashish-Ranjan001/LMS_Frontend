@@ -288,7 +288,7 @@ private mapCategoriesToUI(apiCategories: CategoryWithCoursesDto[]): Category[] {
   // Method to handle category view button click
 onViewCategory(categoryId: string , categoryName: string) {
   console.log('View category:', categoryId);
-  this.router.navigate([`courses/${categoryId}`], { 
+  this.router.navigate([`courses/${btoa(categoryId)}`], { 
     queryParams: { categoryName: categoryName } 
   });
 }
@@ -296,7 +296,7 @@ onViewCategory(categoryId: string , categoryName: string) {
   // Method to handle course view button click
   onViewCourse(courseId: string) {
     // Navigate to course detail page
-    this.router.navigate([`module/${courseId}`]);
+    this.router.navigate([`module/${btoa(courseId)}`]);
     // Example: this.router.navigate(['/course', courseId]);
   }
 

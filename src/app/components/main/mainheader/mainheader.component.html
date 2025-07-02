@@ -1,15 +1,17 @@
 <header class="header">
   <!-- University Title with Typewriter Effect -->
   <div class="university-title" (click)="navigateToHome()">
-    <h1 class="typewriter-text">{{ displayText }}<span class="cursor">|</span></h1>
+    <h1 class="typewriter-text">
+      {{ displayText }}<span class="cursor">|</span>
+    </h1>
   </div>
 
   <!-- Enhanced Search Form -->
-  <form class="search-form" (submit)="handleSearchSubmit($event)">
+  <form class="search-form" (ngSubmit)="handleSearchSubmit($event)">
     <div class="search-container" [class.search-active]="isSearchActive">
       <!-- Search Filter Dropdown -->
       <div class="search-filter-dropdown">
-        <button 
+        <button
           type="button"
           class="filter-button"
           [class.active]="isFilterDropdownOpen"
@@ -17,12 +19,15 @@
         >
           <i [class]="selectedFilter.icon"></i>
           <span class="filter-text">{{ selectedFilter.label }}</span>
-          <i class="fas fa-chevron-down filter-arrow" [class.rotated]="isFilterDropdownOpen"></i>
+          <i
+            class="fas fa-chevron-down filter-arrow"
+            [class.rotated]="isFilterDropdownOpen"
+          ></i>
         </button>
-        
+
         <!-- Filter Options Dropdown -->
         <div class="filter-options" [class.show]="isFilterDropdownOpen">
-          <button 
+          <button
             type="button"
             class="filter-option"
             [class.selected]="selectedFilter.value === option.value"
@@ -41,18 +46,24 @@
       <!-- Search Input -->
       <input
         #searchInput
+        name="search"
         type="text"
-        class="search-input"
-        [(ngModel)]="searchQuery"
-        [placeholder]="'Search ' + selectedFilter.placeholder + '...'"
-        (input)="onSearchInput()"
+        [ngModel]="searchQuery"
+        (ngModelChange)="onSearchInput($event)"
         (focus)="onSearchFocus()"
         (blur)="onSearchBlur()"
-        autocomplete="off"
+        class="search-bar"
+        placeholder="Search..."
       />
 
+      <button
+        type="submit"
+        class="search-submit-btn"
+        style="display: none"
+      ></button>
+
       <!-- Clear Search Button -->
-      <button 
+      <button
         type="button"
         class="clear-search-btn"
         *ngIf="searchQuery"
@@ -62,67 +73,117 @@
       </button>
 
       <!-- Search Results Dropdown -->
-      <div class="search-results-dropdown" [class.show]="showSearchResults" @slideDown>
+      <div
+        class="search-results-dropdown"
+        [class.show]="showSearchResults"
+        [@slideDown]
+      >
         <!-- Search Results Header -->
         <div class="search-results-header" *ngIf="!isSearchLoading">
           <span class="results-count">
-            {{ searchResults.length }} result{{ searchResults.length !== 1 ? 's' : '' }} found
+            {{ searchResults.length }} result{{
+              searchResults.length !== 1 ? "s" : ""
+            }}
+            found
           </span>
           <span class="search-type">{{ selectedFilter.label }}</span>
         </div>
 
-        <!-- Loading State -->
+        <!-- Loading Spinner -->
         <div class="search-loading" *ngIf="isSearchLoading">
           <div class="loading-spinner"></div>
           <p>Searching {{ selectedFilter.placeholder }}...</p>
         </div>
 
         <!-- Search Results List -->
-        <div class="search-results-list" *ngIf="!isSearchLoading && searchResults.length > 0">
-          <div 
+        <div
+          class="search-results-list"
+          *ngIf="!isSearchLoading && searchResults && searchResults.length > 0"
+        >
+          <div
             class="search-result-item"
-            *ngFor="let result of searchResults; trackBy: trackByResultId"
+            *ngFor="
+              let result of searchResults;
+              let i = index;
+              trackBy: trackByResultId
+            "
             (click)="onSearchResultClick(result)"
           >
             <div class="result-content">
-              <!-- Result Icon -->
-              <div class="result-icon" [ngClass]="selectedFilter.value === 'course' ? 'course-icon' : 'category-icon'">
-                <i [class]="selectedFilter.value === 'course' ? 'fas fa-book' : 'fas fa-th-large'"></i>
+              <div
+                class="result-icon"
+                [ngClass]="
+                  selectedFilter.value === 'course'
+                    ? 'course-icon'
+                    : 'category-icon'
+                "
+              >
+                <i
+                  [class]="
+                    selectedFilter.value === 'course'
+                      ? 'fas fa-book'
+                      : 'fas fa-th-large'
+                  "
+                ></i>
               </div>
-
-              <!-- Result Details -->
               <div class="result-details">
                 <h4 class="result-title">
-                  {{ selectedFilter.value === 'course' ? result.course_name : (result.category_name || 'Database') }}
+                  {{
+                    selectedFilter.value === "course"
+                      ? result.course_name
+                      : result.category_name
+                  }}
                 </h4>
-                <p class="result-subtitle" *ngIf="selectedFilter.value === 'course'">
-                  Category: {{ result.category_name || 'Database' }}
+                <p
+                  class="result-subtitle"
+                  *ngIf="selectedFilter.value === 'course'"
+                >
+                  Category: {{ getCategoryNameById(result.category_id) }}
                 </p>
-                <p class="result-subtitle" *ngIf="selectedFilter.value === 'category'">
-                  {{ getCourseCountByCategory(result.category_id) }} course{{ getCourseCountByCategory(result.category_id) !== 1 ? 's' : '' }}
+                <p
+                  class="result-subtitle"
+                  *ngIf="selectedFilter.value === 'category'"
+                >
+                  {{ getCourseCountByCategory(result.category_id) }} course{{
+                    getCourseCountByCategory(result.category_id) !== 1
+                      ? "s"
+                      : ""
+                  }}
                 </p>
                 <span class="result-id">
-                  ID: {{ selectedFilter.value === 'course' ? result.course_id : result.category_id }}
+                  ID:
+                  {{
+                    selectedFilter.value === "course"
+                      ? result.course_id
+                      : result.category_id
+                  }}
                 </span>
               </div>
-
-              <!-- Result Status -->
               <div class="result-status" [class.active]="result.status">
                 <span class="status-dot"></span>
-                {{ result.status ? 'Active' : 'Inactive' }}
+                {{ result.status ? "Active" : "Inactive" }}
               </div>
-
-              <!-- Result Arrow -->
               <i class="fas fa-chevron-right result-arrow"></i>
             </div>
           </div>
         </div>
 
         <!-- No Results -->
-        <div class="no-results" *ngIf="!isSearchLoading && searchResults.length === 0 && searchQuery">
+        <div
+          class="no-results"
+          *ngIf="
+            !isSearchLoading &&
+            searchQuery &&
+            (!searchResults || searchResults.length === 0)
+          "
+        >
           <i class="fas fa-search no-results-icon fa-2x"></i>
-          <p class="no-results-text">No {{ selectedFilter.placeholder }} found</p>
-          <p class="no-results-suggestion">Try searching with different keywords</p>
+          <p class="no-results-text">
+            No {{ selectedFilter.placeholder }} found
+          </p>
+          <p class="no-results-suggestion">
+            Try searching with different keywords
+          </p>
         </div>
       </div>
     </div>
@@ -130,6 +191,49 @@
 
   <!-- Actions -->
   <div class="actions">
+    <div class="notification-container" (click)="toggleDropdown()">
+      <div class="bell-button">
+        <i class="bell-icon bi bi-bell"></i>
+        <span class="notification-count" *ngIf="unreadCount > 0">{{
+          unreadCount > 99 ? '99+' : unreadCount
+        }}</span>
+      </div>
+    
+      <!-- Enhanced Dropdown -->
+      <div class="notification-dropdown" *ngIf="showDropdown">
+        <div class="notification-header">
+          <h4>
+            <i class="bi bi-bell-fill me-2"></i>
+            Notifications
+          </h4>
+        </div>
+        <div
+          class="notification-list"
+          *ngIf="notifications.length > 0; else noNotifications"
+        >
+          <div
+            class="notification-item"
+            *ngFor="let note of notifications; let i = index"
+          >
+            <span>{{ note.message }}</span>
+            <button
+              class="close-btn"
+              (click)="markNotificationAsRead(note.id, i)"
+              title="Mark as read"
+            >
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+        <ng-template #noNotifications>
+          <div class="no-notification">
+            <i class="bi bi-bell-slash mb-2 d-block" style="font-size: 2rem; opacity: 0.3;"></i>
+            No unread notifications
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
     <!-- My Learning Button -->
     <button class="my-learning-button" (click)="onMyLearningClick()">
       <i class="fas fa-graduation-cap"></i>
@@ -140,32 +244,43 @@
     <div class="profile-container">
       <button class="profile-button" (click)="toggleProfileDropdown()">
         <div class="avatar">
-          <img 
-            *ngIf="userAvatar" 
-            [src]="userAvatar" 
+          <img
+            *ngIf="userAvatar"
+            [src]="userAvatar"
             [alt]="userName"
             class="avatar-image"
           />
-          <span *ngIf="!userAvatar" class="avatar-initial">{{ getUserInitial() }}</span>
+          <span *ngIf="!userAvatar" class="avatar-initial">{{
+            getUserInitial()
+          }}</span>
         </div>
         <div class="profile-info">
           <span class="profile-name">{{ userName }}</span>
         </div>
-        <i class="fas fa-chevron-down dropdown-arrow" [class.rotated]="isProfileDropdownOpen"></i>
+        <i
+          class="fas fa-chevron-down dropdown-arrow"
+          [class.rotated]="isProfileDropdownOpen"
+        ></i>
       </button>
 
       <!-- Profile Dropdown -->
-      <div class="profile-dropdown" [class.show]="isProfileDropdownOpen" @slideDown>
+      <div
+        class="profile-dropdown"
+        [class.show]="isProfileDropdownOpen"
+        @slideDown
+      >
         <!-- Dropdown Header -->
         <div class="dropdown-header">
           <div class="user-avatar-large">
-            <img 
-              *ngIf="userAvatar" 
-              [src]="userAvatar" 
+            <img
+              *ngIf="userAvatar"
+              [src]="userAvatar"
               [alt]="userName"
               class="avatar-image"
             />
-            <span *ngIf="!userAvatar" class="avatar-initial-large">{{ getUserInitial() }}</span>
+            <span *ngIf="!userAvatar" class="avatar-initial-large">{{
+              getUserInitial()
+            }}</span>
           </div>
           <div class="user-details">
             <h3 class="user-name">{{ userName }}</h3>
@@ -181,12 +296,12 @@
             <i class="fas fa-user-cog item-icon"></i>
             <span>Account Settings</span>
           </button>
-          
+
           <button class="dropdown-item" (click)="onChangePassword()">
             <i class="fas fa-key item-icon"></i>
             <span>Change Password</span>
           </button>
-          
+
           <button class="dropdown-item logout-item" (click)="onLogout()">
             <i class="fas fa-sign-out-alt item-icon"></i>
             <span>Logout</span>
@@ -198,7 +313,15 @@
 </header>
 
 <!-- Search Backdrop -->
-<div class="search-backdrop" [class.show]="showSearchResults" (click)="closeSearchResults()"></div>
+<div
+  class="search-backdrop"
+  [class.show]="showSearchResults"
+  (click)="closeSearchResults()"
+></div>
 
 <!-- Dropdown Backdrop -->
-<div class="dropdown-backdrop" [class.show]="isProfileDropdownOpen" (click)="closeDropdown()"></div>
+<div
+  class="dropdown-backdrop"
+  [class.show]="isProfileDropdownOpen"
+  (click)="closeDropdown()"
+></div>
