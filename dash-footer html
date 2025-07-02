@@ -1,0 +1,20 @@
+<footer 
+  class="footer-modern"
+  [class.sidebar-open]="isSidebarOpen"
+  [class.sidebar-collapsed]="!isSidebarOpen"
+  [class.footer-hidden]="footerHidden"
+>
+  <div class="footer-content-modern">
+    <span>
+      © {{ animatedYear }} <b>Learning Portal</b> 
+    </span>
+    <span class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener" title="GitHub">
+        <i class="bi bi-github"></i>
+      </a>
+      <a href="mailto:customercare@com" title="Contact">
+        <i class="bi bi-envelope-check"></i>
+      </a>
+    </span>
+  </div>
+</footer>
