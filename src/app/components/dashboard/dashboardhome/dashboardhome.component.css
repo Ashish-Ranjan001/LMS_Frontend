@@ -80,8 +80,7 @@
   .content {
   min-height: calc(100vh - 60px); 
 } */
-
-/* dashboardhome.component.scss */
+/* dashboardhome.component.css */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -92,7 +91,7 @@
 .main-content {
   display: flex;
   flex: 1;
-  margin-top: 60px; /* Match header height */
+  margin-top: 64px; /* Match enhanced header height */
   overflow: hidden; /* Prevent overflow at this level */
 }
 
@@ -103,9 +102,28 @@
   margin-left: 250px; /* Default margin for sidebar width */
   transition: margin-left 0.3s ease;
   position: relative; /* Add positioning context */
-  height: calc(100vh - 120px); /* Account for header and footer */
+  height: calc(100vh - 124px); /* Account for header and footer */
+  background: #f8f9fa;
+}
 
-  &.expanded {
-    margin-left: 0; /* No margin when sidebar is closed */
+.content.expanded {
+  margin-left: 0; /* No margin when sidebar is closed */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0; /* No sidebar margin on mobile */
+    padding: 15px;
+  }
+
+  .content.expanded {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 10px;
   }
 }

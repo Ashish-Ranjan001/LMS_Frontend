@@ -1,0 +1,92 @@
+<nav class="main-sidebar" [class.closed]="collapsed">
+  <!-- Header Section -->
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <img src="evslogo.png" alt="Logo" class="sidebar-logo" />
+      <div class="sidebar-title">EVALUESERVE University</div>
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()" [attr.aria-label]="collapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+      <i class="bi" [ngClass]="collapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <span class="loading-text">Loading categories...</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <i class="bi bi-exclamation-triangle"></i>
+    <span class="error-text">Failed to load categories</span>
+    <button class="retry-btn" (click)="loadCategories()">
+      <i class="bi bi-arrow-clockwise"></i>
+      Retry
+    </button>
+  </div>
+
+  <!-- Categories Navigation -->
+  <div *ngIf="!isLoading && !error" class="nav-container">
+    <div class="nav-section-header">
+      <i class="bi bi-grid-3x3-gap"></i>
+      <span class="section-title">Categories</span>
+      <span class="category-count">{{ categories.length }}</span>
+    </div>
+
+    <ul class="nav flex-column">
+      <li class="nav-item" *ngFor="let category of categories; trackBy: trackByCategory">
+        <a 
+          class="nav-link category-link" 
+          [class.active]="selectedCategoryId === category.id"
+          (click)="selectCategory(category)"
+          [attr.data-category-id]="category.id"
+        >
+          <div class="category-icon">
+            <img 
+              [src]="category.imagePath" 
+              [alt]="category.name"
+              class="category-image"
+              (error)="onImageError($event)"
+            />
+          </div>
+          <div class="category-info">
+            <span class="category-name">{{ category.name }}</span>
+            <span class="course-count">
+              {{ category.courseCount }} 
+              {{ category.courseCount === 1 ? 'course' : 'courses' }}
+            </span>
+          </div>
+          <div class="category-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Empty State -->
+    <div *ngIf="categories.length === 0" class="empty-state">
+      <i class="bi bi-folder2-open"></i>
+      <span class="empty-text">No categories available</span>
+      <button class="refresh-btn" (click)="loadCategories()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="sidebar-footer">
+    <div class="user-info" *ngIf="userId">
+      <i class="bi bi-person-circle"></i>
+      <span class="user-id">{{ userId.substring(0, 8) }}...</span>
+    </div>
+  </div>
+</nav>
+
+<!-- Overlay for mobile -->
+<div 
+  class="sidebar-overlay" 
+  [class.show]="!collapsed && isMobile" 
+  (click)="closeSidebar()"
+></div>

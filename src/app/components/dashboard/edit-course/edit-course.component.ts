@@ -565,7 +565,7 @@ export class EditCourseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.courseId = this.route.snapshot.paramMap.get("id")!
+    this.courseId = atob(this.route.snapshot.paramMap.get("id")!)
     this.initializeData()
   }
 

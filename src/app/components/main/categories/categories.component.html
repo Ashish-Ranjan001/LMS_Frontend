@@ -1,0 +1,203 @@
+<!-- Header Component -->
+<app-mainheader
+  [userName]="user.userName"
+  [userEmail]="user.userEmail"
+  [userAvatar]="user.userAvatar"
+  [lobid]="user.lobid"
+  [userId]="user.userId">
+  >
+</app-mainheader>
+
+<!-- Main Content -->
+<main class="categories-page">
+  <div class="background-effects">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="floating-particles">
+      <div class="particle" *ngFor="let p of particles"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Enhanced Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-badge">
+          <div class="badge-glow"></div>
+          <span class="badge-icon">🎓</span>
+          <span class="badge-text">Learning Hub</span>
+        </div>
+        <h1 class="page-title">
+          <span class="title-gradient">Explore Categories</span>
+          <div class="title-underline"></div>
+        </h1>
+        <p class="page-subtitle">Discover courses across a wide range of subjects and start your learning journey today.</p>
+        <div class="header-stats" *ngIf="categories && categories.length > 0">
+          <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-info">
+              <span class="stat-number">{{ categories.length }}</span>
+              <span class="stat-label">Categories</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-info">
+              <span class="stat-number">{{ getTotalCourses() }}</span>
+              <span class="stat-label">Courses</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="header-decoration">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="skeleton-grid">
+        <div class="skeleton-card" *ngFor="let item of [1,2,3,4,5,6]">
+          <div class="skeleton-image">
+            <div class="skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-content">
+            <div class="skeleton-title">
+              <div class="skeleton-shimmer"></div>
+            </div>
+            <div class="skeleton-subtitle">
+              <div class="skeleton-shimmer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="error-state">
+      <div class="error-content">
+        <div class="error-illustration">
+          <div class="error-circle">
+            <div class="error-pulse"></div>
+            <i class="fas fa-exclamation-triangle error-icon"></i>
+          </div>
+        </div>
+        <h3 class="error-title">Oops! Something went wrong</h3>
+        <p class="error-message">{{ error }}</p>
+        <button class="btn btn-retry" (click)="loadCategories()">
+          <div class="btn-glow"></div>
+          <i class="fas fa-redo me-2"></i>
+          <span>Try Again</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Categories Grid -->
+    <div *ngIf="!loading && !error && categories && categories.length > 0" class="categories-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-icon">✨</span>
+          Browse by Category
+        </h2>
+        <div class="view-toggle">
+          <button class="toggle-btn" [class.active]="viewMode === 'grid'" (click)="setViewMode('grid')">
+            <i class="fas fa-th"></i>
+          </button>
+          <button class="toggle-btn" [class.active]="viewMode === 'list'" (click)="setViewMode('list')">
+            <i class="fas fa-list"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="categories-grid" [class.list-view]="viewMode === 'list'">
+        <div class="category-card" 
+             *ngFor="let category of categories; trackBy: trackByCategory; let i = index"
+             (click)="viewCategoryCourses(category.id, category.name)"
+             role="button"
+             tabindex="0"
+             [style.animation-delay]="(i * 0.1) + 's'"
+             (keydown.enter)="viewCategoryCourses(category.id, category.name)"
+             (keydown.space)="viewCategoryCourses(category.id, category.name)">
+          
+          <div class="card-glow"></div>
+          <div class="card-border"></div>
+          
+          <div class="card-image" [style.background-image]="getCategoryImageStyle(category)">
+            <div class="image-overlay"></div>
+            <div class="image-effects">
+              <div class="sparkle sparkle-1">✨</div>
+              <div class="sparkle sparkle-2">⭐</div>
+              <div class="sparkle sparkle-3">💫</div>
+            </div>
+            
+            <div class="category-icon" *ngIf="!category.imagePath">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <img 
+              *ngIf="category.imagePath" 
+              [src]="category.imagePath" 
+              [alt]="category.name"
+              class="category-img"
+              (error)="onImageError($event)"
+              (load)="onImageLoad($event)">
+            
+            <!-- <div class="card-badge" *ngIf="category.courseCount">
+              <div class="badge-bg"></div>
+              <span class="badge-count">{{ category.courseCount }}</span>
+            </div> -->
+          </div>
+          
+          <div class="card-content">
+            <div class="content-background"></div>
+            <div class="content-inner">
+              <h3 class="category-name">{{ category.name }}</h3>
+              <div class="course-info" *ngIf="category.courseCount">
+                <div class="course-icon">📖</div>
+                <span class="course-count">
+                  {{ category.courseCount }} course{{ category.courseCount !== 1 ? 's' : '' }} available
+                </span>
+              </div>
+              <div class="card-action">
+                <span class="action-text">Explore courses</span>
+                <div class="action-arrow">
+                  <i class="fas fa-arrow-right action-icon"></i>
+                  <div class="arrow-trail"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && (!categories || categories.length === 0)" class="empty-state">
+      <div class="empty-content">
+        <div class="empty-illustration">
+          <div class="empty-circle">
+            <div class="empty-pulse"></div>
+            <i class="fas fa-search empty-icon"></i>
+          </div>
+          <div class="empty-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <h3 class="empty-title">No Categories Found</h3>
+        <p class="empty-message">We're working on adding new categories. Check back soon for exciting new learning opportunities!</p>
+        <button class="btn btn-primary" (click)="loadCategories()">
+          <div class="btn-glow"></div>
+          <i class="fas fa-refresh me-2"></i>
+          <span>Refresh Categories</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer Component -->
+<app-mainfooter></app-mainfooter>

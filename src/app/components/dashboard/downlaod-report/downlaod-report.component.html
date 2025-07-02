@@ -1,0 +1,421 @@
+<div class="report-container">
+    <div class="header-section">
+      <h2>User Analytics Report Generator</h2>
+      <p>Enter a user's email address to generate their comprehensive analytics report</p>
+    </div>
+  
+    <div class="input-section">
+      <div class="form-group">
+        <label for="userEmail">User Email Address:</label>
+        <input 
+          type="email" 
+          id="userEmail" 
+          [(ngModel)]="userEmail" 
+          placeholder="Enter user email (e.g., user@example.com)"
+          class="email-input"
+          [disabled]="isLoading">
+      </div>
+      
+      <div class="button-group">
+        <button 
+          (click)="generateReport()" 
+          [disabled]="isLoading || !userEmail"
+          class="generate-btn">
+          <span *ngIf="isLoading" class="spinner"></span>
+          {{ isLoading ? 'Generating...' : 'Generate Report' }}
+        </button>
+        
+        <button 
+          (click)="clearReport()" 
+          *ngIf="userReport || errorMessage"
+          class="clear-btn">
+          Clear
+        </button>
+      </div>
+    </div>
+  
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  
+    <div *ngIf="userReport" class="report-section">
+      <div class="report-header">
+        <h3>📊 Comprehensive Analytics Report</h3>
+        <span class="report-date">Generated on: {{ currentDate }}</span>
+      </div>
+  
+      <div class="report-content">
+        <!-- User Information Card -->
+        <div class="info-card">
+          <h4>👤 User Information</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">User ID:</span>
+              <span class="value">{{ userReport.userId || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Name:</span>
+              <span class="value">{{ userReport.name || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Email:</span>
+              <span class="value">{{ userReport.email || userEmail }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Designation:</span>
+              <span class="value">{{ userReport.designation || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Level:</span>
+              <span class="value">{{ userReport.level || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">LOB:</span>
+              <span class="value">{{ userReport.lobName || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Sub LOB:</span>
+              <span class="value">{{ userReport.subLob || 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Join Date:</span>
+              <span class="value">{{ userReport.joinDate ? (userReport.joinDate | date:'mediumDate') : 'N/A' }}</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Course Analytics Card -->
+        <div class="info-card">
+          <h4>📚 Course Analytics</h4>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <div class="metric-number">{{ userReport.totalCoursesAvailable || 0 }}</div>
+              <div class="metric-label">Available Courses</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-number">{{ userReport.totalCoursesEnrolled || 0 }}</div>
+              <div class="metric-label">Enrolled Courses</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-number">{{ userReport.completedCourses || 0 }}</div>
+              <div class="metric-label">Completed Courses</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-number">{{ userReport.courseCompletionRate || 0 }}%</div>
+              <div class="metric-label">Completion Rate</div>
+            </div>
+          </div>
+          
+          <div class="course-status-grid">
+            <div class="status-item">
+              <span class="status-label">In Progress:</span>
+              <span class="status-value">{{ userReport.inProgressCourses || 0 }}</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Not Started:</span>
+              <span class="status-value">{{ userReport.notStartedCourses || 0 }}</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Overall Progress:</span>
+              <span class="status-value">{{ userReport.overallProgressPercentage || 0 }}%</span>
+            </div>
+          </div>
+          
+          <div class="progress-section">
+            <div class="progress-item">
+              <span class="progress-label">Course Completion Rate</span>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="userReport.courseCompletionRate || 0"></div>
+              </div>
+              <span class="progress-value">{{ userReport.courseCompletionRate || 0 }}%</span>
+            </div>
+            
+            <div class="progress-item">
+              <span class="progress-label">Overall Progress</span>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="userReport.overallProgressPercentage || 0"></div>
+              </div>
+              <span class="progress-value">{{ userReport.overallProgressPercentage || 0 }}%</span>
+            </div>
+          </div>
+  
+          <div class="course-breakdown">
+            <div class="breakdown-item">
+              <span class="breakdown-label">Courses >80%:</span>
+              <span class="breakdown-value">{{ userReport.coursesAbove80Percent || 0 }}</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Courses >50%:</span>
+              <span class="breakdown-value">{{ userReport.coursesAbove50Percent || 0 }}</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Courses <25%:</span>
+              <span class="breakdown-value">{{ userReport.coursesBelow25Percent || 0 }}</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Learning Time Analytics Card -->
+        <div class="info-card">
+          <h4>⏱️ Learning Time Analytics</h4>
+          <div class="time-stats-grid">
+            <div class="time-stat-item">
+              <div class="time-icon">🕐</div>
+              <div class="time-content">
+                <div class="time-number">{{ userReport.formattedWatchTime || '0h 0m 0s' }}</div>
+                <div class="time-label">Total Watch Time</div>
+              </div>
+            </div>
+            <div class="time-stat-item">
+              <div class="time-icon">📊</div>
+              <div class="time-content">
+                <div class="time-number">{{ Math.floor((userReport.averageWatchTimePerCourse || 0) / 60) }}m {{ (userReport.averageWatchTimePerCourse || 0) % 60 }}s</div>
+                <div class="time-label">Avg Time Per Course</div>
+              </div>
+            </div>
+            <div class="time-stat-item">
+              <div class="time-icon">🌅</div>
+              <div class="time-content">
+                <div class="time-number">{{ userReport.preferredLearningTime || 'N/A' }}</div>
+                <div class="time-label">Preferred Learning Time</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="time-breakdown">
+            <div class="time-breakdown-item">
+              <span class="time-breakdown-label">Hours:</span>
+              <span class="time-breakdown-value">{{ userReport.totalWatchHours || 0 }}h</span>
+            </div>
+            <div class="time-breakdown-item">
+              <span class="time-breakdown-label">Minutes:</span>
+              <span class="time-breakdown-value">{{ userReport.totalWatchMinutes || 0 }}m</span>
+            </div>
+            <div class="time-breakdown-item">
+              <span class="time-breakdown-label">Seconds:</span>
+              <span class="time-breakdown-value">{{ userReport.totalWatchSeconds || 0 }}s</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Quiz Performance Card -->
+        <div class="info-card">
+          <h4>🎯 Quiz Performance</h4>
+          <div class="quiz-stats-grid">
+            <div class="quiz-stat-item">
+              <div class="quiz-number">{{ userReport.totalQuizzesAttempted || 0 }}</div>
+              <div class="quiz-label">Quizzes Attempted</div>
+            </div>
+            <div class="quiz-stat-item">
+              <div class="quiz-number">{{ userReport.quizzesCompleted || 0 }}</div>
+              <div class="quiz-label">Completed</div>
+            </div>
+            <div class="quiz-stat-item">
+              <div class="quiz-number">{{ userReport.quizzesInProgress || 0 }}</div>
+              <div class="quiz-label">In Progress</div>
+            </div>
+          </div>
+          
+          <div class="quiz-scores">
+            <div class="score-item">
+              <span class="score-label">Average Score:</span>
+              <span class="score-value">{{ userReport.averageQuizScore || 0 }}%</span>
+            </div>
+            <div class="score-item">
+              <span class="score-label">Highest Score:</span>
+              <span class="score-value">{{ userReport.highestQuizScore || 0 }}%</span>
+            </div>
+            <div class="score-item">
+              <span class="score-label">Lowest Score:</span>
+              <span class="score-value">{{ userReport.lowestQuizScore || 0 }}%</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Assignment Status Card -->
+        <div class="info-card">
+          <h4>📝 Assignment Status</h4>
+          <div class="assignment-stats-grid">
+            <div class="assignment-stat-item">
+              <div class="assignment-number">{{ userReport.totalAssignments || 0 }}</div>
+              <div class="assignment-label">Total Assignments</div>
+            </div>
+            <div class="assignment-stat-item">
+              <div class="assignment-number">{{ userReport.assignmentsSubmitted || 0 }}</div>
+              <div class="assignment-label">Submitted</div>
+            </div>
+            <div class="assignment-stat-item">
+              <div class="assignment-number">{{ userReport.assignmentsGraded || 0 }}</div>
+              <div class="assignment-label">Graded</div>
+            </div>
+            <div class="assignment-stat-item">
+              <div class="assignment-number">{{ userReport.pendingAssignments || 0 }}</div>
+              <div class="assignment-label">Pending</div>
+            </div>
+          </div>
+          
+          <div class="assignment-rate">
+            <span class="rate-label">Submission Rate:</span>
+            <span class="rate-value">{{ userReport.assignmentSubmissionRate || 0 }}%</span>
+            <div class="rate-bar">
+              <div class="rate-fill" [style.width.%]="userReport.assignmentSubmissionRate || 0"></div>
+            </div>
+          </div>
+  
+          <div *ngIf="userReport.assignmentStatuses && userReport.assignmentStatuses.length > 0" class="assignment-details">
+            <h5>Assignment Details:</h5>
+            <div class="assignment-list">
+              <div *ngFor="let assignment of userReport.assignmentStatuses" class="assignment-item">
+                <div class="assignment-course">{{ assignment.courseName }}</div>
+                <div class="assignment-info">
+                  <span class="assignment-status" [ngClass]="'status-' + (assignment.status?.toLowerCase().replace(' ', '-') || 'unknown')">
+                    {{ assignment.status || 'Unknown' }}
+                  </span>
+                  <span class="assignment-remarks">{{ assignment.remarks || 'No remarks' }}</span>
+                  <span *ngIf="assignment.submissionDate" class="assignment-date">
+                    Submitted: {{ assignment.submissionDate | date:'mediumDate' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Module Progress Card -->
+        <div class="info-card">
+          <h4>📖 Module Progress</h4>
+          <div class="module-stats-grid">
+            <div class="module-stat-item">
+              <div class="module-icon">🎥</div>
+              <div class="module-content">
+                <div class="module-number">{{ userReport.videoModulesWatched || 0 }}</div>
+                <div class="module-label">Video Modules</div>
+              </div>
+            </div>
+            <div class="module-stat-item">
+              <div class="module-icon">📄</div>
+              <div class="module-content">
+                <div class="module-number">{{ userReport.documentModulesRead || 0 }}</div>
+                <div class="module-label">Document Modules</div>
+              </div>
+            </div>
+            <div class="module-stat-item">
+              <div class="module-icon">📚</div>
+              <div class="module-content">
+                <div class="module-number">{{ userReport.totalModulesAccessed || 0 }}</div>
+                <div class="module-label">Total Accessed</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="module-engagement">
+            <div class="engagement-item">
+              <span class="engagement-label">Favorited Courses:</span>
+              <span class="engagement-value">{{ userReport.favoritedCourses || 0 }}</span>
+            </div>
+            <div class="engagement-item">
+              <span class="engagement-label">Saved Courses:</span>
+              <span class="engagement-value">{{ userReport.savedCourses || 0 }}</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Activity & Engagement Card -->
+        <div class="info-card">
+          <h4>📊 Activity & Engagement</h4>
+          <div class="activity-grid">
+            <div class="activity-item">
+              <span class="activity-label">Last Active:</span>
+              <span class="activity-value">{{ userReport.lastActiveDate ? (userReport.lastActiveDate | date:'mediumDate') : 'N/A' }}</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-label">Days Active (Last 30):</span>
+              <span class="activity-value">{{ userReport.daysActiveLast30Days || 0 }}</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-label">Learning Streak:</span>
+              <span class="activity-value" [ngClass]="'streak-' + (userReport.learningStreak?.toLowerCase().replace(' ', '-') || 'unknown')">
+                {{ userReport.learningStreak || 'N/A' }}
+              </span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-label">Last Completed Course:</span>
+              <span class="activity-value">{{ userReport.lastCompletedCourse || 'N/A' }}</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-label">Last Completion Date:</span>
+              <span class="activity-value">{{ userReport.lastCourseCompletionDate ? (userReport.lastCourseCompletionDate | date:'mediumDate') : 'N/A' }}</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-label">Total Badges:</span>
+              <span class="activity-value">{{ userReport.totalBadgesEarned || 0 }}</span>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Enrolled Courses Card -->
+        <div class="info-card">
+          <h4>🎓 Enrolled Courses</h4>
+          <div *ngIf="userReport.enrolledCourses && userReport.enrolledCourses.length > 0; else noCourses" class="courses-list">
+            <div *ngFor="let course of userReport.enrolledCourses" class="course-card">
+              <div class="course-header">
+                <h5 class="course-name">{{ course.courseName }}</h5>
+                <span class="course-status" [ngClass]="'status-' + (course.status?.toLowerCase().replace(' ', '-') || 'unknown')">
+                  {{ course.status }}
+                </span>
+              </div>
+              <div class="course-progress">
+                <div class="progress-info">
+                  <span class="progress-text">{{ course.progressPercentage }}% Complete</span>
+                  <span class="watch-time">{{ Math.floor(course.watchTimeSeconds / 60) }}m {{ course.watchTimeSeconds % 60 }}s watched</span>
+                </div>
+                <div class="course-progress-bar">
+                  <div class="course-progress-fill" [style.width.%]="course.progressPercentage"></div>
+                </div>
+              </div>
+              <div class="course-dates">
+                <span class="enrolled-date">Enrolled: {{ course.enrollmentDate | date:'mediumDate' }}</span>
+                <span *ngIf="course.completionDate" class="completion-date">
+                  Completed: {{ course.completionDate | date:'mediumDate' }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <ng-template #noCourses>
+            <p class="no-courses">No enrolled courses found.</p>
+          </ng-template>
+        </div>
+  
+        <!-- Performance Insights Card -->
+        <div class="info-card">
+          <h4>📈 Performance Insights</h4>
+          
+          <div *ngIf="userReport.areasForImprovement && userReport.areasForImprovement.length > 0" class="improvement-section">
+            <h5>Areas for Improvement:</h5>
+            <div class="improvement-list">
+              <div *ngFor="let area of userReport.areasForImprovement" class="improvement-item">
+                <span class="improvement-icon">⚠️</span>
+                <span class="improvement-text">{{ area }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="userReport.recentAchievements && userReport.recentAchievements.length > 0" class="achievements-section">
+            <h5>Recent Achievements:</h5>
+            <div class="achievements-list">
+              <div *ngFor="let achievement of userReport.recentAchievements" class="achievement-item">
+                <span class="achievement-icon">🏆</span>
+                <span class="achievement-text">{{ achievement }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="download-section">
+        <button (click)="downloadReport()" class="download-btn">
+          📥 Download Comprehensive Report
+        </button>
+      </div>
+    </div>
+  </div>

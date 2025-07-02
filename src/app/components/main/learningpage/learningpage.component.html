@@ -1,0 +1,141 @@
+<app-mainheader
+[userName]="user.userName"
+[userEmail]="user.userEmail"
+[userAvatar]="user.userAvatar"
+[userId]="user.userId"
+[lobid]="user.lobid">
+</app-mainheader>
+
+<div class="learning-container">
+ 
+  <!-- Header Section -->
+  <div class="header-section">
+    <h1>My Learning</h1>
+    <p>Track your learning progress and manage your courses</p>
+  </div>
+ 
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading your learning data...</p>
+  </div>
+ 
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <h3>Something went wrong</h3>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="refreshData()">Try Again</button>
+  </div>
+ 
+  <!-- Main Content -->
+  <div *ngIf="!isLoading && !error">
+    <!-- Category Navigation -->
+    <div class="category-nav">
+      <div class="category-tabs">
+        <button
+          *ngFor="let category of categories"
+          class="category-tab"
+          [class.active]="activeCategory === category.key"
+          (click)="switchCategory(category.key)">
+          <span class="tab-icon">{{ category.icon }}</span>
+          <span class="tab-label">{{ category.label }}</span>
+          <span class="tab-count">({{ getCourseCount(category.key) }})</span>
+        </button>
+      </div>
+    </div>
+ 
+    <!-- Content Section -->
+    <div class="content-section">
+     
+      <!-- All Categories Grid -->
+      <div class="categories-grid" *ngIf="activeCategory === 'all' && allCategories.length > 0">
+        <div
+          *ngFor="let category of allCategories"
+          class="category-card">
+         
+          <div class="card-image-container">
+            <img
+              [src]="category.imageUrl"
+              [alt]="category.name"
+              class="card-image"
+              (error)="onImageError($event)">
+          </div>
+         
+          <div class="card-content">
+            <div class="subcategory-name">{{ category.subCategory }}</div>
+            <h3 class="category-name">{{ category.name }}</h3>
+            <div class="course-count">{{ category.courseCount }} courses</div>
+          </div>
+ 
+          <div class="card-footer">
+            <button class="view-btn" (click)="onViewCategory(category.id ,  category.name)">
+              <span class="btn-icon">👁️</span>
+              View
+            </button>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Courses Grid for other categories -->
+      <div class="courses-grid" *ngIf="activeCategory !== 'all' && filteredCourses.length > 0">
+        <div
+          *ngFor="let course of filteredCourses"
+          class="course-card"
+          [ngClass]="'course-' + course.category">
+         
+          <div class="card-image-container">
+            <img
+              [src]="course.imageUrl"
+              [alt]="course.courseName"
+              class="card-image"
+              (error)="onImageError($event)">
+           
+            <!-- Progress Badge for Ongoing Courses -->
+            <div *ngIf="course.category === 'ongoing' && course.progress !== undefined" class="progress-badge">
+              {{ course.progress }}%
+            </div>
+           
+            <!-- Completed Badge -->
+            <div *ngIf="course.category === 'completed'" class="completed-badge">
+              ✓ Completed
+            </div>
+           
+            <!-- Saved Badge -->
+            <div *ngIf="course.category === 'saved'" class="saved-badge">
+              ❤️ Saved
+            </div>
+          </div>
+         
+          <div class="card-content">
+            <div class="course-category">{{ course.subCategory }}</div>
+            <h3 class="course-name">{{ course.courseName }}</h3>
+            <div class="author-name" *ngIf="course.author">by {{ course.author }}</div>
+          </div>
+ 
+          <div class="card-footer">
+            <button class="view-btn" (click)="onViewCourse(course.id)">
+              <span class="btn-icon">👁️</span>
+              View
+            </button>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- No Categories State for All -->
+      <div class="empty-state" *ngIf="activeCategory === 'all' && allCategories.length === 0 && !isLoading">
+        <div class="empty-icon">📚</div>
+        <h3>No categories available</h3>
+        <p>There are no learning categories available at the moment.</p>
+      </div>
+ 
+      <!-- No Courses State -->
+      <div class="empty-state" *ngIf="activeCategory !== 'all' && filteredCourses.length === 0 && !isLoading">
+        <div class="empty-icon">📚</div>
+        <h3>No courses found</h3>
+        <p>You don't have any {{ activeCategory }} courses yet.</p>
+      </div>
+    </div>
+  </div>
+  <app-mainfooter></app-mainfooter>
+</div>

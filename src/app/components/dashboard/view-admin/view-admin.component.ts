@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AdminserviceService } from '../../../services/Admin/adminservice.service';
-
+import { Router } from '@angular/router';
 
 interface Admin {
   adminId: string;
@@ -43,7 +43,7 @@ export class ViewAdminComponent implements OnInit {
   // Loading state
   isLoading: boolean = true;
   
-  constructor(private adminService: AdminserviceService) {}
+  constructor(private adminService: AdminserviceService,private router: Router) {}
   
   ngOnInit(): void {
     this.loadAdmins();
@@ -139,8 +139,9 @@ export class ViewAdminComponent implements OnInit {
     return status ? 'Active' : 'Inactive';
   }
   
-  // Actions
   editAdmin(admin: Admin): void {
-    alert(`Admin ID: ${admin.adminId}`);
-  }
+    // Assuming your Admin interface has an 'id' property
+    const adminId = admin.adminId; // or admin.adminId, depending on your interface
+    this.router.navigate(['/dashboard/admin/edit', adminId]);
+}
 }

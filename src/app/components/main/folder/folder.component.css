@@ -1,0 +1,506 @@
+.folder-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: visible;
+  }
+  
+  .folder {
+    --folder-color: #5227ff;
+    --folder-back-color: #4a1fe7;
+    --paper-1: #e6e6e6;
+    --paper-2: #f2f2f2;
+    --paper-3: #ffffff;
+  
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    transform-origin: center;
+    scale: 0.7;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .folder.open {
+    z-index: 100;
+    transform: translateY(-4px); /* Keep folder stable when open */
+  }
+  
+  .folder:not(.open):hover {
+    transform: translateY(-4px) scale(0.72);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .folder:not(.open):hover .paper {
+    transform: translate(-50%, 0%);
+  }
+  
+  .folder:not(.open):hover .folder__front {
+    transform: skew(15deg) scaleY(0.6);
+  }
+  
+  .folder:not(.open):hover .right {
+    transform: skew(-15deg) scaleY(0.6);
+  }
+  
+  /* Stable positioning for open folder cards */
+  .folder.open .paper-1 {
+    transform: translate(-140%, -80%) rotateZ(-20deg);
+    z-index: 101;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .folder.open .paper-1:hover {
+    transform: translate(-140%, -80%) rotateZ(-20deg) scale(1.1);
+    z-index: 500;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .folder.open .paper-2 {
+    transform: translate(20%, -80%) rotateZ(20deg);
+    height: 80%;
+    z-index: 102;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .folder.open .paper-2:hover {
+    transform: translate(20%, -80%) rotateZ(20deg) scale(1.1);
+    z-index: 500;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .folder.open .paper-3 {
+    transform: translate(-50%, -120%) rotateZ(5deg);
+    height: 80%;
+    z-index: 103;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .folder.open .paper-3:hover {
+    transform: translate(-50%, -120%) rotateZ(5deg) scale(1.1);
+    z-index: 500;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .folder.open .folder__front {
+    transform: skew(15deg) scaleY(0.6);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .folder.open .right {
+    transform: skew(-15deg) scaleY(0.6);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .folder__back {
+    position: relative;
+    width: 120px;
+    height: 100px;
+    background: var(--folder-back-color);
+    border-radius: 0px 12px 12px 12px;
+    transition: all 0.3s ease;
+  }
+  
+  .folder__back::after {
+    position: absolute;
+    z-index: 0;
+    bottom: 98%;
+    left: 0;
+    content: "";
+    width: 36px;
+    height: 12px;
+    background: var(--folder-back-color);
+    border-radius: 6px 6px 0 0;
+    transition: all 0.3s ease;
+  }
+  
+  .paper {
+    position: absolute;
+    z-index: 2;
+    bottom: 10%;
+    left: 50%;
+    width: 70%;
+    height: 80%;
+    background: var(--paper-1);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center;
+  }
+  
+  /* Base transform for closed state */
+  .paper:not(.folder.open *) {
+    transform: translate(-50%, 10%);
+  }
+  
+  /* Magnet effect only when folder is open */
+  .folder.open .paper {
+    transform: translate(-50%, 10%) translate(var(--magnet-x, 0), var(--magnet-y, 0));
+  }
+  
+  .paper-2 {
+    background: var(--paper-2);
+    width: 80%;
+    height: 70%;
+  }
+  
+  .paper-3 {
+    background: var(--paper-3);
+    width: 90%;
+    height: 60%;
+  }
+  
+  .folder__front {
+    position: absolute;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    background: var(--folder-color);
+    border-radius: 6px 12px 12px 12px;
+    transform-origin: bottom;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .folder__front.right {
+    background: var(--folder-color);
+  }
+  
+  /* Card Content Styles */
+  .card-content {
+    width: 100%;
+    height: 100%;
+    padding: 6px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 3px;
+  }
+  
+  .card-icon {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .card-percentage {
+    font-size: 8px;
+    font-weight: 600;
+    padding: 1px 3px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  
+  .card-value {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 1px;
+    transition: all 0.3s ease;
+  }
+  
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.1;
+    opacity: 0.95;
+    transition: all 0.3s ease;
+  }
+  
+  .card-subtitle {
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.8;
+    line-height: 1;
+    transition: all 0.3s ease;
+  }
+  
+  /* Enhanced hover effects with smooth animations */
+  .paper:hover {
+    z-index: 500;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  }
+  
+  .paper:hover .card-content {
+    transform: scale(1.02);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+  
+  .paper:hover .card-icon {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+  
+  .paper:hover .card-percentage {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .paper:hover .card-value {
+    transform: translateY(-1px);
+  }
+  
+  /* Smooth glow effect on hover */
+  .paper:hover::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, rgba(82, 39, 255, 0.3), rgba(74, 31, 231, 0.3));
+    z-index: -1;
+    opacity: 0;
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes glowPulse {
+    0%,
+    100% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .folder {
+      scale: 0.6;
+    }
+  
+    .folder__back {
+      width: 100px;
+      height: 80px;
+    }
+  
+    .card-value {
+      font-size: 12px;
+    }
+  
+    .card-title {
+      font-size: 7px;
+    }
+  
+    .card-subtitle {
+      font-size: 5px;
+    }
+  
+    .folder.open .paper-1 {
+      transform: translate(-120%, -70%) rotateZ(-15deg);
+    }
+  
+    .folder.open .paper-1:hover {
+      transform: translate(-120%, -70%) rotateZ(-15deg) scale(1.08);
+    }
+  
+    .folder.open .paper-2 {
+      transform: translate(10%, -70%) rotateZ(15deg);
+    }
+  
+    .folder.open .paper-2:hover {
+      transform: translate(10%, -70%) rotateZ(15deg) scale(1.08);
+    }
+  
+    .folder.open .paper-3 {
+      transform: translate(-50%, -100%) rotateZ(5deg);
+    }
+  
+    .folder.open .paper-3:hover {
+      transform: translate(-50%, -100%) rotateZ(5deg) scale(1.08);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .folder {
+      scale: 0.5;
+    }
+  
+    .folder__back {
+      width: 90px;
+      height: 70px;
+    }
+  
+    .card-content {
+      padding: 4px;
+    }
+  
+    .card-value {
+      font-size: 10px;
+    }
+  
+    .card-title {
+      font-size: 6px;
+    }
+  
+    .card-subtitle {
+      font-size: 4px;
+    }
+  
+    .card-icon {
+      width: 12px;
+      height: 12px;
+    }
+  
+    .card-percentage {
+      font-size: 6px;
+    }
+  }
+  
+  /* Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .folder,
+    .paper,
+    .folder__front,
+    .card-content,
+    .card-icon,
+    .card-percentage,
+    .card-value {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+  
+  /* Focus styles for accessibility */
+  .folder:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+  
+  /* Enhanced shadow for open cards */
+  .folder.open .paper {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+  
+  .folder.open .paper:hover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Smooth spring animation for folder opening */
+  .folder.open .paper-1 {
+    animation: springIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.1s both;
+  }
+  
+  .folder.open .paper-2 {
+    animation: springIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s both;
+  }
+  
+  .folder.open .paper-3 {
+    animation: springIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s both;
+  }
+  
+  @keyframes springIn {
+    0% {
+      transform: translate(-50%, 10%) scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .folder-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: visible;
+}
+
+.folder {
+    --folder-color: #5227ff;
+    --folder-back-color: #4a1fe7;
+    --paper-1: #e6e6e6;
+    --paper-2: #f2f2f2;
+    --paper-3: #ffffff;
+
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    transform-origin: center;
+    scale: 1; /* Make it larger */
+    position: relative;
+    z-index: 1;
+}
+
+.folder.open {
+    z-index: 100;
+    transform: translateY(-4px);
+}
+
+.folder:not(.open):hover {
+    transform: translateY(-4px) scale(1.02);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.folder__back {
+    position: relative;
+    width: 200px; /* Increased size */
+    height: 160px; /* Increased size */
+    background: var(--folder-back-color);
+    border-radius: 0px 12px 12px 12px;
+    transition: all 0.3s ease;
+}
+
+.folder__back::after {
+    position: absolute;
+    z-index: 0;
+    bottom: 98%;
+    left: 0;
+    content: "";
+    width: 60px; /* Increased size */
+    height: 20px; /* Increased size */
+    background: var(--folder-back-color);
+    border-radius: 6px 6px 0 0;
+    transition: all 0.3s ease;
+}
+
+.paper {
+    position: absolute;
+    z-index: 2;
+    bottom: 10%;
+    left: 50%;
+    width: 80%;
+    height: 80%;
+    background: var(--paper-1);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center;
+}
+
+/* Keep rest of the CSS as is */

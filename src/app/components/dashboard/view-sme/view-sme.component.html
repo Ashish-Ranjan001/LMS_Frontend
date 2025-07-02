@@ -110,9 +110,17 @@
             </span>
           </td>
           <td class="actions-column">
-            <button class="btn btn-sm btn-outline-primary me-2" (click)="editSme(sme.smeId)">change status</button>
-            <button class="btn btn-sm btn-outline-secondary" (click)="changePassword(sme.smeId)">Change Password</button>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm" (click)="editSme(sme.smeId)">
+                <i class="bi bi-arrow-repeat me-1"></i> Change Status
+              </button>
+          
+              <button class="btn btn-sm" (click)="changePassword(sme.smeId)">
+                <i class="bi bi-key-fill me-1"></i> Change Password
+              </button>
+            </div>
           </td>
+          
         </tr>
       </tbody>
     </table>

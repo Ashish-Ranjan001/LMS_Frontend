@@ -26,15 +26,21 @@
 
    <!-- -----------------------------------------------------------------------------------------  -->
 
-   <!-- Updated dashboardhome.html -->
-<div class="app-container">
-    <!-- Pass the sidebar state to header -->
+   <div class="app-container">
+    <!-- Enhanced Dashboard Header -->
     <app-dashheader
       (menuToggle)="onMenuToggle()"
-      [userName]="'John Doe'"
-      [notificationCount]="5"
-      [userAvatar]="'/assets/avatar.png'"
+      [userName]="userName"
+      [userEmail]="userEmail"
+      [userAvatar]="userAvatar"
+      [lobid]="lobid"
       [isSidebarOpen]="isSidebarOpen"
+      (searchSubmit)="onSearchSubmit($event)"
+      (profileClick)="onProfileClick()"
+      (accountSettingsClick)="onAccountSettingsClick()"
+      (changePasswordClick)="onChangePasswordClick()"
+      (logoutClick)="onLogoutClick()"
+      (myLearningClick)="onMyLearningClick()"
     ></app-dashheader>
   
     <div class="main-content">
@@ -51,5 +57,6 @@
   
     <app-dash-footer
       [isSidebarOpen]="isSidebarOpen"
-   ></app-dash-footer>
+    ></app-dash-footer>
   </div>
+  

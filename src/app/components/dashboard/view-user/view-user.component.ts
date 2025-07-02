@@ -162,10 +162,10 @@ export class ViewUserComponent implements OnInit {
     console.log('Edit user clicked for ID:', userId);
     
     // Uncomment and modify the line below when edit route is ready
-    // this.router.navigate([`/dashboard/user/edit/${userId}`]);
+     this.router.navigate([`/dashboard/user/edit/${userId}`]);
     
-    // Optional: Show a temporary message to user
-    alert(`Edit functionality for user ID: ${userId} will be available soon!`);
+    // // Optional: Show a temporary message to user
+    // alert(`Edit functionality for user ID: ${userId} will be available soon!`);
   }
 
   /**

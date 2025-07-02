@@ -1,0 +1,62 @@
+<div class="folder-container">
+  <div 
+    class="folder"
+    [class.open]="isOpen"
+    [@folderState]="isOpen ? 'open' : 'closed'"
+    (click)="toggleFolder()"
+    [style.--folder-color]="folderColor"
+    [style.--folder-back-color]="folderBackColor"
+  >
+    <div class="folder__back">
+      <!-- Paper Cards -->
+      <div 
+        *ngFor="let card of cards; let i = index"
+        class="paper"
+        [class]="'paper-' + (i + 1)"
+        [@paperState]="getPaperState(i)"
+        [style]="getPaperStyle(i)"
+        (click)="handleCardClick(i)"
+        (mousemove)="onPaperMouseMove($event, i)"
+        (mouseleave)="onPaperMouseLeave(i)"
+      >
+        <div class="card-content" [style.background]="card.gradient">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"
+              >
+                <path [attr.d]="card.icon"></path>
+              </svg>
+            </div>
+            <!-- <div class="card-percentage" [style.color]="card.percentageColor">
+              {{ card.percentage }}
+            </div> -->
+          </div>
+          
+          <div class="card-body">
+            <div class="card-value" [style.color]="card.textColor">
+              {{ card.value }}
+            </div>
+            <div class="card-title" [style.color]="card.textColor">
+              {{ card.title }}
+            </div>
+            <div class="card-subtitle" [style.color]="card.textColor">
+              {{ card.subtitle }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Folder Front -->
+      <div class="folder__front"></div>
+      <div class="folder__front right"></div>
+    </div>
+  </div>
+</div>

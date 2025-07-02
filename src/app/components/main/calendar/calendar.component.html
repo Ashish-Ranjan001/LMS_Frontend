@@ -1,0 +1,71 @@
+<!-- <div class="calendar-container">
+  <div class="calendar-header">
+    <button class="nav-button" (click)="previousMonth()" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15,18 9,12 15,6"></polyline>
+      </svg>
+    </button>
+    
+    <h3 class="month-year">{{ currentMonthYear }}</h3>
+    
+    <button class="nav-button" (click)="nextMonth()" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9,18 15,12 9,6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <div class="calendar-grid">
+    <div class="day-header" *ngFor="let dayName of dayNames">
+      {{ dayName }}
+    </div>
+    
+    <div 
+      class="calendar-day"
+      [class.current-month]="day.isCurrentMonth"
+      [class.today]="day.isToday"
+      [class.selected]="day.isSelected"
+      [class.other-month]="!day.isCurrentMonth"
+      *ngFor="let day of calendarDays"
+      (click)="selectDate(day)">
+      {{ day.date }}
+    </div>
+  </div>
+</div> -->
+
+
+<div class="calendar-container">
+  <div class="calendar-header">
+    <button class="nav-button" (click)="previousMonth()" type="button" aria-label="Previous month">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15,18 9,12 15,6"></polyline>
+      </svg>
+    </button>
+    
+    <h3 class="month-year">{{ currentMonthYear }}</h3>
+    
+    <button class="nav-button" (click)="nextMonth()" type="button" aria-label="Next month">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9,18 15,12 9,6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <div class="calendar-grid">
+    <div class="day-header" *ngFor="let dayName of dayNames">
+      {{ dayName }}
+    </div>
+    
+    <div 
+      class="calendar-day"
+      [class.current-month]="day.isCurrentMonth"
+      [class.today]="day.isToday"
+      [class.selected]="day.isSelected"
+      [class.other-month]="!day.isCurrentMonth"
+      *ngFor="let day of calendarDays"
+      (click)="selectDate(day)"
+      [attr.aria-label]="getDateAriaLabel(day)">
+      {{ day.date }}
+    </div>
+  </div>
+</div>

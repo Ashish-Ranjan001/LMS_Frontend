@@ -1,0 +1,479 @@
+
+
+
+/* =========================================================================================== */
+
+/* Main container using flexbox */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f8f9fa;
+  overflow: hidden;
+}
+
+/* Header Section - Fixed at top */
+.header-section {
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  position: relative;
+  flex-shrink: 0;
+  min-height: 60px;
+}
+
+/* Main Content Container - Scrollable area between header and footer */
+.main-content-container {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+  min-height: 0;
+  background-color: #f8f9fa;
+}
+
+/* Footer Section - Fixed at bottom */
+.footer-section {
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  position: relative;
+  flex-shrink: 0;
+  min-height: 50px;
+}
+
+/* New Grid Parent - Updated to 7 rows instead of 10 */
+.parent {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(7, minmax(50px, auto));
+  gap: 8px;
+  width: 100%;
+  height: fit-content;
+  padding-bottom: 20px;
+}
+
+/* Grid Items */
+.grid-item {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: fit-content;
+}
+
+.grid-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid item content wrapper */
+.grid-item-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Special handling for div5 (folder component) */
+.div5 .grid-item-content {
+  overflow: visible; /* Allow folder cards to extend outside */
+  z-index: 10; /* Ensure folder appears above other components */
+}
+
+/* Default overflow for other grid items */
+.grid-item:not(.div5) .grid-item-content {
+  overflow: auto;
+}
+
+/* Ensure components fill their containers */
+.grid-item-content > * {
+  width: 100%;
+  min-height: 0;
+}
+
+/* Grid positioning classes based on new layout */
+/* Div 1: Hero Banner */
+.div1 {
+  grid-column: span 3 / span 3;
+  grid-row: span 4 / span 4;
+  min-height: 300px;
+}
+
+/* Div 2: Progress Bar */
+.div2 {
+  grid-row: span 2 / span 2;
+  grid-column-start: 4;
+  min-height: 150px;
+}
+
+/* Div 3: Card Carousel */
+.div3 {
+  grid-row: span 2 / span 2;
+  grid-column-start: 5;
+  min-height: 150px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dashboard-btn {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dashboard-btn:hover {
+  background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+}
+
+.dashboard-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.dashboard-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
+}
+/* Div 4: Calendar */
+.div4 {
+  grid-row: span 2 / span 2;
+  grid-column-start: 4;
+  grid-row-start: 3;
+  min-height: 150px;
+}
+
+/* Div 5: Folder Component */
+.div5 {
+  grid-row: span 2 / span 2;
+  grid-column-start: 5;
+  grid-row-start: 3;
+  min-height: 150px;
+  overflow: visible;
+  z-index: 20;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Div 6: Favorite Courses */
+.div6 {
+  grid-column: span 3 / span 3;
+  grid-row: span 3 / span 3;
+  grid-row-start: 5;
+  min-height: 350px;
+}
+
+/* Div 7: Categories */
+.grid-item.div7 {
+  grid-column: span 2 / span 2;
+  grid-row: span 3 / span 3;
+  grid-column-start: 4;
+  grid-row-start: 5;
+  max-height: 400px;
+}
+
+.grid-item.div7 .grid-item-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom Scrollbar for main container */
+.main-content-container::-webkit-scrollbar {
+  width: 12px;
+}
+
+.main-content-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+.main-content-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  border-radius: 6px;
+  border: 2px solid #f1f1f1;
+}
+
+.main-content-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+/* Custom Scrollbar for grid items */
+.grid-item-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.grid-item-content::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.grid-item-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a78bfa 0%, #8b5cf6 100%);
+  border-radius: 4px;
+  border: 1px solid #f8f9fa;
+}
+
+.grid-item-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9333ea 0%, #7c3aed 100%);
+}
+
+/* Placeholder content scrollbar */
+.placeholder-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.placeholder-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.placeholder-content::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.6);
+  border-radius: 3px;
+}
+
+.placeholder-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.8);
+}
+
+/* Tablet Styles */
+@media (max-width: 1024px) {
+  .parent {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(9, minmax(50px, auto));
+    gap: 8px;
+  }
+
+  .main-content-container {
+    padding: 10px;
+  }
+
+  /* Rearrange for tablet */
+  .div1 {
+    grid-column: span 4 / span 4;
+    grid-row: span 3 / span 3;
+    min-height: 250px;
+  }
+
+  .div2 {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    grid-column-start: 1;
+    grid-row-start: 4;
+    min-height: 150px;
+  }
+
+  .div3 {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    grid-column-start: 3;
+    grid-row-start: 4;
+    min-height: 150px;
+  }
+
+  .div4 {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    grid-column-start: 1;
+    grid-row-start: 6;
+    min-height: 150px;
+  }
+
+  .div5 {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    grid-column-start: 3;
+    grid-row-start: 6;
+    min-height: 150px;
+    overflow: visible;
+    z-index: 20;
+  }
+
+  .div6 {
+    grid-column: span 4 / span 4;
+    grid-row: span 2 / span 2;
+    grid-row-start: 8;
+    min-height: 200px;
+  }
+
+  .div7 {
+    grid-column: span 4 / span 4;
+    grid-row: span 2 / span 2;
+    grid-column-start: 1;
+    grid-row-start: 10;
+    min-height: 180px;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .parent {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(7, auto);
+    gap: 6px;
+  }
+
+  .main-content-container {
+    padding: 8px;
+  }
+
+  /* Stack all items vertically on mobile */
+  .div1,
+  .div2,
+  .div3,
+  .div4,
+  .div5,
+  .div6,
+  .div7 {
+    grid-column: span 1 / span 1;
+    grid-row: span 1 / span 1;
+    grid-column-start: auto;
+    grid-row-start: auto;
+  }
+
+  /* Adjust heights for mobile */
+  .div1 {
+    min-height: 200px;
+  }
+
+  .div2, .div3, .div4, .div5 {
+    min-height: 150px;
+  }
+
+  .div6, .div7 {
+    min-height: 180px;
+  }
+
+  .div5 {
+    overflow: visible;
+    z-index: 20;
+  }
+
+  .grid-item:hover {
+    transform: none;
+  }
+
+  .placeholder-content {
+    padding: 12px;
+  }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+  .parent {
+    gap: 4px;
+  }
+
+  .main-content-container {
+    padding: 6px;
+  }
+
+  .grid-item {
+    border-radius: 8px;
+  }
+
+  /* Adjust heights for small mobile */
+  .div1 {
+    min-height: 180px;
+  }
+
+  .div2, .div3, .div4, .div5 {
+    min-height: 120px;
+  }
+
+  .div6, .div7 {
+    min-height: 150px;
+  }
+
+  .div5 {
+    overflow: visible;
+    z-index: 20;
+  }
+
+  .placeholder-content {
+    padding: 10px;
+  }
+
+  .placeholder-content h3 {
+    font-size: 0.95em;
+  }
+
+  .placeholder-content p {
+    font-size: 0.75em;
+  }
+
+  /* Smaller scrollbars on mobile */
+  .main-content-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .grid-item-content::-webkit-scrollbar {
+    width: 6px;
+  }
+}
+
+/* Smooth transitions for all breakpoints */
+@media (prefers-reduced-motion: no-preference) {
+  .parent,
+  .grid-item,
+  .main-content-container {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .grid-item {
+    border: 2px solid #000;
+  }
+
+  .header-section,
+  .footer-section {
+    border: 2px solid #000;
+  }
+
+  .placeholder-content {
+    background: #fff;
+    border: 1px solid #000;
+  }
+}
+
+/* Focus styles for accessibility */
+.grid-item:focus-within {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Improved loading state */
+.grid-item.loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

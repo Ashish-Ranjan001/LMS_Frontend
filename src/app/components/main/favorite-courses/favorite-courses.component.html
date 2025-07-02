@@ -1,0 +1,153 @@
+<div class="rolling-courses-container" [@fadeIn]>
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-container">
+      <h2 class="section-title">Top Courses Pick for You</h2>
+      <div class="title-underline"></div>
+    </div>
+    <button class="see-all-btn" (click)="onSeeAll()">
+      <span>See All</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14"></path>
+        <path d="M12 5l7 7-7 7"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 3D Rolling Gallery -->
+  <div class="gallery-container">
+    <!-- Gradient overlays for depth effect -->
+    <div class="gallery-gradient gallery-gradient-left"></div>
+    <div class="gallery-gradient gallery-gradient-right"></div>
+    
+    <div class="gallery-content">
+      <div 
+        #galleryTrack
+        class="gallery-track"
+        [style.transform]="getGalleryTransform()"
+        [style.width.px]="cylinderWidth"
+        (mouseenter)="onMouseEnter()"
+        (mouseleave)="onMouseLeave()"
+        (mousedown)="onMouseDown($event)"
+        (mousemove)="onMouseMove($event)"
+        (mouseup)="onMouseUp()"
+        (mouseleave)="onMouseUp()"
+      >
+        <div 
+          *ngFor="let course of courses; let i = index"
+          class="gallery-item"
+          [style.width.px]="faceWidth"
+          [style.transform]="getCardTransform(i)"
+          [style.z-index]="getCardZIndex(i)"
+        >
+          <!-- Enhanced Course Card -->
+          <div 
+            class="enhanced-course-card"
+            (mouseenter)="onCardHover(course.id)"
+            (mouseleave)="onCardLeave()"
+            (click)="onCardClick(course)"
+            [@cardHover]="hoveredCard === course.id ? 'hovered' : 'normal'"
+            [@cardClick]="clickedCard === course.id"
+          >
+            <!-- Heart/Favorite Button -->
+            <button 
+              class="favorite-btn"
+              [class.favorited]="course.isFavorite"
+              (click)="toggleFavorite(course, $event)"
+              [@heartBeat]="course.isFavorite"
+            >
+              <svg 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                [attr.fill]="course.isFavorite ? '#ef4444' : 'none'"
+                stroke="currentColor" 
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"
+              >
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+
+            <!-- Course Image Container -->
+            <div class="enhanced-course-image-container">
+              <img 
+                [src]="course.image" 
+                [alt]="course.title"
+                class="enhanced-course-image"
+              />
+              <!-- <div *ngIf="course.popular" class="enhanced-popular-badge">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+                <span>Popular</span>
+              </div> -->
+            </div>
+
+            <!-- Course Content -->
+            <div class="enhanced-course-content">
+              <!-- Category Tag -->
+              <span 
+                class="enhanced-category-tag" 
+                [style.color]="course.categoryColor"
+                [style.background-color]="course.categoryBg"
+              >
+                {{ course.category }}
+              </span>
+
+              <!-- Course Title -->
+              <h3 class="enhanced-course-title">{{ course.title }}</h3>
+
+              <!-- Creator Info -->
+              <div class="enhanced-creator-info">
+                <div class="enhanced-avatar-container">
+                  <img 
+                    [src]="course.creatorAvatar" 
+                    [alt]="course.creator"
+                    class="enhanced-creator-avatar"
+                  />
+                </div>
+                <span class="enhanced-creator-text">by <strong>{{ course.creator }}</strong></span>
+              </div>
+
+              <!-- Course Stats -->
+              <div class="enhanced-course-stats">
+                <div class="enhanced-stat-item">
+                  <svg class="enhanced-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  </svg>
+                  <span>{{ course.lessons }}</span>
+                </div>
+                <div class="enhanced-stat-item">
+                  <svg class="enhanced-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span>{{ course.duration }}h</span>
+                </div>
+              </div>
+
+              <!-- Rating and View Details -->
+              <div class="enhanced-course-footer">
+                <div class="enhanced-rating">
+                  <svg class="enhanced-star-icon" viewBox="0 0 24 24" fill="#fbbf24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                  </svg>
+                  <span class="enhanced-rating-text">{{ course.rating }} ({{ course.reviews }})</span>
+                </div>
+                <button 
+                  class="enhanced-view-details-btn"
+                  (click)="onViewDetails(course.id, $event)"
+                >
+                  View
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

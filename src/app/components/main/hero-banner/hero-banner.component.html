@@ -1,0 +1,60 @@
+<div class="hero-banner-container">
+    <!-- Header -->
+    <div class="chart-header d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h3 class="chart-title mb-1">Study Statistics</h3>
+      </div>
+      <div class="chart-controls d-flex align-items-center">
+        <!-- Legend -->
+        <div class="chart-legend d-flex me-3">
+          <div class="legend-item d-flex align-items-center me-3">
+            <span class="legend-dot completed"></span>
+            <span class="legend-label">Completed</span>
+          </div>
+          <div class="legend-item d-flex align-items-center me-3">
+            <span class="legend-dot ongoing"></span>
+            <span class="legend-label">Ongoing</span>
+          </div>
+        </div>
+        
+        <!-- Period Selector -->
+        <div class="dropdown">
+          <button class="btn btn-outline-light btn-sm dropdown-toggle period-selector" 
+                  type="button" 
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+            {{ selectedPeriod }}
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="javascript:void(0)" (click)="onPeriodChange('Categories')">Categories</a></li>
+            
+            <li><a class="dropdown-item" href="javascript:void(0)" (click)="onPeriodChange('Monthly')">Monthly</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0)" (click)="onPeriodChange('Yearly')">Yearly</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Chart Container -->
+    <div class="chart-container position-relative">
+      <canvas #chartCanvas class="chart-canvas"></canvas>
+      
+      <!-- Tooltip -->
+      <div 
+        *ngIf="tooltip.show" 
+        class="chart-tooltip" 
+        [style.left.px]="tooltip.x + 10" 
+        [style.top.px]="tooltip.y - 60">
+        <div class="tooltip-header">{{ tooltip.category }}</div>
+        <div class="tooltip-body">
+          <div *ngFor="let item of tooltip.data" class="tooltip-item d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <span class="tooltip-dot" [style.background-color]="item.color"></span>
+              <span class="tooltip-label">{{ item.label }}</span>
+            </div>
+            <span class="tooltip-value">{{ item.value }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

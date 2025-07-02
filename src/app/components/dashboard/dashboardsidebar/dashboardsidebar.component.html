@@ -1,18 +1,35 @@
 <nav class="sidebar" [class.closed]="collapsed">
   <div class="sidebar-header text-center">
     <img src="evslogo.png" alt="Logo" class="sidebar-logo" />
-    <div class="sidebar-title">EVALUESERVE University</div>
+    <div class="sidebar-title">Learning Portal</div>
   </div>
 
   <ul class="nav flex-column mt-3">
-    <li class="nav-item">
-      <a routerLink="/reports" routerLinkActive="active" class="nav-link">
+    <!-- Reports Section -->
+    <li class="nav-item" *ngIf="shouldShowMenuItem('reports')">
+      <a 
+        class="nav-link" 
+        [class.selected]="reportsOpen"
+        (click)="toggleReports()">
         <i class="bi bi-grid"></i>
         <span>Reports</span>
+        <i
+          class="bi ms-auto"
+          [ngClass]="{
+            'bi-chevron-down': reportsOpen,
+            'bi-chevron-right': !reportsOpen
+          }"
+        ></i>
       </a>
+      <ul class="nav flex-column child-nav" [class.show]="reportsOpen">
+        <li class="nav-item">
+          <a routerLink="reports/generate" class="nav-link ps-4">Generate Report</a>
+        </li>
+      </ul>
     </li>
 
-    <li class="nav-item">
+    <!-- Line of Business Section -->
+    <li class="nav-item" *ngIf="shouldShowMenuItem('business')">
       <a
         class="nav-link"
         [class.selected]="businessOpen"
@@ -38,7 +55,8 @@
       </ul>
     </li>
 
-    <li class="nav-item">
+    <!-- SME Section -->
+    <li class="nav-item" *ngIf="shouldShowMenuItem('sme')">
       <a class="nav-link" 
       [class.selected]="smeOpen"
       (click)="toggleSME()">
@@ -62,8 +80,9 @@
       </ul>
     </li>
 
-    <li class="nav-item">
-      <a routerLink="/courses" class="nav-link"
+    <!-- Courses Section -->
+    <li class="nav-item" *ngIf="shouldShowMenuItem('courses')">
+      <a  class="nav-link"
        [class.selected]="courseOpen"
        (click)="toggleCourse()">
         <i class="bi bi-journal-bookmark"></i>
@@ -97,98 +116,110 @@
         </li>
       </ul>
     </li>
-<!-- 
-    <ul class="nav flex-column mt-3">
-      <li class="nav-item">
-        <a routerLink="user" routerLinkActive="active" class="nav-link">
-          <i class="bi bi-grid"></i>
-          <span>User</span>
-        </a>
-      </li>
-    </ul> -->
     
-      <li class="nav-item">
-        <a 
+    <!-- User Section -->
+    <li class="nav-item" *ngIf="shouldShowMenuItem('user')">
+      <a 
+      class="nav-link" 
+       [class.selected]="usersOpen"
+      (click)="toggleUser()">
+        <i class="bi bi-grid"></i>
+        <span>User</span>
+         <i
+          class="bi ms-auto"
+          [ngClass]="{
+            'bi-chevron-down': usersOpen,
+            'bi-chevron-right': !usersOpen
+          }"
+        ></i>
+      </a>
+      <ul class="nav flex-column child-nav" [class.show]="usersOpen">
+        <li class="nav-item">
+          <a routerLink="user/add" class="nav-link ps-4">Add User</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="user/view" class="nav-link ps-4">View User</a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- TA Section -->
+    <li class="nav-item" *ngIf="shouldShowMenuItem('ta')">
+      <a class="nav-link" 
+       [class.selected]="taOpen"
+       (click)="toggleTA()">
+       <i class="bi bi-mortarboard"></i>
+        <span>TA</span>
+         <i
+          class="bi ms-auto"
+          [ngClass]="{
+            'bi-chevron-down': taOpen,
+            'bi-chevron-right': !taOpen
+          }"
+        ></i>
+      </a>
+      <ul class="nav flex-column child-nav" [class.show]="taOpen">
+        <li class="nav-item">
+          <a routerLink="ta/add" class="nav-link ps-4">Add TA</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="ta/view" class="nav-link ps-4">View TA</a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Admin Section -->
+    <li class="nav-item" *ngIf="shouldShowMenuItem('admin')">
+      <a 
+      class="nav-link" 
+       [class.selected]="adminOpen"
+      (click)="toggleAdmin()">
+        <i class="bi bi-shield-lock"></i>
+        <span>Admin</span>
+         <i
+          class="bi ms-auto"
+          [ngClass]="{
+            'bi-chevron-down': adminOpen,
+            'bi-chevron-right': !adminOpen
+          }"
+        ></i>
+      </a>
+      <ul class="nav flex-column child-nav" [class.show]="adminOpen">
+        <li class="nav-item">
+          <a routerLink="admin/add" class="nav-link ps-4">Add Admin</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="admin/view" class="nav-link ps-4">View Admin</a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- Assignment Section -->
+    <li class="nav-item" *ngIf="shouldShowMenuItem('assignment')">
+      <a 
         class="nav-link" 
-         [class.selected]="usersOpen"
-        (click)="toggleUser()">
-          <i class="bi bi-grid"></i>
-          <span>User</span>
-           <i
-            class="bi ms-auto"
-            [ngClass]="{
-              'bi-chevron-down': usersOpen,
-              'bi-chevron-right': !usersOpen
-            }"
-          ></i>
-        </a>
-        <ul class="nav flex-column child-nav" [class.show]="usersOpen">
-          <li class="nav-item">
-            <a routerLink="user/add" class="nav-link ps-4">Add User</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="user/view" class="nav-link ps-4">View User</a>
-          </li>
-        </ul>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" 
-         [class.selected]="businessOpen"
-         (click)="toggleTA()">
-         
-          <span>TA</span>
-           <i
-            class="bi ms-auto"
-            [ngClass]="{
-              'bi-chevron-down': taOpen,
-              'bi-chevron-right': !taOpen
-            }"
-          ></i>
-        </a>
-        <ul class="nav flex-column child-nav" [class.show]="taOpen">
-          <li class="nav-item">
-            <a routerLink="ta/add" class="nav-link ps-4">Add TA</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="ta/view" class="nav-link ps-4">View TA</a>
-          </li>
-        </ul>
-      </li>
-
+        [class.selected]="assignmentOpen"
+        (click)="toggleAssignment()">
+        <i class="bi bi-pencil-square"></i>
+        <span>Assignment</span>
+        <i
+          class="bi ms-auto"
+          [ngClass]="{
+            'bi-chevron-down': assignmentOpen,
+            'bi-chevron-right': !assignmentOpen
+          }"
+        ></i>
+      </a>
+      <ul class="nav flex-column child-nav" [class.show]="assignmentOpen">
+        <li class="nav-item">
+          <a routerLink="assignment/add" class="nav-link ps-4">Add Assignment</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="assignment/view" class="nav-link ps-4">View Assignment</a>
+        </li>
+      </ul>
+    </li>
     
-
-      <li class="nav-item">
-        <a 
-        class="nav-link" 
-         [class.selected]="adminOpen"
-        (click)="toggleAdmin()">
-          <i class="bi bi-shield-lock"></i>
-          <span>Admin</span>
-           <i
-            class="bi ms-auto"
-            [ngClass]="{
-              'bi-chevron-down': adminOpen,
-              'bi-chevron-right': !adminOpen
-            }"
-          ></i>
-        </a>
-        <ul class="nav flex-column child-nav" [class.show]="adminOpen">
-          <li class="nav-item">
-            <a routerLink="admin/add" class="nav-link ps-4">Add Admin</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="admin/view" class="nav-link ps-4">View Admin</a>
-          </li>
-        </ul>
-      </li>
-
-      <li class="nav-item">
-        <a routerLink="/assignment" class="nav-link">
-          <i class="bi bi-pencil-square"></i>
-          <span>Assignment</span>
-        </a>
-      </li>
-    </ul>
+  </ul>
  
 </nav>

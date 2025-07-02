@@ -143,7 +143,7 @@
             <span>{{ getStatusText(course.status) }}</span>
           </div>
         </td>
-        <td class="actions-column">
+        <!-- <td class="actions-column">
           <button class="btn btn-sm btn-outline-primary me-2" (click)="editCourse(course)">
             <i class="bi bi-pencil-square"></i> Edit
           </button>
@@ -154,9 +154,22 @@
 
           <button class="btn btn-sm btn-outline-primary me-2" (click)="viewModule(course)">
             <i class="bi bi-pencil-square"></i> View Modules
-          </button>
-
-        </td>
+          </button> -->
+          <td class="actions-column">
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline-primary" (click)="editCourse(course)">
+                <i ></i>  Edit
+              </button>
+          
+              <button class="btn btn-sm btn-outline-success" (click)="addModule(course)">
+                <i ></i> Add Module
+              </button>
+          
+              <button class="btn btn-sm btn-outline-info" (click)="viewModule(course)">
+                <i ></i> View Modules
+              </button>
+            </div>
+          </td> 
       </tr>
     </tbody>
   </table>

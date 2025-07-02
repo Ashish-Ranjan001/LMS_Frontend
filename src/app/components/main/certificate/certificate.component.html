@@ -1,0 +1,90 @@
+<div class="container-fluid p-4">
+    <div id="certificate-container" class="certificate-wrapper">
+      <div class="certificate-container">
+        <!-- Decorative corners -->
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+        
+        <!-- Certificate content -->
+        <div class="certificate-content">
+          <!-- Header -->
+          <div class="certificate-header">
+            <h1 class="certificate-title">CERTIFICATE</h1>
+            <p class="certificate-subtitle">OF COMPLETION</p>
+          </div>
+          
+          <!-- Award text -->
+          <div class="award-section">
+            <p class="award-text">THIS CERTIFICATE IS AWARDED TO :</p>
+          </div>
+          
+          <!-- User name -->
+          <div class="recipient-section">
+            <div class="recipient-name-container">
+              <span class="recipient-name">{{ userName || 'user name' }}</span>
+            </div>
+            <div class="underline"></div>
+          </div>
+          
+          <!-- Course completion text -->
+          <div class="completion-section">
+            <p class="completion-text">
+              FOR COMPLETING A CERTIFICATION PROGRAM FOR<br>
+              <span class="course-name">{{ courseName || 'COURSE NAME' }}</span> AT LEARNING PORTAL.
+            </p>
+          </div>
+          
+          <!-- Signatures -->
+          <div class="signature-section">
+            <div class="signature-block">
+              <div class="signature-line"></div>
+              <div class="signature-info">
+                <p class="signature-name">YASH VIJAY</p>
+                <p class="signature-title">DEVELOPER</p>
+              </div>
+            </div>
+            
+            <div class="signature-block">
+              <div class="signature-line"></div>
+              <div class="signature-info">
+                <p class="signature-name">ADITYA NARAYAN</p>
+                <p class="signature-title">DEVELOPER</p>
+              </div>
+            </div>
+            
+            <div class="signature-block">
+              <div class="signature-line"></div>
+              <div class="signature-info">
+                <p class="signature-name">ASHISH RANJAN</p>
+                <p class="signature-title">DEVELOPER</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Medal/Ribbon decoration -->
+          <div class="medal-decoration">
+            <div class="medal-circle">
+              <div class="medal-inner"></div>
+            </div>
+            <div class="ribbon-left"></div>
+            <div class="ribbon-right"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Download button -->
+    <div class="text-center mt-4" *ngIf="showDownloadButton">
+      <button 
+        id="download-btn"
+        type="button" 
+        class="btn btn-primary btn-lg px-5 py-3 download-certificate-btn"
+        (click)="downloadCertificate()"
+        [disabled]="!userName || !courseName">
+        <i class="fas fa-download me-2"></i>
+        Download Certificate
+      </button>
+    </div>
+  </div>

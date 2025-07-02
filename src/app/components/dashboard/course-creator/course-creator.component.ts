@@ -858,9 +858,9 @@
 // ------------------ final code ------------------------
 
 
-import { Component } from '@angular/core';
+import { Component , inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { Router } from '@angular/router';
 import { Course } from '../../../models/course';
 import { Quiz } from '../../../models/quiz';
 import { CourseModule } from '../../../models/course-module';
@@ -914,8 +914,9 @@ export class CourseCreatorComponent {
   successMessage: string = '';
   createdCourseId: number | null = null;
 
-  constructor(private courseService: CourseServicesService) {}
+  constructor(private courseService: CourseServicesService , ) {}
 
+  router:any=inject(Router)
   goToStep(stepIndex: number): void {
     if (stepIndex < 0 || stepIndex > this.steps.length - 1) {
       return;
@@ -994,6 +995,7 @@ export class CourseCreatorComponent {
       
       this.successMessage = 'Course and module created successfully!';
       alert( 'Course and module created successfully!');
+      this.router.navigate(['dashboard/course/viewcourse']);
     } catch (error) {
       console.error('Error during submission:', error);
       this.errorMessage = 'An error occurred during submission. Please try again.';
