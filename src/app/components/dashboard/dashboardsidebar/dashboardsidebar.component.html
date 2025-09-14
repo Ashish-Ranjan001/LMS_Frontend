@@ -1,194 +1,46 @@
-<nav class="sidebar" [class.closed]="collapsed">
-  <div class="sidebar-header text-center">
-    <img src="evslogo.png" alt="Logo" class="sidebar-logo" />
-    <div class="sidebar-title">EVALUESERVE University</div>
+<aside class="sidebar"
+  [class.closed]="collapsed && !tempExpanded"
+  (mouseenter)="onSidebarMouseEnter()"
+  (mouseleave)="onSidebarMouseLeave()">
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <img src="sidebar.jpg" alt="Logo" class="sidebar-logo" />
+      <h1 class="sidebar-title" [class.hide]="collapsed && !tempExpanded">Learn & Empower</h1>
+    </div>
+    <div class="user-profile" [class.collapsed]="collapsed && !tempExpanded">
+      <img [src]="userAvatar" class="user-avatar" alt="userName" />
+      <div class="user-info" [class.hide]="collapsed && !tempExpanded">
+        <span class="user-name">{{ userName }}</span>
+        <span class="user-email">{{ userEmail }}</span>
+      </div>
+    </div>
   </div>
-
-  <ul class="nav flex-column mt-3">
-    <li class="nav-item">
-      <a routerLink="/reports" routerLinkActive="active" class="nav-link">
-        <i class="bi bi-grid"></i>
-        <span>Reports</span>
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a
-        class="nav-link"
-        [class.selected]="businessOpen"
-        (click)="toggleBusiness()"
-      >
-        <i class="bi bi-mortarboard"></i>
-        <span>Line of Business</span>
-        <i
-          class="bi ms-auto"
-          [ngClass]="{
-            'bi-chevron-down': businessOpen,
-            'bi-chevron-right': !businessOpen
-          }"
-        ></i>
-      </a>
-      <ul class="nav flex-column child-nav" [class.show]="businessOpen">
-        <li class="nav-item">
-          <a routerLink="lob/add" class="nav-link ps-4">Add LoB</a>
-        </li>
-        <li class="nav-item">
-          <a routerLink="lob/view" class="nav-link ps-4">View LoB</a>
-        </li>
-      </ul>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" 
-      [class.selected]="smeOpen"
-      (click)="toggleSME()">
-        <i class="bi bi-mortarboard"></i>
-        <span>SME</span>
-        <i
-          class="bi ms-auto"
-          [ngClass]="{
-            'bi-chevron-down': smeOpen,
-            'bi-chevron-right': !smeOpen
-          }"
-        ></i>
-      </a>
-      <ul class="nav flex-column child-nav" [class.show]="smeOpen">
-        <li class="nav-item">
-          <a routerLink="sme/add" class="nav-link ps-4">Add Sme</a>
-        </li>
-        <li class="nav-item">
-          <a routerLink="sme/view" class="nav-link ps-4">View Sme</a>
-        </li>
-      </ul>
-    </li>
-
-    <li class="nav-item">
-      <a routerLink="/courses" class="nav-link"
-       [class.selected]="courseOpen"
-       (click)="toggleCourse()">
-        <i class="bi bi-journal-bookmark"></i>
-        <span>Courses</span>
-         <i
-          class="bi ms-auto"
-          [ngClass]="{
-            'bi-chevron-down': courseOpen,
-            'bi-chevron-right': !courseOpen
-          }"
-        ></i>
-      </a>
-      <ul class="nav flex-column child-nav" [class.show]="courseOpen">
-        <li class="nav-item">
-          <a routerLink="course/addCategory" class="nav-link ps-4"
-            >Add Category</a
-          >
-        </li>
-        <li class="nav-item">
-          <a routerLink="course/viewCategory" class="nav-link ps-4"
-            >View Category</a
-          >
-        </li>
-        <li class="nav-item">
-          <a routerLink="course/addcourse" class="nav-link ps-4">Add Course</a>
-        </li>
-        <li class="nav-item">
-          <a routerLink="course/viewcourse" class="nav-link ps-4"
-            >View Course</a
-          >
-        </li>
-      </ul>
-    </li>
-<!-- 
-    <ul class="nav flex-column mt-3">
-      <li class="nav-item">
-        <a routerLink="user" routerLinkActive="active" class="nav-link">
-          <i class="bi bi-grid"></i>
-          <span>User</span>
-        </a>
-      </li>
-    </ul> -->
-    
-      <li class="nav-item">
-        <a 
-        class="nav-link" 
-         [class.selected]="usersOpen"
-        (click)="toggleUser()">
-          <i class="bi bi-grid"></i>
-          <span>User</span>
-           <i
-            class="bi ms-auto"
-            [ngClass]="{
-              'bi-chevron-down': usersOpen,
-              'bi-chevron-right': !usersOpen
-            }"
-          ></i>
-        </a>
-        <ul class="nav flex-column child-nav" [class.show]="usersOpen">
-          <li class="nav-item">
-            <a routerLink="user/add" class="nav-link ps-4">Add User</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="user/view" class="nav-link ps-4">View User</a>
+  <nav class="sidebar-nav">
+    <ul>
+      <li *ngFor="let item of navConfig"
+          class="nav-item"
+          [class.hidden]="!shouldShowMenuItem(item.key)">
+        <button class="nav-button"
+                [class.active]="openSections[item.key] && !(collapsed && !tempExpanded)"
+                (click)="toggleSection(item.key)">
+          <i [class]="item.icon"></i>
+          <span class="nav-label" [class.hide]="collapsed && !tempExpanded">{{ item.label }}</span>
+          <i *ngIf="!(collapsed && !tempExpanded)"
+             class="bi"
+             [class.bi-chevron-down]="openSections[item.key]"
+             [class.bi-chevron-right]="!openSections[item.key]">
+          </i>
+        </button>
+        <ul class="submenu" [class.expanded]="openSections[item.key] && !(collapsed && !tempExpanded)">
+          <li *ngFor="let child of item.children">
+            <a [routerLink]="child.to"
+               routerLinkActive="active"
+               class="submenu-link">
+              {{ child.label }}
+            </a>
           </li>
         </ul>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" 
-         [class.selected]="businessOpen"
-         (click)="toggleTA()">
-         
-          <span>TA</span>
-           <i
-            class="bi ms-auto"
-            [ngClass]="{
-              'bi-chevron-down': taOpen,
-              'bi-chevron-right': !taOpen
-            }"
-          ></i>
-        </a>
-        <ul class="nav flex-column child-nav" [class.show]="taOpen">
-          <li class="nav-item">
-            <a routerLink="ta/add" class="nav-link ps-4">Add TA</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="ta/view" class="nav-link ps-4">View TA</a>
-          </li>
-        </ul>
-      </li>
-
-    
-
-      <li class="nav-item">
-        <a 
-        class="nav-link" 
-         [class.selected]="adminOpen"
-        (click)="toggleAdmin()">
-          <i class="bi bi-shield-lock"></i>
-          <span>Admin</span>
-           <i
-            class="bi ms-auto"
-            [ngClass]="{
-              'bi-chevron-down': adminOpen,
-              'bi-chevron-right': !adminOpen
-            }"
-          ></i>
-        </a>
-        <ul class="nav flex-column child-nav" [class.show]="adminOpen">
-          <li class="nav-item">
-            <a routerLink="admin/add" class="nav-link ps-4">Add Admin</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="admin/view" class="nav-link ps-4">View Admin</a>
-          </li>
-        </ul>
-      </li>
-
-      <li class="nav-item">
-        <a routerLink="/assignment" class="nav-link">
-          <i class="bi bi-pencil-square"></i>
-          <span>Assignment</span>
-        </a>
       </li>
     </ul>
- 
-</nav>
+  </nav>
+</aside>

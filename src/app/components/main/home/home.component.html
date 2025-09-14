@@ -1,1 +1,102 @@
-<p>home works!</p>
+<div class="app-container">
+  <!-- Header Section - Fixed at top, outside grid -->
+  <div class="header-section">
+    <app-mainheader
+      [userName]="userName"
+      [userEmail]="userEmail"
+      [userAvatar]="userAvatar"
+      [lobid]="lobid"
+      [userId]="userId"
+      >
+    </app-mainheader>
+  </div>
+
+  <!-- Main Content Grid Container - Scrollable area -->
+  <div class="main-content-container">
+    <div class="parent">
+      
+      <!-- Div 1: Hero Banner -->
+      <div class="grid-item div1">
+        <div class="grid-item-content">
+          <app-hero-banner 
+            (action)="onHeroBannerAction($event)">
+          </app-hero-banner>
+        </div>
+      </div>
+
+      <!-- Div 2: Progress Bar -->
+      <div class="grid-item div2">
+        <div class="grid-item-content">
+          <app-progress-bar 
+            (progressUpdate)="onProgressUpdate($event)">
+          </app-progress-bar>
+        </div>
+      </div>
+
+      <!-- Div 3: Card Carousel -->
+      <div class="grid-item div3">
+       
+        <div class="grid-item-content">
+         
+          <!-- <app-card-carousel 
+            (itemSelected)="onCarouselItemSelected($event)">
+          </app-card-carousel> -->
+
+          <app-card-carousel>
+        </app-card-carousel>
+            
+        </div>
+      </div>
+
+    
+      <!-- Div 4: Calendar -->
+      <div class="grid-item div4">
+        <div class="grid-item-content">
+          <app-calendar 
+            (eventSelected)="onCalendarEventSelected($event)">
+          </app-calendar>
+        </div>
+      </div>
+
+      <!-- Div 5: Folder Component -->
+      <div class="grid-item div5">
+        <div class="grid-item-content">
+          <app-folder></app-folder>
+        </div>
+      </div>
+
+      <!-- Div 6: Favorite Courses -->
+      <div class="grid-item div6">
+        <div class="grid-item-content">
+          <app-favorite-courses 
+            (courseSelected)="onCourseSelected($event)">
+          </app-favorite-courses>
+        </div>
+      </div>
+
+      <!-- Div 7: Categories -->
+      <div class="grid-item div7">
+        <!-- <div class="grid-item-content">
+          <app-home-categories 
+            (categorySelected)="onCategorySelected($event)">
+          </app-home-categories>
+        </div> -->
+          <div class="grid-item-content">
+          <app-home-saved-course></app-home-saved-course>
+        </div>
+      </div>
+
+      <!-- Div 8: Saved Courses -->
+      <!-- <div class="grid-item div8">
+        <div class="grid-item-content">
+          <app-home-saved-course></app-home-saved-course>
+        </div>
+      </div> -->
+    </div>
+  </div>
+
+  <!-- Footer Section - Fixed at bottom, outside grid -->
+  <div class="footer-section">
+    <app-mainfooter></app-mainfooter>
+  </div>
+</div>

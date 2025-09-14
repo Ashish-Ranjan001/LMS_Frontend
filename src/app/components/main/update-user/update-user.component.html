@@ -1,0 +1,266 @@
+<div class="profile-container">
+  <!-- Animated Background -->
+  <div class="animated-background">
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+      <div class="shape shape-5"></div>
+      <div class="shape shape-6"></div>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Left Side - ID Card -->
+    <div class="left-panel">
+      <div class="lanyard-wrapper">
+        <div class="lanyard-string"></div>
+        <div class="id-card" 
+             [class.loading]="isLoading"
+             [class.dragging]="isDragging"
+             (mousedown)="startDrag($event)"
+             (mousemove)="onDrag($event)"
+             (mouseup)="endDrag()"
+             (mouseleave)="endDrag()"
+             (mouseenter)="onCardHover(true)" 
+             (mouseleave)="onCardHover(false)"
+             [style.transform]="cardTransform">
+          
+          <!-- Loading State -->
+          <div class="loading-overlay" *ngIf="isLoading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Card Content -->
+          <div class="card-content" [class.card-hovered]="isCardHovered">
+            <div class="card-header">
+              <div class="company-logo">
+                <h4>Learning Portal</h4>
+                <span class="company-subtitle">Pvt. Ltd.</span>
+              </div>
+              <div class="card-badge">
+                <span class="badge bg-success">{{ userProfile?.joinerStatus || 'Active' }}</span>
+              </div>
+            </div>
+            
+            <div class="employee-photo-container">
+              <div class="photo-frame">
+                <img [src]="getAvatarImage()" alt="Employee Photo" class="avatar-image">
+                <div class="photo-overlay"></div>
+              </div>
+            </div>
+            
+            <div class="employee-details">
+              <div class="detail-row">
+                <span class="label">
+                  <i class="fas fa-user text-primary"></i>
+                  Name:
+                </span>
+                <span class="value">{{ userProfile?.name || 'Loading...' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">
+                  <i class="fas fa-envelope text-info"></i>
+                  Email:
+                </span>
+                <span class="value">{{ userProfile?.email || 'Loading...' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">
+                  <i class="fas fa-phone text-success"></i>
+                  Phone:
+                </span>
+                <span class="value">{{ userProfile?.phone || 'Loading...' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">
+                  <i class="fas fa-venus-mars text-warning"></i>
+                  Gender:
+                </span>
+                <span class="value">{{ userProfile?.gender | titlecase }}</span>
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <div class="footer-row">
+                <span class="label">
+                  <i class="fas fa-id-badge text-info"></i>
+                  LOB ID:
+                </span>
+                <span class="value lob-name">{{ userProfile?.lobId || 'LOB001' }}</span>
+              </div>
+              <div class="footer-row">
+                <span class="label">
+                  <i class="fas fa-hashtag text-success"></i>
+                  Employee ID:
+                </span>
+                <span class="value employee-id">{{ userProfile?.id || 'EMP12345' }}</span>
+              </div>
+            </div>
+
+            <!-- Interactive Elements -->
+            <div class="card-interactive-elements">
+              <div class="hologram-effect"></div>
+              <div class="security-chip"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Form -->
+    <div class="right-panel">
+      <div class="form-container">
+        <div class="form-header">
+          <h2 class="form-title">
+            <i class="fas fa-user-edit text-primary"></i>
+            Update Profile
+          </h2>
+          <p class="form-subtitle">Update your personal information below</p>
+        </div>
+
+        <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+          <i class="fas fa-info-circle me-2"></i>
+          <div>
+            Please ensure all information is accurate and up-to-date.
+          </div>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+          <!-- Name Field -->
+          <div class="form-group mb-4">
+            <label for="name" class="form-label">
+              <i class="fas fa-user text-primary"></i>
+              Full Name <span class="required">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-user"></i>
+              </span>
+              <input 
+                type="text" 
+                id="name" 
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('name')"
+                [class.is-valid]="isFieldValid('name')"
+                formControlName="name"
+                placeholder="Enter your full name">
+            </div>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+              {{ getFieldError('name') }}
+            </div>
+            <div class="valid-feedback" *ngIf="isFieldValid('name')">
+              Looks good!
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group mb-4">
+            <label for="email" class="form-label">
+              <i class="fas fa-envelope text-info"></i>
+              Email Address <span class="required">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-envelope"></i>
+              </span>
+              <input 
+                type="email" 
+                id="email" 
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('email')"
+                [class.is-valid]="isFieldValid('email')"
+                formControlName="email"
+                placeholder="Enter your email address">
+            </div>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+              {{ getFieldError('email') }}
+            </div>
+            <div class="valid-feedback" *ngIf="isFieldValid('email')">
+              Looks good!
+            </div>
+          </div>
+
+          <!-- Phone Field -->
+          <div class="form-group mb-4">
+            <label for="phone" class="form-label">
+              <i class="fas fa-phone text-success"></i>
+              Phone Number <span class="required">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-phone"></i>
+              </span>
+              <input 
+                type="tel" 
+                id="phone" 
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('phone')"
+                [class.is-valid]="isFieldValid('phone')"
+                formControlName="phone"
+                placeholder="Enter your phone number">
+            </div>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('phone')">
+              {{ getFieldError('phone') }}
+            </div>
+            <div class="valid-feedback" *ngIf="isFieldValid('phone')">
+              Looks good!
+            </div>
+          </div>
+
+          <!-- Gender Field -->
+          <div class="form-group mb-4">
+            <label for="gender" class="form-label">
+              <i class="fas fa-venus-mars text-warning"></i>
+              Gender <span class="required">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-venus-mars"></i>
+              </span>
+              <select 
+                id="gender" 
+                class="form-control form-select"
+                [class.is-invalid]="isFieldInvalid('gender')"
+                [class.is-valid]="isFieldValid('gender')"
+                formControlName="gender">
+                <option value="">Select Gender</option>
+                <option *ngFor="let option of genderOptions" [value]="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('gender')">
+              {{ getFieldError('gender') }}
+            </div>
+            <div class="valid-feedback" *ngIf="isFieldValid('gender')">
+              Looks good!
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary btn-change-password me-3"
+              (click)="onChangePassword()">
+              <i class="fas fa-key me-2"></i>
+              Change Password
+            </button>
+            <button 
+              type="submit" 
+              class="btn btn-primary btn-update"
+              [disabled]="profileForm.invalid || isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+              <i *ngIf="!isSubmitting" class="fas fa-save me-2"></i>
+              {{ isSubmitting ? 'Updating...' : 'Update Profile' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

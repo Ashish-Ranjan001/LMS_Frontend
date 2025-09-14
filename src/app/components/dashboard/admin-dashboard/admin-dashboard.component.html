@@ -1,0 +1,555 @@
+<div class="admin-dashboard">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div class="header-content">
+        <h1 class="dashboard-title">
+          <i class="fas fa-tachometer-alt"></i>
+          Admin Dashboard
+        </h1>
+        <div class="header-actions">
+          <button class="btn btn-primary" (click)="refreshData()">
+            <i class="fas fa-sync-alt"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Navigation Tabs -->
+    <div class="dashboard-nav">
+      <nav class="nav-tabs">
+        <button 
+          class="nav-tab" 
+          [class.active]="activeTab === 'overview'"
+          (click)="setActiveTab('overview')">
+          <i class="fas fa-chart-line"></i>
+          Overview
+        </button>
+        <button 
+          class="nav-tab" 
+          [class.active]="activeTab === 'users'"
+          (click)="setActiveTab('users')">
+          <i class="fas fa-users"></i>
+          Users
+        </button>
+        <button 
+          class="nav-tab" 
+          [class.active]="activeTab === 'courses'"
+          (click)="setActiveTab('courses')">
+          <i class="fas fa-book"></i>
+          Courses
+        </button>
+        <button 
+          class="nav-tab" 
+          [class.active]="activeTab === 'enrollments'"
+          (click)="setActiveTab('enrollments')">
+          <i class="fas fa-graduation-cap"></i>
+          Enrollments
+        </button>
+        <button 
+          class="nav-tab" 
+          [class.active]="activeTab === 'modules'"
+          (click)="setActiveTab('modules')">
+          <i class="fas fa-puzzle-piece"></i>
+          Modules
+        </button>
+        <button 
+          class="nav-tab" 
+          [class.active]="activeTab === 'sme'"
+          (click)="setActiveTab('sme')">
+          <i class="fas fa-user-tie"></i>
+          SME Panel
+        </button>
+        <button 
+          class="nav-tab" 
+          [class.active]="activeTab === 'lob'"
+          (click)="setActiveTab('lob')">
+          <i class="fas fa-building"></i>
+          LOB Insights
+        </button>
+      </nav>
+    </div>
+  
+    <!-- Overview Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'overview'">
+      <div class="overview-section">
+        <!-- Stats Cards -->
+        <div class="stats-grid" *ngIf="overviewStats">
+          <div class="stat-card primary">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <h3>{{overviewStats.totalUsers || 0}}</h3>
+              <p>Total Users</p>
+              <small>{{overviewStats.activeUsers || 0}} active this month</small>
+            </div>
+          </div>
+          
+          <div class="stat-card success">
+            <div class="stat-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-content">
+              <h3>{{overviewStats.totalCourses || 0}}</h3>
+              <p>Total Courses</p>
+            </div>
+          </div>
+          
+          <div class="stat-card info">
+            <div class="stat-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="stat-content">
+              <h3>{{overviewStats.totalEnrollments || 0}}</h3>
+              <p>Total Enrollments</p>
+            </div>
+          </div>
+          
+          <div class="stat-card warning">
+            <div class="stat-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+              <h3>{{overviewStats.completionRate || 0}}%</h3>
+              <p>Completion Rate</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Recent Activities -->
+        <div class="recent-activities" *ngIf="recentActivities">
+          <div class="activity-section">
+            <h3><i class="fas fa-clock"></i> Recent Enrollments</h3>
+            <div class="activity-list">
+              <div class="activity-item" *ngFor="let enrollment of recentActivities.recentEnrollments">
+                <div class="activity-info">
+                  <strong>{{enrollment.userName}}</strong> enrolled in 
+                  <em>{{enrollment.courseName}}</em>
+                  <span class="progress-badge">{{enrollment.progress}}% progress</span>
+                </div>
+                <div class="activity-time">
+                  {{formatDate(enrollment.enrolledAt)}}
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="activity-section">
+            <h3><i class="fas fa-trophy"></i> Recent Completions</h3>
+            <div class="activity-list">
+              <div class="activity-item" *ngFor="let completion of recentActivities.recentCompletions">
+                <div class="activity-info">
+                  <strong>{{completion.userName}}</strong> completed 
+                  <em>{{completion.courseName}}</em>
+                </div>
+                <div class="activity-time">
+                  {{formatDate(completion.completedAt)}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Users Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'users'">
+      <div class="users-section" *ngIf="userAnalytics">
+        <div class="charts-grid">
+          <!-- User Registration Trend -->
+          <!-- <div class="chart-card">
+            <h3><i class="fas fa-chart-line"></i> User Registration Trend</h3>
+            <div class="chart-container">
+              <canvas #userTrendChart></canvas>
+            </div>
+          </div> -->
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-line"></i> User Registration Trend</h3>
+            <div class="chart-container">
+              <canvas #userTrendChart></canvas>
+            </div>
+          </div>
+  
+          <!-- Role Distribution -->
+          <!-- <div class="chart-card">
+            <h3><i class="fas fa-pie-chart"></i> Role Distribution</h3>
+            <div class="chart-container">
+              <canvas #roleDistributionChart></canvas>
+            </div>
+          </div> -->
+          <div class="chart-card">
+            <h3><i class="fas fa-pie-chart"></i> Role Distribution</h3>
+            <div class="chart-container">
+              <canvas #roleDistributionChart></canvas>
+            </div>
+          </div>
+
+        
+          <!-- LOB Distribution -->
+          <div class="chart-card">
+            <h3><i class="fas fa-building"></i> LOB Distribution</h3>
+            <div class="distribution-list">
+              <div class="distribution-item" *ngFor="let lob of userAnalytics.lobDistribution">
+                <div class="distribution-label">{{lob.lob}}</div>
+                <div class="distribution-bar">
+                  <div class="bar-fill" [style.width.%]="getPercentage(lob.count, userAnalytics.lobDistribution)"></div>
+                  <span class="bar-value">{{lob.count}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Gender Distribution -->
+          <div class="chart-card">
+            <h3><i class="fas fa-venus-mars"></i> Gender Distribution</h3>
+            <div class="gender-stats">
+              <div class="gender-item" *ngFor="let gender of userAnalytics.genderDistribution">
+                <div class="gender-icon">
+                  <i [class]="gender.gender === 'Male' ? 'fas fa-mars' : 'fas fa-venus'"></i>
+                </div>
+                <div class="gender-info">
+                  <strong>{{gender.count}}</strong>
+                  <span>{{gender.gender}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Courses Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'courses'">
+      <div class="courses-section" *ngIf="coursePerformance">
+        <div class="charts-grid">
+          <!-- Popular Courses -->
+          <div class="chart-card full-width">
+            <h3><i class="fas fa-star"></i> Top 10 Popular Courses</h3>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Course Name</th>
+                    <th>Enrollments</th>
+                    <th>Completions</th>
+                    <th>Completion Rate</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let course of coursePerformance.popularCourses">
+                    <td>{{course.courseName}}</td>
+                    <td>{{course.enrollments}}</td>
+                    <td>{{course.completions}}</td>
+                    <td>
+                      <div class="progress-bar">
+                        <div class="progress-fill" [style.width.%]="course.completionRate"></div>
+                        <span class="progress-text">{{course.completionRate}}%</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge" [class]="course.completionRate > 70 ? 'badge-success' : course.completionRate > 40 ? 'badge-warning' : 'badge-danger'">
+                        {{course.completionRate > 70 ? 'Excellent' : course.completionRate > 40 ? 'Good' : 'Needs Attention'}}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+  
+          <!-- Category Performance -->
+          <div class="chart-card">
+            <h3><i class="fas fa-tags"></i> Category Performance</h3>
+            <div class="category-list">
+              <div class="category-item" *ngFor="let category of coursePerformance.categoryPerformance">
+                <div class="category-header">
+                  <h4>{{category.category}}</h4>
+                  <span class="category-badge">{{category.courseCount}} courses</span>
+                </div>
+                <div class="category-stats">
+                  <div class="stat">
+                    <i class="fas fa-users"></i>
+                    {{category.totalEnrollments}} enrollments
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Completion Trends -->
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-area"></i> Completion Trends</h3>
+            <div class="chart-container">
+              <canvas #completionTrendsChart></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Enrollments Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'enrollments'">
+      <div class="enrollments-section" *ngIf="enrollmentTracking">
+        <div class="charts-grid">
+          <!-- Progress Distribution -->
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-pie"></i> Progress Distribution</h3>
+            <div class="chart-container">
+              <canvas #progressDistributionChart></canvas>
+            </div>
+          </div>
+  
+          <!-- Quiz Statistics -->
+          <div class="chart-card">
+            <h3><i class="fas fa-question-circle"></i> Quiz Statistics</h3>
+            <div class="quiz-stats">
+              <div class="quiz-stat" *ngFor="let stat of enrollmentTracking.quizStats">
+                <div class="stat-header">
+                  <h4>{{stat.status}}</h4>
+                  <span class="stat-count">{{stat.count}}</span>
+                </div>
+                <div class="stat-detail" *ngIf="stat.averageScore && stat.averageScore > 0">
+                  Avg Score: {{formatNumber(stat.averageScore)}}%
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Assignment Statistics -->
+          <div class="chart-card">
+            <h3><i class="fas fa-file-alt"></i> Assignment Statistics</h3>
+            <div class="assignment-stats">
+              <div class="assignment-stat" *ngFor="let stat of enrollmentTracking.assignmentStats">
+                <div class="stat-circle">
+                  <div class="circle-progress">
+                    <span>{{stat.count}}</span>
+                  </div>
+                </div>
+                <div class="stat-label">{{stat.status}}</div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Enrollment Summary -->
+          <div class="chart-card">
+            <h3><i class="fas fa-info-circle"></i> Enrollment Summary</h3>
+            <div class="summary-stats">
+              <div class="summary-item">
+                <div class="summary-icon">
+                  <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="summary-content">
+                  <h4>{{enrollmentTracking.totalEnrollments || 0}}</h4>
+                  <p>Total Active Enrollments</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modules Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'modules'">
+      <div class="modules-section" *ngIf="moduleInsights">
+        <div class="charts-grid">
+          <!-- Modules Per Course -->
+          <div class="chart-card full-width">
+            <h3><i class="fas fa-puzzle-piece"></i> Modules Per Course</h3>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Course Name</th>
+                    <th>Module Count</th>
+                    <th>Total Duration</th>
+                    <th>Avg Module Duration</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let course of moduleInsights.modulesPerCourse">
+                    <td>{{course.courseName}}</td>
+                    <td>
+                      <span class="module-count">{{course.moduleCount}}</span>
+                    </td>
+                    <td>{{formatDuration(course.totalDuration)}}</td>
+                    <td>{{formatDuration(course.totalDuration / course.moduleCount)}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+  
+          <!-- Average Watch Time -->
+          <div class="chart-card">
+            <h3><i class="fas fa-clock"></i> Average Watch Time</h3>
+            <div class="watch-time-list">
+              <div class="watch-time-item" *ngFor="let item of moduleInsights.avgWatchTime">
+                <div class="watch-time-info">
+                  <h4>Course {{item.courseId}}</h4>
+                  <div class="time-stats">
+                    <div class="time-stat">
+                      <span class="time-label">Watched:</span>
+                      <span class="time-value">{{formatDuration(item.avgWatchedSeconds / 60)}}</span>
+                    </div>
+                    <div class="time-stat">
+                      <span class="time-label">Total:</span>
+                      <span class="time-value">{{formatDuration(item.avgCourseDuration / 60)}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="watch-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" [style.width.%]="(item.avgWatchedSeconds / item.avgCourseDuration) * 100"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- SME Panel Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'sme'">
+      <div class="sme-section" *ngIf="smePanel">
+        <!-- SME Summary -->
+        <div class="sme-summary">
+          <div class="summary-cards">
+            <div class="summary-card">
+              <h3>{{smePanel.totalSmes || 0}}</h3>
+              <p>Total SMEs</p>
+            </div>
+            <div class="summary-card">
+              <h3>{{smePanel.avgCoursesPerSme || 0}}</h3>
+              <p>Avg Courses per SME</p>
+            </div>
+          </div>
+        </div>
+  
+        <div class="charts-grid">
+          <!-- SME Data Table -->
+          <div class="chart-card full-width">
+            <h3><i class="fas fa-user-tie"></i> SME Management</h3>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Courses Assigned</th>
+                    <th>Under Review</th>
+                    <th>Total Enrollments</th>
+                    <th>Last Activity</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let sme of smePanel.smeData">
+                    <td>{{sme.name}}</td>
+                    <td>{{sme.email}}</td>
+                    <td>{{sme.phone}}</td>
+                    <td>
+                      <span class="badge badge-primary">{{sme.coursesAssigned}}</span>
+                    </td>
+                    <td>
+                      <span class="badge badge-warning" *ngIf="sme.coursesUnderReview > 0">
+                        {{sme.coursesUnderReview}}
+                      </span>
+                      <span class="badge badge-success" *ngIf="sme.coursesUnderReview === 0">
+                        0
+                      </span>
+                    </td>
+                    <td>{{sme.totalEnrollments}}</td>
+                    <td>{{formatDate(sme.lastActivity)}}</td>
+                    <td>
+                      <span class="badge" [class]="sme.coursesAssigned > 0 ? 'badge-success' : 'badge-secondary'">
+                        {{sme.coursesAssigned > 0 ? 'Active' : 'Inactive'}}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+  
+          <!-- Workload Distribution -->
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-bar"></i> SME Workload Distribution</h3>
+            <div class="workload-chart">
+              <div class="workload-item" *ngFor="let item of smePanel.workloadDistribution">
+                <div class="workload-label">{{item.range}}</div>
+                <div class="workload-bar">
+                  <div class="bar-fill" [style.width.%]="getSmePercentage(item.count, smePanel.totalSmes)"></div>
+                  <span class="bar-value">{{item.count}} SMEs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- LOB Insights Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'lob'">
+      <div class="lob-section" *ngIf="lobInsights">
+        <div class="charts-grid">
+          <!-- LOB Performance Table -->
+          <div class="chart-card full-width">
+            <h3><i class="fas fa-building"></i> LOB Performance Overview</h3>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>LOB Name</th>
+                    <th>Users</th>
+                    <th>Courses</th>
+                    <th>Total Enrollments</th>
+                    <th>Completed</th>
+                    <th>Completion Rate</th>
+                    <th>Performance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let lob of lobInsights.lobData">
+                    <td>
+                      <div class="lob-info">
+                        <strong>{{lob.lobName}}</strong>
+                        <small>{{lob.description}}</small>
+                      </div>
+                    </td>
+                    <td>{{lob.userCount}}</td>
+                    <td>{{lob.courseCount}}</td>
+                    <td>{{lob.totalEnrollments}}</td>
+                    <td>{{lob.completedEnrollments}}</td>
+                    <td>
+                      <div class="progress-bar">
+                        <div class="progress-fill" [style.width.%]="lob.avgCompletionRate"></div>
+                        <span class="progress-text">{{lob.avgCompletionRate}}%</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge" [class]="lob.avgCompletionRate > 70 ? 'badge-success' : lob.avgCompletionRate > 40 ? 'badge-warning' : 'badge-danger'">
+                        {{lob.avgCompletionRate > 70 ? 'Excellent' : lob.avgCompletionRate > 40 ? 'Good' : 'Needs Improvement'}}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Loading States -->
+    <div class="loading-overlay" *ngIf="isLoading.overview || isLoading.userAnalytics || isLoading.coursePerformance || isLoading.enrollmentTracking || isLoading.moduleInsights || isLoading.smePanel || isLoading.lobInsights || isLoading.recentActivities">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading dashboard data...</p>
+      </div>
+    </div>
+  </div>

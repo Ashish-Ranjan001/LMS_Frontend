@@ -1,0 +1,50 @@
+<div class="card shadow password-form">
+  <h4 class="text-center mb-4">🔐 Change Password</h4>
+ 
+  <form (ngSubmit)="updatePassword()" #passwordForm="ngForm" novalidate>
+    <div class="form-group mb-3">
+      <label for="email">📧 Email</label>
+      <input
+        id="email"
+        type="email"
+        class="form-control"
+        placeholder="your@email.com"
+        [(ngModel)]="email"
+        name="email"
+        required
+        [ngClass]="{ 'is-invalid': emailInvalid }"
+      />
+      <div class="invalid-feedback">Please enter a valid email.</div>
+    </div>
+ 
+    <div class="form-group mb-3">
+      <label for="newPassword">🔑 New Password</label>
+      <input
+        id="newPassword"
+        type="password"
+        class="form-control"
+        [(ngModel)]="newPassword"
+        name="newPassword"
+        minlength="6"
+        required
+      />
+    </div>
+ 
+    <div class="form-group mb-3">
+      <label for="confirmPassword">✅ Confirm Password</label>
+      <input
+        id="confirmPassword"
+        type="password"
+        class="form-control"
+        [(ngModel)]="confirmPassword"
+        name="confirmPassword"
+        required
+        [ngClass]="{ 'is-invalid': passwordMismatch }"
+      />
+      <div class="invalid-feedback">Passwords don’t match!</div>
+    </div>
+ 
+    <button type="submit" class="btn btn-success w-100 mt-3">Update Password</button>
+  </form>
+</div>
+ 

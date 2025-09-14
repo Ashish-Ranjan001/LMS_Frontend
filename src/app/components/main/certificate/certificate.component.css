@@ -1,0 +1,356 @@
+/* Certificate Container */
+.certificate-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 2rem;
+    border-radius: 20px;
+  }
+  
+  .certificate-container {
+    position: relative;
+    width: 900px;
+    height: 650px;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border: 3px solid #d4a574;
+    border-radius: 15px;
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    overflow: hidden;
+    background-color: white;
+  }
+  
+  /* Corner Decorations */
+  .corner-decoration {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #d4a574;
+    z-index: 1;
+  }
+  
+  .corner-decoration.top-left {
+    top: 20px;
+    left: 20px;
+    border-right: none;
+    border-bottom: none;
+    border-top-left-radius: 10px;
+  }
+  
+  .corner-decoration.top-right {
+    top: 20px;
+    right: 20px;
+    border-left: none;
+    border-bottom: none;
+    border-top-right-radius: 10px;
+  }
+  
+  .corner-decoration.bottom-left {
+    bottom: 20px;
+    left: 20px;
+    border-right: none;
+    border-top: none;
+    border-bottom-left-radius: 10px;
+  }
+  
+  .corner-decoration.bottom-right {
+    bottom: 20px;
+    right: 20px;
+    border-left: none;
+    border-top: none;
+    border-bottom-right-radius: 10px;
+  }
+  
+  /* Certificate Content */
+  .certificate-content {
+    position: relative;
+    height: 100%;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+  }
+  
+  /* Header Styles */
+  .certificate-header {
+    margin-bottom: 1rem;
+  }
+  
+  .certificate-title {
+    font-family: 'Times New Roman', serif;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #2c3e50;
+    letter-spacing: 8px;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .certificate-subtitle {
+    font-family: 'Times New Roman', serif;
+    font-size: 1.5rem;
+    color: #d4a574;
+    letter-spacing: 4px;
+    margin: 0.5rem 0 0 0;
+    font-weight: 400;
+  }
+  
+  /* Award Section */
+  .award-section {
+    margin: 1.5rem 0;
+  }
+  
+  .award-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  /* Recipient Section */
+  .recipient-section {
+    margin: 2rem 0;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .recipient-name-container {
+    margin-bottom: 0.5rem;
+  }
+  
+  .recipient-name {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 3.5rem;
+    color: #2c3e50;
+    font-weight: normal;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .underline {
+    height: 2px;
+    background: linear-gradient(to right, #d4a574, #b8935a, #d4a574);
+    margin: 0 auto;
+    width: 80%;
+    border-radius: 1px;
+  }
+  
+  /* Completion Section */
+  .completion-section {
+    margin: 2rem 0;
+    max-width: 650px;
+  }
+  
+  .completion-text {
+    font-family: 'Times New Roman', serif;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    line-height: 1.6;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+  
+  .course-name {
+    font-weight: bold;
+    color: #d4a574;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  /* Signature Section */
+  .signature-section {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 2rem;
+    padding: 0 2rem;
+  }
+  
+  .signature-block {
+    text-align: center;
+    flex: 1;
+    margin: 0 1rem;
+  }
+  
+  .signature-line {
+    width: 120px;
+    height: 1px;
+    background: #d4a574;
+    margin: 0 auto 0.5rem auto;
+  }
+  
+  .signature-info {
+    margin-top: 0.5rem;
+  }
+  
+  .signature-name {
+    font-family: 'Times New Roman', serif;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #2c3e50;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+  
+  .signature-title {
+    font-family: 'Times New Roman', serif;
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    letter-spacing: 1px;
+    margin: 0.2rem 0 0 0;
+    text-transform: uppercase;
+  }
+  
+  /* Medal Decoration */
+  .medal-decoration {
+    position: absolute;
+    top: 50%;
+    right: 50px;
+    transform: translateY(-50%);
+    z-index: 3;
+  }
+  
+  .medal-circle {
+    width: 80px;
+    height: 80px;
+    border: 4px solid #d4a574;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .medal-inner {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #d4a574;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff, #f8f9fa);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .ribbon-left, .ribbon-right {
+    position: absolute;
+    top: 75px;
+    width: 20px;
+    height: 40px;
+    background: linear-gradient(145deg, #d4a574, #b8935a);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+  }
+  
+  .ribbon-left {
+    left: 20px;
+    transform: rotate(-15deg);
+  }
+  
+  .ribbon-right {
+    right: 20px;
+    transform: rotate(15deg);
+  }
+  
+  /* Download Button */
+  .download-certificate-btn {
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  
+  .download-certificate-btn:hover {
+    background: linear-gradient(145deg, #2980b9, #21618c);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+  }
+  
+  .download-certificate-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 992px) {
+    .certificate-container {
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+      min-height: 580px;
+    }
+    
+    .certificate-title {
+      font-size: 3rem;
+      letter-spacing: 6px;
+    }
+    
+    .recipient-name {
+      font-size: 2.8rem;
+    }
+    
+    .signature-section {
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .medal-decoration {
+      position: relative;
+      right: auto;
+      top: auto;
+      transform: none;
+      margin-top: 1rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .certificate-wrapper {
+      padding: 1rem;
+    }
+    
+    .certificate-content {
+      padding: 2rem 1.5rem;
+    }
+    
+    .certificate-title {
+      font-size: 2.5rem;
+      letter-spacing: 4px;
+    }
+    
+    .recipient-name {
+      font-size: 2.2rem;
+    }
+    
+    .signature-section {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .signature-block {
+      margin: 0.5rem 0;
+    }
+  }
+  
+  /* Print Styles */
+  @media print {
+    .download-certificate-btn {
+      display: none !important;
+    }
+    
+    .certificate-wrapper {
+      background: white;
+      box-shadow: none;
+    }
+  }

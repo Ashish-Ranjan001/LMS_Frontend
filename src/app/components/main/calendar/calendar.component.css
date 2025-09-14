@@ -1,0 +1,303 @@
+.calendar-container {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 8px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  background: #f9fafb;
+  padding: 4px 8px;
+  border-radius: 6px;
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.nav-button {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #4b5563;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.nav-button:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.nav-button:active {
+  transform: scale(0.95);
+}
+
+.month-year {
+  font-size: 11px;
+  font-weight: 600;
+  margin: 0;
+  color: #1f2937;
+  letter-spacing: 0.3px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.day-header {
+  text-align: center;
+  font-size: 8px;
+  font-weight: 600;
+  color: #6b7280;
+  padding: 2px;
+  background: #f9fafb;
+  border-radius: 2px;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  color: #4b5563;
+  min-height: 16px;
+  max-height: 20px;
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+}
+
+.calendar-day.current-month:hover {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+.calendar-day.other-month {
+  color: #d1d5db;
+  cursor: default;
+  background: #fcfcfc;
+}
+
+.calendar-day.today {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 700;
+  border: 1px solid #bfdbfe;
+}
+
+.calendar-day.today:hover {
+  background: #dbeafe;
+}
+
+.calendar-day.selected {
+  background: #2563eb;
+  color: white;
+  font-weight: 700;
+  border: 1px solid #1d4ed8;
+}
+
+.calendar-day.selected:hover {
+  background: #1d4ed8;
+}
+
+.calendar-day.today.selected {
+  background: #4f46e5;
+  border: 1px solid #4338ca;
+  color: white;
+}
+
+.calendar-day.today.selected:hover {
+  background: #4338ca;
+}
+
+/* Compact responsive adjustments */
+@media (max-width: 1200px) {
+  .calendar-container {
+    padding: 6px;
+  }
+  
+  .month-year {
+    font-size: 10px;
+  }
+  
+  .calendar-day {
+    font-size: 8px;
+    min-height: 14px;
+    max-height: 18px;
+  }
+  
+  .day-header {
+    font-size: 7px;
+    padding: 1px;
+  }
+  
+  .nav-button {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .nav-button svg {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 4px;
+  }
+  
+  .calendar-header {
+    margin-bottom: 4px;
+    padding: 3px 6px;
+  }
+  
+  .month-year {
+    font-size: 9px;
+  }
+  
+  .calendar-day {
+    font-size: 7px;
+    min-height: 12px;
+    max-height: 16px;
+  }
+  
+  .day-header {
+    font-size: 6px;
+    padding: 1px;
+  }
+  
+  .nav-button {
+    padding: 3px;
+    width: 18px;
+    height: 18px;
+  }
+  
+  .nav-button svg {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Ensure calendar fits perfectly in grid space */
+.calendar-container {
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.calendar-grid {
+  min-height: 0;
+}
+
+/* Focus styles for accessibility */
+.calendar-day:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+.nav-button:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+/* Subtle animation for month transitions */
+.calendar-grid {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle hover effect for the entire calendar */
+.calendar-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Weekend days styling */
+.calendar-grid .calendar-day:nth-child(7n),
+.calendar-grid .calendar-day:nth-child(7n-6) {
+  color: #6b7280;
+}
+
+/* Current week highlight */
+.calendar-day.current-week {
+  background-color: #f9fafb;
+}
+
+/* Month separator line */
+.calendar-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+/* Improved loading state */
+.calendar-container.loading {
+  pointer-events: none;
+}
+
+.calendar-container.loading .calendar-day {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Better visual hierarchy */
+.calendar-header {
+  margin-bottom: 8px;
+}
+
+/* Subtle grid lines */
+.calendar-grid {
+  background-color: #f9fafb;
+  padding: 2px;
+  border-radius: 4px;
+}

@@ -1,5 +1,4 @@
-
-  .container-fluid {
+.container-fluid {
   font-family: 'Segoe UI', Roboto, sans-serif;
   padding: 20px;
 }
@@ -19,11 +18,12 @@
 }
 
 .table th {
-  background-color: #f9f9f9;
-  font-weight: 500;
+  background-color: #f8f9fa;
+  font-weight: 600;
   color: #666;
   padding: 12px 16px;
   border-bottom: 1px solid #dee2e6;
+  border-top: none;
   vertical-align: middle;
 }
 
@@ -38,31 +38,6 @@
   width: 220px;
   text-align: center;
 }
-
-
-/* .status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.status-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #ccc;
-}
-
-.status-dot.active {
-  background-color: #4cd964;
-}
-
-.status-dot.inactive {
-  background-color: #ff3b30;
-} */
 
 .col-status {
   width: 15%;
@@ -143,7 +118,7 @@
 
 /* Empty state styling */
 .empty-state {
-  padding: 40px 0;
+  padding: 60px 0;
   text-align: center;
   color: #6c757d;
 }
@@ -151,31 +126,165 @@
 .empty-state i {
   font-size: 48px;
   opacity: 0.5;
+  color: #adb5bd;
+  margin-bottom: 15px;
+}
+
+.empty-state h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  font-size: 0.95rem;
+  color: #6c757d;
+  margin-bottom: 20px;
 }
 
 /* Spinner styling */
 .spinner-border {
   width: 3rem;
   height: 3rem;
+  border-width: 0.3em;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Alert styling */
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+  padding: 1rem 1.25rem;
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #721c24;
+}
+
+/* Table responsive styling */
+.table-responsive {
+  border-radius: 0.5rem;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
 /* Button styling */
 .btn-outline-primary {
   color: #0d6efd;
   border-color: #0d6efd;
+  transition: all 0.2s ease;
 }
 
 .btn-outline-primary:hover {
   background-color: #0d6efd;
   color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .btn-outline-secondary {
   color: #6c757d;
   border-color: #6c757d;
+  transition: all 0.2s ease;
 }
 
 .btn-outline-secondary:hover {
   background-color: #6c757d;
   color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Loading state */
+.text-center p.text-muted {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+/* Results info styling */
+.text-center.mt-3.text-muted small {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+/* Badge styling */
+.badge {
+  padding: 0.5em 1em;
+  border-radius: 20px;
+}
+.btn {
+  position: relative;
+  font-size: 12px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.6em 1.6em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 3em;
+  transition: all 0.3s ease;
+  border: none;
+  font-family: inherit;
+  font-weight: 500;
+  color: rgb(0, 0, 0);
+  background-color: rgb(251, 251, 251);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn i {
+  font-size: 16px;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background-image: linear-gradient(120deg, #ce54ff 0%, #4a235a 20%);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  border-radius: 3em;
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+.btn:hover::after {
+  transform: scale(1.4);
+  opacity: 1;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  color: white;
 }

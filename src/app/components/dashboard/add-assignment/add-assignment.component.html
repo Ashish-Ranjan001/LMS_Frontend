@@ -1,0 +1,203 @@
+<div class="add-assignment-container">
+    <div class="form-header">
+      <h2>Add Assignment</h2>
+      <p>Select SME, LOB, and Course, then upload assignment file to assign to all enrolled users</p>
+    </div>
+  
+    <div class="form-section">
+      <div class="form-row">
+        <!-- SME Dropdown -->
+        <div class="form-group">
+          <label for="sme">
+            SME Name <span class="required">*</span>
+          </label>
+          <select
+            id="sme"
+            [(ngModel)]="selectedSmeId"
+            (ngModelChange)="onFormChange()"
+            required
+            class="form-control"
+          >
+            <option value="" disabled selected>Choose SME</option>
+            <option *ngFor="let sme of smeList" [value]="sme.smeId">
+              {{ sme.smeName || 'Unnamed SME' }}
+              <span *ngIf="sme.smeEmail"> ({{ sme.smeEmail }})</span>
+            </option>
+          </select>
+          <div *ngIf="smeList.length === 0 && !loadingSmes" class="dropdown-info">
+            No active SMEs available
+          </div>
+          <div *ngIf="loadingSmes" class="dropdown-info">
+            Loading SMEs...
+          </div>
+        </div>
+  
+        <!-- LOB Dropdown -->
+        <div class="form-group">
+          <label for="lob">
+            LOB Name <span class="required">*</span>
+          </label>
+          <select
+            id="lob"
+            [(ngModel)]="selectedLobId"
+            (ngModelChange)="onFormChange()"
+            required
+            class="form-control"
+          >
+            <option value="" disabled selected>Choose LOB</option>
+            <option *ngFor="let lob of lobList" [value]="lob.lobId">
+              {{ lob.lobName || 'Unnamed LOB' }}
+            </option>
+          </select>
+          <div *ngIf="lobList.length === 0 && !loadingLobs" class="dropdown-info">
+            No active LOBs available
+          </div>
+          <div *ngIf="loadingLobs" class="dropdown-info">
+            Loading LOBs...
+          </div>
+        </div>
+  
+        <!-- Course Dropdown -->
+        <div class="form-group">
+          <label for="course">
+            Course Name <span class="required">*</span>
+          </label>
+          <select
+            id="course"
+            [(ngModel)]="selectedCourseId"
+            (ngModelChange)="onFormChange()"
+            required
+            class="form-control"
+          >
+            <option value="" disabled selected>Choose Course</option>
+            <option *ngFor="let course of courseList" [value]="course.courseId">
+              {{ course.courseName || 'Unnamed Course' }}
+            </option>
+          </select>
+          <div *ngIf="courseList.length === 0 && !loadingCourses" class="dropdown-info">
+            No active Courses available
+          </div>
+          <div *ngIf="loadingCourses" class="dropdown-info">
+            Loading Courses...
+          </div>
+        </div>
+      </div>
+  
+      <!-- File Upload Section -->
+      <div class="file-upload-section">
+        <div class="form-group">
+          <label for="assignmentFile">
+            Assignment File <span class="required">*</span>
+          </label>
+          <div class="file-upload-wrapper">
+            <input
+              type="file"
+              id="assignmentFile"
+              (change)="onFileSelect($event)"
+              accept=".pdf,.doc,.docx,.txt,.zip,.rar"
+              class="file-input"
+            >
+            <div class="file-upload-display">
+              <div *ngIf="!assignmentFile" class="file-placeholder">
+                <i class="upload-icon">📁</i>
+                <span>Click to select assignment file</span>
+                <small>Supported formats: PDF, DOC, DOCX, TXT, ZIP, RAR (Max 10MB)</small>
+              </div>
+              <div *ngIf="assignmentFile" class="file-selected">
+                <i class="file-icon">📄</i>
+                <div class="file-info">
+                  <span class="file-name">{{ assignmentFile.name }}</span>
+                  <span class="file-size">{{ formatFileSize(assignmentFile.size) }}</span>
+                </div>
+                <button type="button" class="remove-file-btn" (click)="assignmentFile = null">
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Instructions Section -->
+      <div class="form-group">
+        <label for="instructions">
+          Instructions (Optional)
+        </label>
+        <textarea
+          id="instructions"
+          [(ngModel)]="instructions"
+          (ngModelChange)="onFormChange()"
+          class="form-control instructions-textarea"
+          placeholder="Enter any additional instructions for the assignment..."
+          rows="4"
+        ></textarea>
+      </div>
+  
+      <!-- Submit Button -->
+      <div class="button-section">
+        <button 
+          class="btn btn-primary submit-btn"
+          [disabled]="!isFormValid() || submittingAssignment"
+          (click)="submitAssignment()"
+        >
+          <span *ngIf="submittingAssignment" class="spinner"></span>
+          {{ submittingAssignment ? 'Submitting...' : 'Submit Assignment' }}
+        </button>
+        
+        <button 
+          type="button"
+          class="btn btn-secondary reset-btn"
+          [disabled]="submittingAssignment"
+          (click)="resetForm()"
+        >
+          Reset Form
+        </button>
+      </div>
+    </div>
+  
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      <i class="error-icon">⚠️</i>
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="success-message">
+      <i class="success-icon">✅</i>
+      {{ successMessage }}
+    </div>
+  
+    <!-- Assignment Response Details -->
+    <div *ngIf="assignmentResponse && assignmentResponse.success" class="response-section">
+      <div class="response-header">
+        <h3>Assignment Submitted Successfully!</h3>
+      </div>
+      
+      <div class="response-details">
+        <div class="detail-item">
+          <strong>SME:</strong> {{ getSelectedSmeName() }}
+        </div>
+        <div class="detail-item">
+          <strong>Course:</strong> {{ assignmentResponse.course_name }}
+        </div>
+        <div class="detail-item">
+          <strong>LOB:</strong> {{ assignmentResponse.lob_name }}
+        </div>
+        <div class="detail-item">
+          <strong>Users Assigned:</strong> {{ assignmentResponse.assigned_count }}
+        </div>
+      </div>
+  
+      <!-- Assigned Users List -->
+      <div *ngIf="assignmentResponse.assigned_users && assignmentResponse.assigned_users.length > 0" class="assigned-users">
+        <h4>Assigned Users:</h4>
+        <div class="users-list">
+          <div *ngFor="let user of assignmentResponse.assigned_users" class="user-item">
+            <span class="user-name">{{ user.name }}</span>
+            <span class="user-email">({{ user.email }})</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,61 @@
+
+
+ <div class="categories-container">
+    <div class="categories-header">
+      <h3>Popular Categories</h3>
+      <p>Explore trending courses</p>
+    </div>
+    
+    <div class="stack-container" [class.reorganizing]="isReordering">
+      <div 
+        *ngFor="let card of cards; trackBy: trackByCardId; let i = index"
+        class="card-wrapper"
+        [class.dragging]="currentDragCard === card.id"
+        [class.moving-to-back]="isReordering && currentDragCard === card.id"
+        [style]="getCardStyle(card)"
+        (mousedown)="onMouseDown($event, card.id)"
+        (touchstart)="onTouchStart($event, card.id)"
+        (click)="onCardClick(card)"
+        [attr.aria-label]="'Course: ' + card.title"
+        tabindex="0">
+        
+        <div class="course-card" [class.loading]="isReordering">
+          <div class="card-image-container">
+            <img [src]="card.image" [alt]="card.title" class="card-image">
+            <div class="category-badge">{{ card.category }}</div>
+          </div>
+          
+          <div class="card-content">
+            <h4 class="course-title">{{ card.title }}</h4>
+            
+            <div class="author-info">
+              <img [src]="card.authorAvatar" [alt]="card.author" class="author-avatar">
+              <span class="author-name">Created by {{ card.author }}</span>
+            </div>
+            
+            <div class="course-stats">
+              <div class="stat-item">
+                <span class="stat-icon">📚</span>
+                <span class="stat-text">{{ card.lessons }} Lessons</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-icon">⏱️</span>
+                <span class="stat-text">{{ card.hours }}h</span>
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <div class="rating">
+                <span class="rating-star">⭐</span>
+                <span class="rating-text">{{ card.rating }} ({{ card.reviews }}k)</span>
+              </div>
+              <button class="view-btn" (click)="$event.stopPropagation()">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+
+

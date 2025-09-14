@@ -1,0 +1,143 @@
+<div class="users-in-lob-container">
+    <div class="form-header">
+      <h2>View Users in LOB</h2>
+      <p>Select a LOB and Course to view enrolled users and their assignment status</p>
+    </div>
+  
+    <div class="form-section">
+      <div class="form-row">
+        <!-- LOB Dropdown -->
+        <div class="form-group">
+          <label for="lob">
+            LOB <span class="required">*</span>
+          </label>
+          <select
+            id="lob"
+            [(ngModel)]="selectedLobId"
+            (ngModelChange)="onFormChange()"
+            required
+            class="form-control"
+          >
+            <option value="" disabled selected>Choose Lob</option>
+            <option *ngFor="let lob of lobList" [value]="lob.lobId">
+              {{ lob.lobName || 'Unnamed LOB' }}
+            </option>
+          </select>
+          <div *ngIf="lobList.length === 0 && !loadingLobs" class="dropdown-info">
+            No active LOBs available
+          </div>
+          <div *ngIf="loadingLobs" class="dropdown-info">
+            Loading LOBs...
+          </div>
+        </div>
+  
+        <!-- Course Dropdown -->
+        <div class="form-group">
+          <label for="course">
+            Course <span class="required">*</span>
+          </label>
+          <select
+            id="course"
+            [(ngModel)]="selectedCourseId"
+            (ngModelChange)="onFormChange()"
+            required
+            class="form-control"
+          >
+          <option value="" disabled selected>Choose Course</option>
+          <option *ngFor="let course of courseList" [value]="course.courseId">
+            {{ course.courseName || 'Unnamed Course' }}
+          </option>
+          
+          </select>
+          <div *ngIf="courseList.length === 0 && !loadingCourses" class="dropdown-info">
+            No active Courses available
+          </div>
+          <div *ngIf="loadingCourses" class="dropdown-info">
+            Loading Courses...
+          </div>
+        </div>
+      </div>
+  
+      <!-- View Button -->
+      <div class="button-section">
+        <button 
+          class="btn btn-primary view-btn"
+          [disabled]="!canViewUsers() || loadingUsers"
+          (click)="viewUsersInLob()"
+        >
+          <span *ngIf="loadingUsers" class="spinner"></span>
+          {{ loadingUsers ? 'Loading...' : 'View Users' }}
+        </button>
+      </div>
+    </div>
+  
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      <i class="error-icon">⚠️</i>
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Results Section -->
+    <div *ngIf="usersData" class="results-section">
+      <div class="results-header">
+        <h3>Users in {{ getSelectedLobName() }} - {{ getSelectedCourseName() }}</h3>
+        <div class="summary-info">
+            <span class="total-users">Total Users: {{ usersData.total_users }}</span>
+            <span class="users-with-assignments">
+                With Assignments: {{ usersData.users.length }}
+
+            </span>
+            
+        </div>
+      </div>
+  
+      <!-- Users Table -->
+      <div class="users-table-container" *ngIf="usersData.users && usersData.users.length > 0">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Assignment Status</th>
+              <th>Has Assignment</th>
+              <th>Last Assigned By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of usersData.users; let i = index" 
+                [class.even-row]="i % 2 === 0">
+              <td class="user-name">
+                <div class="user-info">
+                  <span class="name">{{ user.user_name }}</span>
+                  <small class="user-id">ID: {{ user.user_id }}</small>
+                </div>
+              </td>
+              <td class="user-email">{{ user.user_email }}</td>
+              <td class="assignment-status">
+                <span [class]="'status-badge ' + getAssignmentStatusClass(user.assignment_download_status)">
+                  {{ getAssignmentStatusText(user.assignment_download_status) }}
+                </span>
+              </td>
+              <td class="has-assignment">
+                <span [class]="'assignment-indicator ' + (user.has_assignment ? 'has-assignment' : 'no-assignment')">
+                  {{ user.has_assignment ? '✓ Yes' : '✗ No' }}
+                </span>
+              </td>
+              <td class="last-assigned">
+                {{ user.last_assigned_by || 'Not assigned' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- No Users Message -->
+      <div *ngIf="!usersData.users || usersData.users.length === 0" class="no-users-message">
+        <div class="no-users-content">
+          <i class="no-users-icon">👥</i>
+          <h4>No Users Found</h4>
+          <p>There are no users enrolled in the selected LOB and Course combination.</p>
+        </div>
+      </div>
+    </div>
+  </div>

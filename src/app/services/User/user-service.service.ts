@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable   } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,4 +19,16 @@ export class UserServiceService {
     const url = `${this.apiBaseUrl}/api/users`;
     return this.http.get(url);
   }
+  
+  getUserById(userId: string): Observable<any> {
+    const url = `${this.apiBaseUrl}/api/users/${userId}`;
+    return this.http.get(url);
+    }
+
+
+  updateUser(userId: string, data: any): Observable<any> {
+    const url =`${this.apiBaseUrl}/api/users/${userId}`;
+    return this.http.put(url,data);
+    }
+
 }

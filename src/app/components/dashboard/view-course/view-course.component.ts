@@ -321,7 +321,7 @@ export class ViewCourseComponent implements OnInit {
   }
 
   editCourse(course: Course): void {
-    this.router.navigate(['dashboard/course/edit', course.course_id]);
+    this.router.navigate(['dashboard/course/edit', btoa(course.course_id)]);
   }
   addModule(course: Course): void {
     this.router.navigate(['dashboard/module/add', course.course_id]);

@@ -248,3 +248,7 @@
       transition-duration: 0.01ms !important;
     }
   }
+
+  .card-header h2 {
+    color: #000 !important;
+  }

@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid">
   <div class="row mb-3 justify-content-end">
     <div class="col-md-4 text-end">
       <div class="input-group">
@@ -68,5 +68,132 @@
         </ul>
       </nav>
     </div>
+  </div>
+</div> -->
+<div class="container-fluid">
+  <!-- Page Title -->
+  <h1 class="page-title">Teaching Assistants</h1>
+
+  <!-- Search Section -->
+  <div class="row mb-3 justify-content-end">
+    <div class="col-md-4 text-end">
+      <div class="input-group">
+        <span class="input-group-text">Search:</span>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="searchTerm"
+          (input)="search()"
+          placeholder="Search TAs...">
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="text-center" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Loading TA data...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="alert alert-danger" *ngIf="!isLoading && error">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+    <button class="btn btn-outline-danger btn-sm ms-3" (click)="loadTas()">
+      <i class="fas fa-redo me-1"></i>Retry
+    </button>
+  </div>
+
+  <!-- Empty Search Results -->
+  <div class="empty-state" *ngIf="!isLoading && !error && searchTerm.trim() && filteredTas.length === 0">
+    <i class="fas fa-search mb-3"></i>
+    <h4>No TAs Found</h4>
+    <p>No teaching assistants match your search criteria "{{ searchTerm }}"</p>
+    <button class="btn btn-outline-secondary" (click)="searchTerm = ''; search()">
+      <i class="fas fa-times me-1"></i>Clear Search
+    </button>
+  </div>
+
+  <!-- Empty Data State -->
+  <div class="empty-state" *ngIf="!isLoading && !error && !searchTerm.trim() && tas.length === 0">
+    <i class="fas fa-users mb-3"></i>
+    <h4>No Teaching Assistants</h4>
+    <p>There are no teaching assistants in the system yet.</p>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-responsive" *ngIf="!isLoading && !error && paginatedTas.length > 0">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ta of paginatedTas">
+          <td>{{ ta.name }}</td>
+          <td>{{ ta.email }}</td>
+          <td>{{ ta.phone }}</td>
+          <td class="col-status">
+            <span class="status-badge" [ngClass]="getStatusText(ta.status).toLowerCase()">
+              <span class="status-dot"></span>
+              {{ getStatusText(ta.status) }}
+            </span>
+          </td>
+          <td class="actions-column">
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm" (click)="editTa(ta.taId)">
+                <i class="bi bi-pencil-fill me-1"></i> Edit
+              </button>
+          
+              <button class="btn btn-sm" (click)="changePassword(ta.taId)">
+                <i class="bi bi-key-fill me-1"></i> Change Password
+              </button>
+            </div>
+          </td>
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="row mt-3" *ngIf="!isLoading && !error && filteredTas.length > 0">
+    <div class="col-12">
+      <nav aria-label="TA pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" href="javascript:void(0)" (click)="goToFirstPage()">&laquo;</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" href="javascript:void(0)" (click)="goToPreviousPage()">&lsaquo;</a>
+          </li>
+          <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
+            <a class="page-link" href="javascript:void(0)" (click)="goToPage(page)">{{ page }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" href="javascript:void(0)" (click)="goToNextPage()">&rsaquo;</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" href="javascript:void(0)" (click)="goToLastPage()">&raquo;</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Results Info -->
+  <div class="text-center mt-3 text-muted" *ngIf="!isLoading && !error && filteredTas.length > 0">
+    <small>
+      Showing {{ ((currentPage - 1) * itemsPerPage) + 1 }} to {{ Math.min(currentPage * itemsPerPage, filteredTas.length) }} 
+      of {{ filteredTas.length }} {{ filteredTas.length === 1 ? 'entry' : 'entries' }}
+      <span *ngIf="searchTerm.trim()"> (filtered from {{ tas.length }} total)</span>
+    </small>
   </div>
 </div>

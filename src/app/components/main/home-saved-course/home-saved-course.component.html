@@ -1,0 +1,102 @@
+<div class="saved-courses-container" [@fadeIn]>
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-container">
+      <h2 class="section-title">Your Saved Courses</h2>
+      <div class="title-underline"></div>
+    </div>
+    <button class="see-all-btn" (click)="onSeeAll()">
+      <span>See All</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14"></path>
+        <path d="M12 5l7 7-7 7"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 3D Rolling Gallery -->
+  <div class="gallery-container">
+    <!-- Gradient overlays for depth effect -->
+    <div class="gallery-gradient gallery-gradient-left"></div>
+    <div class="gallery-gradient gallery-gradient-right"></div>
+    
+    <div class="gallery-content">
+      <div 
+        #galleryTrack
+        class="gallery-track"
+        [style.transform]="getGalleryTransform()"
+        [style.width.px]="cylinderWidth"
+        (mouseenter)="onMouseEnter()"
+        (mouseleave)="onMouseLeave()"
+        (mousedown)="onMouseDown($event)"
+        (mousemove)="onMouseMove($event)"
+        (mouseup)="onMouseUp()"
+        (mouseleave)="onMouseUp()"
+      >
+        <div 
+          *ngFor="let course of savedCourses; let i = index"
+          class="gallery-item"
+          [style.width.px]="faceWidth"
+          [style.transform]="getCardTransform(i)"
+          [style.z-index]="getCardZIndex(i)"
+        >
+          <!-- Compact Course Card -->
+          <div 
+            class="compact-course-card"
+            (mouseenter)="onCardHover(course.id)"
+            (mouseleave)="onCardLeave()"
+            (click)="onCardClick(course)"
+            [@cardHover]="hoveredCard === course.id ? 'hovered' : 'normal'"
+            [@cardClick]="clickedCard === course.id"
+          >
+            <!-- Course Image -->
+            <div class="course-image-container">
+              <img 
+                [src]="course.image" 
+                [alt]="course.title"
+                class="course-image"
+              />
+              <!-- Category Tag -->
+              <span 
+                class="compact-category-tag" 
+                [style.color]="course.categoryColor"
+                [style.background-color]="course.categoryBg"
+              >
+                {{ course.category }}
+              </span>
+            </div>
+            
+            <!-- Course Content -->
+            <div class="compact-course-content">
+              <!-- Course Title -->
+              <h3 class="compact-course-title">{{ course.title }}</h3>
+
+              <!-- Progress Bar -->
+              <div class="compact-progress-container">
+                <div class="compact-progress-bar">
+                  <div 
+                    class="compact-progress-fill" 
+                    [style.width.%]="course.progress"
+                    [style.background-color]="getProgressColor(course.progress)"
+                  ></div>
+                </div>
+                <div class="compact-progress-info">
+                  <span class="compact-progress-text">{{ course.progress }}%</span>
+                  <span class="compact-last-accessed">{{ course.lastAccessed }}</span>
+                </div>
+              </div>
+
+              <!-- Continue Button -->
+              <button 
+                class="compact-continue-btn" 
+                (click)="onContinueCourse(course.id, $event)"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

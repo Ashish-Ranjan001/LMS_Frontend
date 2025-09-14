@@ -1,0 +1,83 @@
+<!-- progress-bar.component.html -->
+<div class="radial-chart-container">
+  <div class="chart-header">
+    <h3 class="chart-title">Course Progress</h3>
+    <p class="chart-subtitle">Your Learning Journey</p>
+  </div>
+
+  <div class="chart-wrapper">
+    <svg class="radial-chart" viewBox="0 0 200 200">
+      <!-- Background Circles -->
+      <g transform="rotate(-90 100 100)">
+        <ng-container *ngFor="let item of courseData; let i = index">
+          <circle
+            [attr.cx]="100"
+            [attr.cy]="100"
+            [attr.r]="70 - (i * 15)"
+            fill="none"
+            stroke="#374151"
+            stroke-width="10"
+            opacity="0.3"
+            [attr.stroke-dasharray]="getBackgroundDasharray(70 - (i * 15))"
+            [attr.stroke-dashoffset]="0">
+          </circle>
+        </ng-container>
+      </g>
+
+      <!-- Progress Arcs -->
+      <g transform="rotate(-90 100 100)">
+        <ng-container *ngFor="let item of courseData; let i = index">
+          <circle
+            [attr.cx]="100"
+            [attr.cy]="100"
+            [attr.r]="70 - (i * 15)"
+            fill="none"
+            [attr.stroke]="item.color"
+            stroke-width="10"
+            stroke-linecap="round"
+            [attr.stroke-dasharray]="getProgressDasharray(item.percentage, 70 - (i * 15))"
+            [attr.stroke-dashoffset]="0"
+            class="progress-arc"
+            [class.hovered]="hoveredSegment === item.label"
+            (mouseenter)="onSegmentHover(item.label)"
+            (mouseleave)="onSegmentLeave()">
+          </circle>
+        </ng-container>
+      </g>
+
+      <!-- Center Content -->
+      <g class="center-content">
+        <circle cx="100" cy="100" r="22" fill="#111827" opacity="0.9"></circle>
+        <ng-container *ngIf="!hoveredSegment">
+          <text x="100" y="95" text-anchor="middle" class="center-value">{{ courseData[0].value }}</text>
+          <text x="100" y="105" text-anchor="middle" class="center-label">Courses</text>
+        </ng-container>
+        <ng-container *ngIf="hoveredSegment && getHoveredData()">
+          <text x="100" y="95" text-anchor="middle" class="center-value">{{ getHoveredData()?.value }}</text>
+          <text x="100" y="105" text-anchor="middle" class="center-label">{{ getHoveredData()?.label }}</text>
+        </ng-container>
+      </g>
+    </svg>
+
+    <!-- Tooltip -->
+    <div class="tooltip" *ngIf="hoveredSegment && getHoveredData()" [class.show]="hoveredSegment">
+      <div class="tooltip-content">
+        <div class="tooltip-label">{{ getHoveredData()?.label }}</div>
+        <div class="tooltip-value">{{ getHoveredData()?.value }}</div>
+        <div class="tooltip-percentage">{{ getHoveredData()?.percentage | number: '1.0-0' }}%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div *ngFor="let item of courseData" class="legend-item"
+         [class.active]="hoveredSegment === item.label"
+         (mouseenter)="onSegmentHover(item.label)"
+         (mouseleave)="onSegmentLeave()">
+      <div class="legend-color" [style.background-color]="item.color"></div>
+      <span class="legend-label">{{ item.label }}</span>
+      <span class="legend-value">{{ item.value }}</span>
+    </div>
+  </div>
+</div>

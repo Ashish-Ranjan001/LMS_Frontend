@@ -1,0 +1,646 @@
+
+
+// ----------------------------------------------------------------------------
+
+
+import { Component, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+interface CourseCard {
+  id: number;
+  title: string;
+  category: string;
+  author: string;
+  authorAvatar: string;
+  lessons: number;
+  hours: number;
+  rating: number;
+  reviews: number;
+  image: string;
+}
+
+interface CardPosition {
+  x: number;
+  y: number;
+  rotateX: number;
+  rotateY: number;
+  rotateZ: number;
+  scale: number;
+  zIndex: number;
+  opacity: number;
+  isAnimating: boolean;
+}
+
+@Component({
+  selector: 'app-home-categories',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './home-categories.component.html',
+  styleUrls: ['./home-categories.component.css']
+})
+export class HomeCategoriesComponent implements OnInit, OnDestroy {
+  @Output() cardSelected = new EventEmitter<CourseCard>();
+
+  cards: CourseCard[] = [
+    {
+      id: 1,
+      title: 'React Native Course',
+      category: 'Frontend',
+      author: 'Albert James',
+      authorAvatar: 'female.jpg',
+      lessons: 24,
+      hours: 40,
+      rating: 4.9,
+      reviews: 12,
+      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y29tcHV0ZXJ8ZW58MHx8MHx8fDA%3D/140x90'
+    },
+    {
+      id: 2,
+      title: 'Angular Complete Guide',
+      category: 'Frontend',
+      author: 'Sarah Wilson',
+      authorAvatar: 'female.jpg',
+      lessons: 32,
+      hours: 55,
+      rating: 4.8,
+      reviews: 24,
+      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y29tcHV0ZXJ8ZW58MHx8MHx8fDA%3D'
+    },
+    {
+      id: 3,
+      title: 'Node.js Backend',
+      category: 'Backend',
+      author: 'Mike Johnson',
+      authorAvatar: 'female.jpg',
+      lessons: 18,
+      hours: 30,
+      rating: 4.7,
+      reviews: 18,
+      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y29tcHV0ZXJ8ZW58MHx8MHx8fDA%3D'
+    },
+    {
+      id: 4,
+      title: 'UI/UX Design',
+      category: 'Design',
+      author: 'Lisa Chen',
+      authorAvatar: 'female.jpg',
+      lessons: 28,
+      hours: 45,
+      rating: 4.9,
+      reviews: 32,
+      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y29tcHV0ZXJ8ZW58MHx8MHx8fDA%3D'
+    }
+  ];
+
+  cardPositions: Map<number, CardPosition> = new Map();
+  isDragging = false;
+  dragStartX = 0;
+  dragStartY = 0;
+  currentDragCard: number | null = null;
+  // sensitivity = 80;
+  sensitivity = 100; 
+  animationFrameId: number | null = null;
+  isReordering = false;
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.initializeCardPositions();
+  }
+
+  ngOnDestroy(): void {
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
+  }
+
+  private initializeCardPositions(): void {
+    this.cards.forEach((card, index) => {
+      const randomRotate = Math.random() * 8 - 4; // Random between -4 and 4
+      this.cardPositions.set(card.id, {
+        x: 0,
+        y: 0,
+        rotateX: 0,
+        rotateY: 0,
+        rotateZ: (this.cards.length - index - 1) * 4 + randomRotate,
+        scale: 1 + index * 0.05 - this.cards.length * 0.05,
+        zIndex: this.cards.length - index,
+        opacity: 1,
+        isAnimating: false
+      });
+    });
+  }
+
+  onMouseDown(event: MouseEvent, cardId: number): void {
+    if (this.isReordering) return;
+    
+    this.isDragging = true;
+    this.currentDragCard = cardId;
+    this.dragStartX = event.clientX;
+    this.dragStartY = event.clientY;
+    
+    // Bring dragged card to front
+    const position = this.cardPositions.get(cardId);
+    if (position) {
+      this.cardPositions.set(cardId, {
+        ...position,
+        zIndex: 1000,
+        scale: position.scale * 1.1
+      });
+    }
+    
+    document.addEventListener('mousemove', this.onMouseMove.bind(this));
+    document.addEventListener('mouseup', this.onMouseUp.bind(this));
+    
+    event.preventDefault();
+  }
+
+  onTouchStart(event: TouchEvent, cardId: number): void {
+    if (this.isReordering) return;
+    
+    const touch = event.touches[0];
+    this.isDragging = true;
+    this.currentDragCard = cardId;
+    this.dragStartX = touch.clientX;
+    this.dragStartY = touch.clientY;
+    
+    // Bring dragged card to front
+    const position = this.cardPositions.get(cardId);
+    if (position) {
+      this.cardPositions.set(cardId, {
+        ...position,
+        zIndex: 1000,
+        scale: position.scale * 1.1
+      });
+    }
+    
+    document.addEventListener('touchmove', this.onTouchMove.bind(this));
+    document.addEventListener('touchend', this.onTouchEnd.bind(this));
+    
+    event.preventDefault();
+  }
+
+  private onMouseMove(event: MouseEvent): void {
+    if (!this.isDragging || !this.currentDragCard) return;
+    
+    const deltaX = event.clientX - this.dragStartX;
+    const deltaY = event.clientY - this.dragStartY;
+    
+    this.updateCardPosition(deltaX, deltaY);
+  }
+
+  private onTouchMove(event: TouchEvent): void {
+    if (!this.isDragging || !this.currentDragCard) return;
+    
+    const touch = event.touches[0];
+    const deltaX = touch.clientX - this.dragStartX;
+    const deltaY = touch.clientY - this.dragStartY;
+    
+    this.updateCardPosition(deltaX, deltaY);
+    event.preventDefault();
+  }
+
+  // private updateCardPosition(deltaX: number, deltaY: number): void {
+  //   if (!this.currentDragCard) return;
+
+  //   const position = this.cardPositions.get(this.currentDragCard);
+  //   if (!position) return;
+
+  //   const rotateY = Math.min(Math.max(deltaX / 2, -45), 45);
+  //   const rotateX = Math.min(Math.max(-deltaY / 2, -45), 45);
+  //   const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  //   const opacity = Math.max(1 - distance / 200, 0.3);
+
+  //   this.cardPositions.set(this.currentDragCard, {
+  //     ...position,
+  //     x: deltaX * 0.8,
+  //     y: deltaY * 0.8,
+  //     rotateX,
+  //     rotateY,
+  //     opacity,
+  //     isAnimating: false
+  //   });
+
+  //   this.cdr.detectChanges();
+  // }
+
+  private updateCardPosition(deltaX: number, deltaY: number): void {
+    if (!this.currentDragCard) return;
+  
+    const position = this.cardPositions.get(this.currentDragCard);
+    if (!position) return;
+  
+    const rotateY = Math.min(Math.max(deltaX / 3, -30), 30); // Reduced rotation range
+    const rotateX = Math.min(Math.max(-deltaY / 3, -30), 30); // Reduced rotation range
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const opacity = Math.max(1 - distance / 300, 0.5); // Changed from 200 to 300, min 0.5 instead of 0.3
+
+  this.cardPositions.set(this.currentDragCard, {
+    ...position,
+    x: deltaX * 0.6, // Reduced from 0.8 for smoother movement
+    y: deltaY * 0.6, // Reduced from 0.8 for smoother movement
+    rotateX,
+    rotateY,
+    opacity,
+    isAnimating: false
+  });
+
+  this.cdr.detectChanges();
+}
+
+  private onMouseUp(event: MouseEvent): void {
+    const deltaX = event.clientX - this.dragStartX;
+    const deltaY = event.clientY - this.dragStartY;
+    this.handleDragEnd(deltaX, deltaY);
+    document.removeEventListener('mousemove', this.onMouseMove.bind(this));
+    document.removeEventListener('mouseup', this.onMouseUp.bind(this));
+  }
+
+  private onTouchEnd(event: TouchEvent): void {
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - this.dragStartX;
+    const deltaY = touch.clientY - this.dragStartY;
+    this.handleDragEnd(deltaX, deltaY);
+    document.removeEventListener('touchmove', this.onTouchMove.bind(this));
+    document.removeEventListener('touchend', this.onTouchEnd.bind(this));
+  }
+
+  private handleDragEnd(deltaX: number, deltaY: number): void {
+    if (!this.currentDragCard) return;
+
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    
+    if (distance > this.sensitivity) {
+      this.sendToBackWithAnimation(this.currentDragCard);
+    } else {
+      this.resetCardPosition(this.currentDragCard);
+    }
+
+    this.isDragging = false;
+    this.currentDragCard = null;
+  }
+
+  // private resetCardPosition(cardId: number): void {
+  //   const currentIndex = this.cards.findIndex(card => card.id === cardId);
+  //   const targetPosition = this.getTargetPosition(currentIndex);
+    
+  //   this.animateToPosition(cardId, targetPosition, 400);
+  // }
+
+  private resetCardPosition(cardId: number): void {
+    const currentIndex = this.cards.findIndex(card => card.id === cardId);
+    const targetPosition = this.getTargetPosition(currentIndex);
+    
+    this.animateToPosition(cardId, targetPosition, 600); // Increased from 400
+  }
+
+  // private sendToBackWithAnimation(cardId: number): void {
+  //   if (this.isReordering) return;
+    
+  //   this.isReordering = true;
+  //   const draggedCard = this.cards.find(card => card.id === cardId);
+  //   if (!draggedCard) return;
+
+  //   // First, animate the dragged card to the back position
+  //   const backPosition = this.getTargetPosition(this.cards.length - 1);
+  //   backPosition.opacity = 0.3;
+  //   backPosition.scale = 0.8;
+    
+  //   this.animateToPosition(cardId, backPosition, 500, () => {
+  //     // After dragged card animation, reorder the array
+  //     const cardIndex = this.cards.findIndex(card => card.id === cardId);
+  //     const [card] = this.cards.splice(cardIndex, 1);
+  //     this.cards.push(card); // Move to back
+      
+  //     // Animate all other cards to their new positions
+  //     this.animateAllCardsToNewPositions(() => {
+  //       this.isReordering = false;
+  //       this.cardSelected.emit(draggedCard);
+  //     });
+  //   });
+  // }
+
+  private sendToBackWithAnimation(cardId: number): void {
+    if (this.isReordering) return;
+    
+    this.isReordering = true;
+    const draggedCard = this.cards.find(card => card.id === cardId);
+    if (!draggedCard) return;
+  
+    // Animate with smoother transition
+    const backPosition = this.getTargetPosition(this.cards.length - 1);
+    backPosition.opacity = 0.5; // Changed from 0.3 for better visibility
+    backPosition.scale = 0.85; // Changed from 0.8
+    
+    // Increased duration for smoother animation
+    this.animateToPosition(cardId, backPosition, 800, () => { // Increased from 500
+      // After dragged card animation, reorder the array
+      const cardIndex = this.cards.findIndex(card => card.id === cardId);
+      const [card] = this.cards.splice(cardIndex, 1);
+      this.cards.push(card); // Move to back
+      
+      // Animate all other cards to their new positions
+      this.animateAllCardsToNewPositions(() => {
+        this.isReordering = false;
+        this.cardSelected.emit(draggedCard);
+      });
+    });
+  }
+  
+
+  // private animateAllCardsToNewPositions(callback?: () => void): void {
+  //   let animationsCompleted = 0;
+  //   const totalAnimations = this.cards.length;
+
+  //   this.cards.forEach((card, index) => {
+  //     const targetPosition = this.getTargetPosition(index);
+      
+  //     this.animateToPosition(card.id, targetPosition, 600, () => {
+  //       animationsCompleted++;
+  //       if (animationsCompleted === totalAnimations && callback) {
+  //         callback();
+  //       }
+  //     });
+  //   });
+  // }
+
+  // Update the animateAllCardsToNewPositions method
+private animateAllCardsToNewPositions(callback?: () => void): void {
+  let animationsCompleted = 0;
+  const totalAnimations = this.cards.length;
+
+  this.cards.forEach((card, index) => {
+    const targetPosition = this.getTargetPosition(index);
+    
+    // Stagger the animations slightly for smoother effect
+    setTimeout(() => {
+      this.animateToPosition(card.id, targetPosition, 800, () => { // Increased from 600
+        animationsCompleted++;
+        if (animationsCompleted === totalAnimations && callback) {
+          callback();
+        }
+      });
+    }, index * 50); // Add slight delay between each card
+  });
+}
+
+  private getTargetPosition(index: number): CardPosition {
+    const randomRotate = Math.random() * 8 - 4;
+    return {
+      x: 0,
+      y: 0,
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: (this.cards.length - index - 1) * 4 + randomRotate,
+      scale: 1 + index * 0.05 - this.cards.length * 0.05,
+      zIndex: this.cards.length - index,
+      opacity: 1,
+      isAnimating: true
+    };
+  }
+  private animateToPosition(
+    cardId: number, 
+    targetPosition: CardPosition, 
+    duration: number = 600, // Increased default from 300
+    callback?: () => void
+  ): void {
+    const startPosition = this.cardPositions.get(cardId);
+    if (!startPosition) return;
+  
+    const startTime = performance.now();
+  
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Use the smoother easing function
+      const easeProgress = this.easeOutCubic(progress); // New easing function
+      
+      const currentPosition: CardPosition = {
+        x: startPosition.x + (targetPosition.x - startPosition.x) * easeProgress,
+        y: startPosition.y + (targetPosition.y - startPosition.y) * easeProgress,
+        rotateX: startPosition.rotateX + (targetPosition.rotateX - startPosition.rotateX) * easeProgress,
+        rotateY: startPosition.rotateY + (targetPosition.rotateY - startPosition.rotateY) * easeProgress,
+        rotateZ: startPosition.rotateZ + (targetPosition.rotateZ - startPosition.rotateZ) * easeProgress,
+        scale: startPosition.scale + (targetPosition.scale - startPosition.scale) * easeProgress,
+        zIndex: progress > 0.7 ? targetPosition.zIndex : startPosition.zIndex, // Changed from 0.5
+        opacity: startPosition.opacity + (targetPosition.opacity - startPosition.opacity) * easeProgress,
+        isAnimating: true
+      };
+  
+      this.cardPositions.set(cardId, currentPosition);
+      this.cdr.detectChanges();
+  
+      if (progress < 1) {
+        this.animationFrameId = requestAnimationFrame(animate);
+      } else {
+        this.cardPositions.set(cardId, {
+          ...targetPosition,
+          isAnimating: false
+        });
+        this.cdr.detectChanges();
+        if (callback) callback();
+      }
+    };
+  
+    this.animationFrameId = requestAnimationFrame(animate);
+  }
+  
+  private easeOutCubic(t: number): number {
+    return 1 - Math.pow(1 - t, 3);
+  }
+  
+
+
+  // private animateToPosition(
+  //   cardId: number, 
+  //   targetPosition: CardPosition, 
+  //   duration: number = 300,
+  //   callback?: () => void
+  // ): void {
+  //   const startPosition = this.cardPositions.get(cardId);
+  //   if (!startPosition) return;
+
+  //   const startTime = performance.now();
+
+  //   const animate = (currentTime: number) => {
+  //     const elapsed = currentTime - startTime;
+  //     const progress = Math.min(elapsed / duration, 1);
+      
+  //     const easeProgress = this.easeOutQuart(progress);
+      
+  //     const currentPosition: CardPosition = {
+  //       x: startPosition.x + (targetPosition.x - startPosition.x) * easeProgress,
+  //       y: startPosition.y + (targetPosition.y - startPosition.y) * easeProgress,
+  //       rotateX: startPosition.rotateX + (targetPosition.rotateX - startPosition.rotateX) * easeProgress,
+  //       rotateY: startPosition.rotateY + (targetPosition.rotateY - startPosition.rotateY) * easeProgress,
+  //       rotateZ: startPosition.rotateZ + (targetPosition.rotateZ - startPosition.rotateZ) * easeProgress,
+  //       scale: startPosition.scale + (targetPosition.scale - startPosition.scale) * easeProgress,
+  //       zIndex: progress > 0.5 ? targetPosition.zIndex : startPosition.zIndex,
+  //       opacity: startPosition.opacity + (targetPosition.opacity - startPosition.opacity) * easeProgress,
+  //       isAnimating: true
+  //     };
+
+  //     this.cardPositions.set(cardId, currentPosition);
+  //     this.cdr.detectChanges();
+
+  //     if (progress < 1) {
+  //       this.animationFrameId = requestAnimationFrame(animate);
+  //     } else {
+  //       this.cardPositions.set(cardId, {
+  //         ...targetPosition,
+  //         isAnimating: false
+  //       });
+  //       this.cdr.detectChanges();
+  //       if (callback) callback();
+  //     }
+  //   };
+
+  //   this.animationFrameId = requestAnimationFrame(animate);
+  // }
+
+  // private easeOutQuart(t: number): number {
+  //   return 1 - Math.pow(1 - t, 4);
+  // }
+
+  private easeOutQuart(t: number): number {
+    return 1 - Math.pow(1 - t, 3); // Changed from power of 4 to 3 for smoother curve
+  }
+
+  // private easeOutQuart(t: number): number {
+  //   return 1 - Math.pow(1 - t, 4);
+  // }
+  
+
+  onCardClick(card: CourseCard): void {
+    if (!this.isDragging && !this.isReordering) {
+      this.cardSelected.emit(card);
+    }
+  }
+
+  // getCardStyle(card: CourseCard): any {
+  //   const position = this.cardPositions.get(card.id);
+  //   if (!position) return {};
+
+  //   return {
+  //     transform: `
+  //       translate3d(${position.x}px, ${position.y}px, 0)
+  //       rotateX(${position.rotateX}deg)
+  //       rotateY(${position.rotateY}deg)
+  //       rotateZ(${position.rotateZ}deg)
+  //       scale(${position.scale})
+  //     `,
+  //     zIndex: position.zIndex,
+  //     opacity: position.opacity,
+  //     transformOrigin: '50% 50%',
+  //     transition: position.isAnimating ? 'none' : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease'
+  //   };
+  // }
+
+  getCardStyle(card: CourseCard): any {
+    const position = this.cardPositions.get(card.id);
+    if (!position) return {};
+  
+    return {
+      transform: `
+        translate3d(${position.x}px, ${position.y}px, 0)
+        rotateX(${position.rotateX}deg)
+        rotateY(${position.rotateY}deg)
+        rotateZ(${position.rotateZ}deg)
+        scale(${position.scale})
+      `,
+      zIndex: position.zIndex,
+      opacity: position.opacity,
+      transformOrigin: '50% 50%',
+      transition: position.isAnimating ? 'none' : 'transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.4s ease' // Smoother curve
+    };
+  }
+
+  trackByCardId(index: number, card: CourseCard): number {
+    return card.id;
+  }
+}
+
+
+
+// //  // Continue updateCardPosition method
+// const opacity = Math.max(1 - distance / 300, 0.5); // Changed from 200 to 300, min 0.5 instead of 0.3
+
+// this.cardPositions.set(this.currentDragCard, {
+//   ...position,
+//   x: deltaX * 0.6, // Reduced from 0.8 for smoother movement
+//   y: deltaY * 0.6, // Reduced from 0.8 for smoother movement
+//   rotateX,
+//   rotateY,
+//   opacity,
+//   isAnimating: false
+// });
+
+// this.cdr.detectChanges();
+// }
+
+// // Update the resetCardPosition method for smoother return
+// private resetCardPosition(cardId: number): void {
+// const currentIndex = this.cards.findIndex(card => card.id === cardId);
+// const targetPosition = this.getTargetPosition(currentIndex);
+
+// this.animateToPosition(cardId, targetPosition, 600); // Increased from 400
+// }
+
+// // Update the animateToPosition method
+// private animateToPosition(
+// cardId: number, 
+// targetPosition: CardPosition, 
+// duration: number = 600, // Increased default from 300
+// callback?: () => void
+// ): void {
+// const startPosition = this.cardPositions.get(cardId);
+// if (!startPosition) return;
+
+// const startTime = performance.now();
+
+// const animate = (currentTime: number) => {
+//   const elapsed = currentTime - startTime;
+//   const progress = Math.min(elapsed / duration, 1);
+  
+//   // Use the smoother easing function
+//   const easeProgress = this.easeOutCubic(progress); // New easing function
+  
+//   const currentPosition: CardPosition = {
+//     x: startPosition.x + (targetPosition.x - startPosition.x) * easeProgress,
+//     y: startPosition.y + (targetPosition.y - startPosition.y) * easeProgress,
+//     rotateX: startPosition.rotateX + (targetPosition.rotateX - startPosition.rotateX) * easeProgress,
+//     rotateY: startPosition.rotateY + (targetPosition.rotateY - startPosition.rotateY) * easeProgress,
+//     rotateZ: startPosition.rotateZ + (targetPosition.rotateZ - startPosition.rotateZ) * easeProgress,
+//     scale: startPosition.scale + (targetPosition.scale - startPosition.scale) * easeProgress,
+//     zIndex: progress > 0.7 ? targetPosition.zIndex : startPosition.zIndex, // Changed from 0.5
+  //   opacity: startPosition.opacity + (targetPosition.opacity - startPosition.opacity) * easeProgress,
+  //   isAnimating: true
+  // };
+
+  // this.cardPositions.set(cardId, currentPosition);
+  // this.cdr.detectChanges();
+
+  // if (progress < 1) {
+  //   this.animationFrameId = requestAnimationFrame(animate);
+  // } else {
+  //   this.cardPositions.set(cardId, {
+  //     ...targetPosition,
+  //     isAnimating: false
+  //   });
+//     this.cdr.detectChanges();
+//     if (callback) callback();
+//   }
+// };
+
+// this.animationFrameId = requestAnimationFrame(animate);
+// }
+
+// // Add new easing function for even smoother animations
+// private easeOutCubic(t: number): number {
+// return 1 - Math.pow(1 - t, 3);
+// }
+
+// // Keep the existing easeOutQuart for backward compatibility
+// private easeOutQuart(t: number): number {
+// return 1 - Math.pow(1 - t, 4);
+// }

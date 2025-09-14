@@ -57,4 +57,12 @@ export class CourseServicesService {
     const url = `${this.apiBaseUrl}/api/Module/${moduleId}`;
     return this.client.get<any>(url);
   }
+  getCourseWithCategoriesLob(lobid: string) {
+    const url = `${this.apiBaseUrl}/api/Course/coursewithcategories`;
+    return this.client.get<any>(url, {
+      params: {
+        lobid: lobid
+      }
+    });
+  }
 }
