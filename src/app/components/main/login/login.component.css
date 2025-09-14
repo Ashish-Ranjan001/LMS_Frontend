@@ -48,7 +48,7 @@
  
 .university-logo {
   max-width: 160px;
-  height: auto;
+  height: 100px;
   transition: transform 0.3s ease;
   border-radius: 80px; /* You can increase or decrease this value */
   overflow: hidden;/* Ensures child elements, like the image, inherit the rounded edges */

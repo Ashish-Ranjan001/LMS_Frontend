@@ -1,8 +1,19 @@
-
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterModule } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+
+interface NavChild {
+  to: string;
+  label: string;
+}
+interface NavSection {
+  key: string;
+  icon: string;
+  label: string;
+  children: NavChild[];
+  permission?: () => boolean;
+}
 
 @Component({
   selector: 'app-dashboardsidebar',
@@ -13,147 +24,161 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class DashboardsidebarComponent implements OnInit {
   @Input() collapsed = false;
+  @Output() collapsedChange = new EventEmitter<boolean>();
 
-  // User information
-  userRoleId: number = 0;
-  userName: string = '';
-  userEmail: string = '';
-  userAvatar: string = '';
-  isSuperAdmin: boolean = false;
+  userRoleId = 0;
+  userName = '';
+  userEmail = '';
+  userAvatar = '';
+  isSuperAdmin = false;
 
-  // controls for expanding sub-menus
-  businessOpen = true;
-  smeOpen = false;
-  usersOpen = false;
-  taOpen = false;
-  adminOpen = false;
-  courseOpen = false;
-  assignmentOpen = false; 
-  reportsOpen = false;
+  openSections: { [key: string]: boolean } = {};
+
+  // For hover/expand
+  tempExpanded = false;
+
+  navConfig: NavSection[] = [
+    {
+      key: 'reports',
+      icon: 'bi-bar-chart-line',
+      label: 'Reports',
+      children: [
+        { to: '/dashboard/reports/generate', label: 'Generate Report' }
+      ],
+      permission: () => this.userRoleId !== 0
+    },
+    {
+      key: 'business',
+      icon: 'bi-briefcase',
+      label: 'Line of Business',
+      children: [
+        { to: '/dashboard/lob/add', label: 'Add LoB' },
+        { to: '/dashboard/lob/view', label: 'View LoB' }
+      ]
+    },
+    {
+      key: 'sme',
+      icon: 'bi-person-badge',
+      label: 'SME',
+      children: [
+        { to: '/dashboard/sme/add', label: 'Add SME' },
+        { to: '/dashboard/sme/view', label: 'View SME' }
+      ]
+    },
+    {
+      key: 'courses',
+      icon: 'bi-journal-bookmark',
+      label: 'Courses',
+      children: [
+        { to: '/dashboard/course/addCategory', label: 'Add Category' },
+        { to: '/dashboard/course/viewCategory', label: 'View Category' },
+        { to: '/dashboard/course/addcourse', label: 'Add Course' },
+        { to: '/dashboard/course/viewcourse', label: 'View Course' }
+      ]
+    },
+    {
+      key: 'user',
+      icon: 'bi-person-circle',
+      label: 'User',
+      children: [
+        { to: '/dashboard/user/add', label: 'Add User' },
+        { to: '/dashboard/user/view', label: 'View User' }
+      ]
+    },
+    {
+      key: 'ta',
+      icon: 'bi-person-workspace',
+      label: 'TA',
+      children: [
+        { to: '/dashboard/ta/add', label: 'Add TA' },
+        { to: '/dashboard/ta/view', label: 'View TA' }
+      ]
+    },
+    {
+      key: 'admin',
+      icon: 'bi-shield-lock',
+      label: 'Admin',
+      children: [
+        { to: '/dashboard/admin/add', label: 'Add Admin' },
+        { to: '/dashboard/admin/view', label: 'View Admin' }
+      ],
+      permission: () => this.isSuperAdmin
+    },
+    {
+      key: 'assignment',
+      icon: 'bi-pencil-square',
+      label: 'Assignment',
+      children: [
+        { to: '/dashboard/assignment/add', label: 'Add Assignment' },
+        { to: '/dashboard/assignment/view', label: 'View Assignment' }
+      ],
+      permission: () => this.userRoleId !== 2
+    }
+  ];
 
   ngOnInit() {
     this.getDecodedUserData();
     this.setInitialMenuStates();
   }
 
-  // Method to decode JWT token and extract user data including role ID
   getDecodedUserData() {
     try {
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-       
-        this.userRoleId = 0;
-        this.isSuperAdmin = false;
-        return null;
-      }
-
+      const token = localStorage.getItem('authToken');
+      if (!token) return null;
       const decodedToken: any = jwtDecode(token);
-    
-
-      // Extract user information
       this.userName = decodedToken.Name || this.userName;
       this.userEmail = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] || this.userEmail;
       const gender = decodedToken.Gender;
-      this.userAvatar = gender === 'Male' ? 'male.svg' : 'female.jpg';
-
-      // Try multiple possible role property names
-      let roleValue = decodedToken.RoleId || 
-                     decodedToken.roleId || 
-                     decodedToken.role_id || 
-                     decodedToken.Role || 
-                     decodedToken.role ||
-                     decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ||
-                     decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'] ||
-                     0;
-
-      
-      // Convert to number if it's a string
-      if (typeof roleValue === 'string') {
-        this.userRoleId = parseInt(roleValue, 10);
-      } else {
-        this.userRoleId = roleValue || 0;
-      }
-
-      // Extract IsSuperAdmin property
-      const superAdminValue = decodedToken.IsSuperAdmin || decodedToken.isSuperAdmin || decodedToken.is_super_admin || "False";
-      this.isSuperAdmin = superAdminValue === "True" || superAdminValue === true;
-
- 
-      
+      this.userAvatar = (gender && gender.toLowerCase() === 'male') ? 'male.svg' : 'female.jpg';
+      let roleValue = decodedToken.RoleId ||
+                      decodedToken.roleId ||
+                      decodedToken.role_id ||
+                      decodedToken.Role ||
+                      decodedToken.role ||
+                      decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ||
+                      decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'] ||
+                      0;
+      this.userRoleId = typeof roleValue === 'string' ? parseInt(roleValue, 10) : roleValue || 0;
+      const superAdminValue = decodedToken.IsSuperAdmin || decodedToken.isSuperAdmin || decodedToken.is_super_admin || 'False';
+      this.isSuperAdmin = superAdminValue === 'True' || superAdminValue === true;
       return decodedToken;
     } catch (error) {
-      console.error("Error decoding JWT:", error);
       this.userRoleId = 0;
       this.isSuperAdmin = false;
       return null;
     }
   }
 
-  // Method to check if user should see a specific menu item
   shouldShowMenuItem(menuItem: string): boolean {
-
-    
-    // Assignment section should NOT be visible to users with role ID 2
-    if (menuItem === 'assignment') {
-      const shouldShow = this.userRoleId !== 2;
-   
-      return shouldShow;
-    }
-    
-    // Admin section should only be visible if user is SuperAdmin
-    if (menuItem === 'admin') {
-      const shouldShow = this.isSuperAdmin;
-      
-      return shouldShow;
-    }
-    
-    // All other menu items are visible to everyone
-
+    const config = this.navConfig.find(item => item.key === menuItem);
+    if (config && config.permission) return config.permission();
     return true;
   }
 
-  // Set initial menu states based on user role
   setInitialMenuStates() {
     if (this.userRoleId === 3) {
-      // For role ID 3, open Assignment section by default (since they can see everything)
-      this.assignmentOpen = true;
-      this.businessOpen = false;
+      this.openSections['assignment'] = true;
+    } else {
+      this.openSections['business'] = true;
     }
   }
 
-  toggleBusiness() { 
-    this.businessOpen = !this.businessOpen; 
+  toggleSection(key: string) {
+    if (this.collapsed && !this.tempExpanded) return;
+    this.openSections[key] = !this.openSections[key];
   }
-  
-  toggleSME() { 
-    this.smeOpen = !this.smeOpen; 
+
+  // Hover expand/collapse logic
+  onSidebarMouseEnter() {
+    if (this.collapsed && !this.tempExpanded) {
+      this.tempExpanded = true;
+      this.collapsedChange.emit(false);
+    }
   }
-  
-  toggleUsers() { 
-    this.usersOpen = !this.usersOpen; 
-  }
-  
-  toggleTA() { 
-    this.taOpen = !this.taOpen; 
-  }
-  
-  toggleAdmin() { 
-    this.adminOpen = !this.adminOpen; 
-  }
-  
-  toggleCourse() { 
-    this.courseOpen = !this.courseOpen; 
-  }
-  
-  toggleUser() { 
-    this.usersOpen = !this.usersOpen; 
-  }
-  
-  toggleAssignment() { 
-    this.assignmentOpen = !this.assignmentOpen; 
-  }
-  
-  toggleReports() { 
-    this.reportsOpen = !this.reportsOpen; 
+  onSidebarMouseLeave() {
+    if (this.tempExpanded) {
+      this.tempExpanded = false;
+      this.collapsedChange.emit(true);
+    }
   }
 }

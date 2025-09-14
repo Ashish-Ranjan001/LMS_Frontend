@@ -1,12 +1,6 @@
 <header class="header" [class.sidebar-open]="isSidebarOpen">
   <!-- Menu Toggle Button -->
-  <button class="menu-button" (click)="onMenuToggle()" aria-label="Toggle menu">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="4" x2="20" y1="12" y2="12"></line>
-      <line x1="4" x2="20" y1="6" y2="6"></line>
-      <line x1="4" x2="20" y1="18" y2="18"></line>
-    </svg>
-  </button>
+ 
 
   <!-- University Title with Typewriter Effect -->
   <div class="university-title" (click)="navigateToHome()">
@@ -48,17 +42,18 @@
       <i class="fas fa-search search-icon"></i>
 
       <!-- Search Input -->
-      <input
-        #searchInput
-        type="text"
-        class="search-input"
-        [(ngModel)]="searchQuery"
-        [placeholder]="'Search ' + selectedFilter.placeholder + '...'"
-        (input)="onSearchInput()"
-        (focus)="onSearchFocus()"
-        (blur)="onSearchBlur()"
-        autocomplete="off"
-      />
+    <label for="searchInput"></label>
+<input 
+  id="searchInput"
+  type="text"
+  class="search-input"
+  [(ngModel)]="searchQuery"
+  [placeholder]="'Search ' + selectedFilter.placeholder + '...'"
+  (input)="onSearchInput()"
+  (focus)="onSearchFocus()"
+  (blur)="onSearchBlur()"
+  autocomplete="off"
+/>
 
       <!-- Clear Search Button -->
       <button 
@@ -67,7 +62,7 @@
         *ngIf="searchQuery"
         (click)="clearSearch()"
       >
-        <i class="fas fa-times"></i>
+        <i class="fas fa-times">X</i>
       </button>
 
       <!-- Search Results Dropdown -->
@@ -149,7 +144,9 @@
           <img 
             *ngIf="userAvatar" 
             [src]="userAvatar" 
-            [alt]="userName"
+            
+            alt="User Name"
+             [alt]="userName"
             class="avatar-image"
           />
           <span *ngIf="!userAvatar" class="avatar-initial">{{ getUserInitial() }}</span>
@@ -168,6 +165,7 @@
             <img 
               *ngIf="userAvatar" 
               [src]="userAvatar" 
+              alt="User Name"
               [alt]="userName"
               class="avatar-image"
             />
@@ -188,10 +186,10 @@
             <span>Account Settings</span>
           </button>
           
-          <button class="dropdown-item" (click)="onChangePassword()">
+          <!-- <button class="dropdown-item" (click)="onChangePassword()">
             <i class="fas fa-key item-icon"></i>
             <span>Change Password</span>
-          </button>
+          </button> -->
           
           <button class="dropdown-item logout-item" (click)="onLogout()">
             <i class="fas fa-sign-out-alt item-icon"></i>

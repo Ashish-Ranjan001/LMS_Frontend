@@ -1,62 +1,22 @@
-<!-- <div class="app-container">
-   
-    <app-dashheader
-      (menuToggle)="onMenuToggle()"
-      [userName]="'John Doe'"
-      [notificationCount]="5"
-      [userAvatar]="'/assets/avatar.png'"
-    ></app-dashheader>
-  
-    <div class="main-content">
-     
-      <app-dashboardsidebar
-        [collapsed]="!isSidebarOpen"
-      ></app-dashboardsidebar>
-  
-      <main class="content"
-            [class.expanded]="!isSidebarOpen"  
-      >
-        <router-outlet></router-outlet>
-      </main>
-    </div>
-  
-    <app-dash-footer></app-dash-footer>
-  </div>
-   -->
+<div class="app-container">
+  <app-dashheader
+    (menuToggle)="onMenuToggle()"
+    [userName]="userName"
+    [userEmail]="userEmail"
+    [userAvatar]="userAvatar"
+    [lobid]="lobid"
+    [isSidebarOpen]="isSidebarOpen"
+  ></app-dashheader>
 
-   <!-- -----------------------------------------------------------------------------------------  -->
-
-   <div class="app-container">
-    <!-- Enhanced Dashboard Header -->
-    <app-dashheader
-      (menuToggle)="onMenuToggle()"
-      [userName]="userName"
-      [userEmail]="userEmail"
-      [userAvatar]="userAvatar"
-      [lobid]="lobid"
-      [isSidebarOpen]="isSidebarOpen"
-      (searchSubmit)="onSearchSubmit($event)"
-      (profileClick)="onProfileClick()"
-      (accountSettingsClick)="onAccountSettingsClick()"
-      (changePasswordClick)="onChangePasswordClick()"
-      (logoutClick)="onLogoutClick()"
-      (myLearningClick)="onMyLearningClick()"
-    ></app-dashheader>
-  
-    <div class="main-content">
-      <app-dashboardsidebar
-        [collapsed]="!isSidebarOpen"
-      ></app-dashboardsidebar>
-  
-      <main class="content"
-            [class.expanded]="!isSidebarOpen"  
-      >
-        <router-outlet></router-outlet>
-      </main>
-    </div>
-  
-    <app-dash-footer
-      [isSidebarOpen]="isSidebarOpen"
-    ></app-dash-footer>
+  <div class="main-content">
+    <app-dashboardsidebar
+      [collapsed]="!isSidebarOpen"
+      (collapsedChange)="onSidebarCollapsedChange($event)">
+    </app-dashboardsidebar>
+    <main class="content" [class.expanded]="!isSidebarOpen">
+      <router-outlet></router-outlet>
+    </main>
   </div>
-  
+
+  <app-dash-footer [isSidebarOpen]="isSidebarOpen"></app-dash-footer>
+</div>

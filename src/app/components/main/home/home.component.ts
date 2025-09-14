@@ -111,7 +111,7 @@ lobid:string='';
       this.userEmail = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] || this.userEmail;
       const gender = decodedToken.Gender;
 
-      this.userAvatar = gender === 'Male' ? 'male.svg' : 'female.jpg';
+      this.userAvatar = gender.toLowerCase() == 'male' ? 'male.svg' : 'female.jpg';
       this.lobid = decodedToken.LobId;
 
       const userId = decodedToken.UserId || decodedToken.nameid || decodedToken.sub;

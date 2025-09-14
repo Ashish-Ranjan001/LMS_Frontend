@@ -467,7 +467,7 @@ export class DashheaderComponent implements OnInit, OnDestroy {
   }
 
   navigateToHome(): void {
-    this.router.navigate(["/home"])
+    this.router.navigate(["dashboard"])
   }
 
   @HostListener("document:click", ["$event"])

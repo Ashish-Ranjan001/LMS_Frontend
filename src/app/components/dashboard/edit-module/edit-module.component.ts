@@ -1130,6 +1130,7 @@ export class EditModuleComponent implements OnInit, OnDestroy {
     const moduleName = this.moduleData.modulename || ""
     const duration = this.moduleData.duration || ""
     const description = this.moduleData.description || ""
+    console.log("Module data before submission:", this.moduleData)
 
     if (!moduleName.trim() || !duration.trim() || !description.trim()) {
       alert("Please fill in all required fields")

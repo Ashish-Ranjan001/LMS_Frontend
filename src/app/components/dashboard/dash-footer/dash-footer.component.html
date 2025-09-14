@@ -1,7 +1,26 @@
-<footer class="footer" [class.sidebar-open]="isSidebarOpen">
-    <div class="footer-content">
-      <!-- You can swap this for any links/info you like -->
-      <span>© 2025 Learning Portal</span>
+<footer 
+  class="footer-modern"
+  [class.sidebar-open]="isSidebarOpen"
+  [class.sidebar-collapsed]="!isSidebarOpen"
+  [class.footer-hidden]="footerHidden"
+>
+  <div class="footer-content-modern">
+    <div class="footer-text">
+      © {{ animatedYear }} <b>Learning Portal</b> 
     </div>
-  </footer>
-  
+
+     <marquee class="footer-marquee" >
+     Developed by <b>Yash Vijay , Aditya Narayan , Ashish Ranjan</b> |
+      </marquee>
+
+    <span class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener" title="GitHub">
+        <i class="bi bi-github"></i>
+      </a>
+      <a href="mailto:customercare@com" title="Contact">
+        <i class="bi bi-envelope-check"></i>
+      </a>
+    </span>
+  </div>
+
+</footer>

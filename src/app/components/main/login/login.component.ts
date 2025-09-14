@@ -335,7 +335,7 @@ export class LoginComponent {
         if (roleId === 1 || roleId === '1') {
           this.router.navigate(['/home']);
         } else {
-          this.router.navigate(['/dashboard/admin/dashboard']);
+          this.router.navigate(['/dashboard']);
         }
       }, 1000);
     } catch (error) {

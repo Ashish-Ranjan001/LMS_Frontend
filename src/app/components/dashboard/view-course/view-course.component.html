@@ -1,83 +1,3 @@
-<!-- 
-
-<div class="container-fluid">
- 
-  <div class="row mb-3 justify-content-end">
-    <div class="col-md-4 text-end">
-      <div class="input-group">
-        <span class="input-group-text">Search:</span>
-        <input 
-          type="text" 
-          class="form-control"
-          [(ngModel)]="searchTerm" 
-          (input)="search()" 
-          placeholder="Search courses...">
-      </div>
-    </div>
-  </div>
-
-  <div class="table-responsive">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th class="image-column">Image</th>
-          <th>Name</th>
-          <th>Sub Set</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let course of paginatedCourses">
-          <td class="image-column">
-            <div class="course-image-container">
-              <img [src]="course.imageUrl" alt="{{ course.name }}" class="course-image">
-            </div>
-          </td>
-          <td>{{ course.name }}</td>
-          <td>{{ course.name }}</td>
-          <td>
-            <div class="status-indicator">
-              <span class="status-dot" [ngClass]="{'active': course.status === 'Published'}"></span>
-              <span>{{ course.status }}</span>
-            </div>
-          </td>
-          <td class="actions-column">
-            <button class="btn btn-sm btn-outline-primary">Edit</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-
-  <div class="row">
-    <div class="col-12">
-      <nav aria-label="Course pagination">
-        <ul class="pagination justify-content-center">
-          <li class="page-item" [class.disabled]="currentPage === 1">
-            <a class="page-link" href="javascript:void(0)" (click)="goToFirstPage()">&laquo;</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentPage === 1">
-            <a class="page-link" href="javascript:void(0)" (click)="goToPreviousPage()">&lsaquo;</a>
-          </li>
-          
-          <li class="page-item" *ngFor="let page of pages" [class.active]="page === currentPage">
-            <a class="page-link" href="javascript:void(0)" (click)="goToPage(page)">{{ page }}</a>
-          </li>
-          
-          <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <a class="page-link" href="javascript:void(0)" (click)="goToNextPage()">&rsaquo;</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <a class="page-link" href="javascript:void(0)" (click)="goToLastPage()">&raquo;</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </div>
-</div> -->
-
 
 
 
@@ -143,18 +63,7 @@
             <span>{{ getStatusText(course.status) }}</span>
           </div>
         </td>
-        <!-- <td class="actions-column">
-          <button class="btn btn-sm btn-outline-primary me-2" (click)="editCourse(course)">
-            <i class="bi bi-pencil-square"></i> Edit
-          </button>
-
-          <button class="btn btn-sm btn-outline-primary me-2" (click)="addModule(course)">
-            <i class="bi bi-pencil-square"></i> Add Module
-          </button>
-
-          <button class="btn btn-sm btn-outline-primary me-2" (click)="viewModule(course)">
-            <i class="bi bi-pencil-square"></i> View Modules
-          </button> -->
+    
           <td class="actions-column">
             <div class="d-flex gap-2">
               <button class="btn btn-sm btn-outline-primary" (click)="editCourse(course)">

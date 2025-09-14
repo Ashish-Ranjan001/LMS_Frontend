@@ -160,6 +160,7 @@ import { AuthGuard } from './guards/admin.guard.ts.guard';
 import { RoleGuard } from './guards/role.guard.ts.guard';
 import { LoginRedirectGuard } from './guards/login-redirect.guard';
 import { AdminDashboardComponent } from './components/dashboard/admin-dashboard/admin-dashboard.component';
+import { EditUserComponent } from './components/dashboard/edit-user/edit-user.component';
 
 export const routes: Routes = [
     // Public routes
@@ -354,6 +355,12 @@ export const routes: Routes = [
                 component: EditAdminComponent,
                 canActivate: [RoleGuard]
             },
+             { 
+                path: 'edituser/:id', 
+                component: EditUserComponent,
+                canActivate: [RoleGuard]
+            },
+
             {
                 path:'',
                 component:AdminDashboardComponent,

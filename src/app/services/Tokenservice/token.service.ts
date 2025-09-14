@@ -60,6 +60,24 @@
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 
+interface DecodedToken {
+  Gender: string;
+  IsSuperAdmin: string;
+  Name: string;
+  RoleId: string;
+  Status: string;
+  UserId: string;
+  aud: string;
+  exp: number;
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string;
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress': string;
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier': string;
+  iss: string;
+  sub: string;
+  nameid?: string;
+  LobId?: string;
+}
+
 @Injectable({ 
   providedIn: 'root' 
 })
@@ -149,6 +167,31 @@ export class TokenService {
     this.lobid = undefined;
     this.roleId = 1;
   }
+
+  isSuperAdmin(): boolean {
+    try {
+      const decodedToken = this.getFullDecodedToken();
+      return decodedToken?.IsSuperAdmin === 'True';
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+      return false;
+    }
+  }
+    private getFullDecodedToken(): DecodedToken | null {
+    try {
+      const token = this.getToken();
+      if (!token) return null;
+      
+      return jwtDecode<DecodedToken>(token);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+    getToken(): string | null {
+    return localStorage.getItem("authToken");
+  }
+
 }
 
 
@@ -260,15 +303,15 @@ export class TokenService {
 //   }
 
 //   // Check if user is super admin
-//   isSuperAdmin(): boolean {
-//     try {
-//       const decodedToken = this.getFullDecodedToken();
-//       return decodedToken?.IsSuperAdmin === 'True';
-//     } catch (error) {
-//       console.error('Error checking admin status:', error);
-//       return false;
-//     }
-//   }
+  // isSuperAdmin(): boolean {
+  //   try {
+  //     const decodedToken = this.getFullDecodedToken();
+  //     return decodedToken?.IsSuperAdmin === 'True';
+  //   } catch (error) {
+  //     console.error('Error checking admin status:', error);
+  //     return false;
+  //   }
+  // }
 
 //   // Check if user has specific role
 //   hasRole(role: string): boolean {
@@ -311,22 +354,22 @@ export class TokenService {
 //   }
 
 //   // Get raw token from localStorage
-//   getToken(): string | null {
-//     return localStorage.getItem("authToken");
-//   }
+  // getToken(): string | null {
+  //   return localStorage.getItem("authToken");
+  // }
 
 //   // Get full decoded token (private method for internal use)
-//   private getFullDecodedToken(): DecodedToken | null {
-//     try {
-//       const token = this.getToken();
-//       if (!token) return null;
+  // private getFullDecodedToken(): DecodedToken | null {
+  //   try {
+  //     const token = this.getToken();
+  //     if (!token) return null;
       
-//       return jwtDecode<DecodedToken>(token);
-//     } catch (error) {
-//       console.error('Error decoding token:', error);
-//       return null;
-//     }
-//   }
+  //     return jwtDecode<DecodedToken>(token);
+  //   } catch (error) {
+  //     console.error('Error decoding token:', error);
+  //     return null;
+  //   }
+  // }
 
 //   // Set auth token
 //   // setToken(token: string): void {
